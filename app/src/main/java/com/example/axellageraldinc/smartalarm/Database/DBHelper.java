@@ -95,12 +95,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Update alarm status (on/off)
-    public boolean updateAlarmStatus(int id, String hour, String minute) {
+    public boolean updateAlarmStatus(int status, String hour, String minute) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(STATUS_ALARM, alarmModel.getStatus());
-        int rowAffected = db.update(TABLE_ALARM, values, "id=? AND hour=? AND minute=?"
-                , new String[] {String.valueOf(id), hour, minute});
+        values.put(STATUS_ALARM, status);
+        int rowAffected = db.update(TABLE_ALARM, values, "hour=? AND minute=?"
+                , new String[] {hour, minute});
         return rowAffected == 1;
     }
 

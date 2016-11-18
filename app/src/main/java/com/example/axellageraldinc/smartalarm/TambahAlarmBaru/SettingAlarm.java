@@ -3,14 +3,19 @@ package com.example.axellageraldinc.smartalarm.TambahAlarmBaru;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -32,6 +37,8 @@ public class SettingAlarm extends AppCompatActivity
     public String chosenRingtone;
     String hour, minute;
     DBHelper dbHelper;
+    AudioManager myAudioManager;
+    public static int volume = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -41,6 +48,7 @@ public class SettingAlarm extends AppCompatActivity
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         SetRingtone();
 
@@ -60,6 +68,67 @@ public class SettingAlarm extends AppCompatActivity
             }
         });
 
+        Button btnSetVolume = (Button) findViewById(R.id.btnVolume);
+        btnSetVolume.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowSetVolume();
+            }
+        });
+
+    }
+
+    //Setting volume dari seekbar
+    public void ShowSetVolume()
+    {
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
+        final SeekBar seek = new SeekBar(this);
+        seek.setMax(300);
+
+        popDialog.setTitle("Set Alarm Volume");
+        popDialog.setView(seek);
+
+        int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        seek.setMax(maxVolume);
+        seek.setProgress(curVolume);
+
+        seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+                volume = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                Toast.makeText(getApplicationContext(), "Volume: " + Integer.toString(volume), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Button OK
+        popDialog.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        //Button Cancel
+        popDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        popDialog.create();
+        popDialog.show();
     }
 
     public void SetAlarmOn()

@@ -22,14 +22,19 @@ public class AlarmReceiver extends BroadcastReceiver
         myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         Toast.makeText(context, "Alarm! Wake up! Wake up!", Toast.LENGTH_LONG).show();
-        myAudioManager.adjustVolume(AudioManager.ADJUST_RAISE, AudioManager.FLAG_PLAY_SOUND);
-        myAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        /*int originalVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);*/
+        /*myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC), 0);*/
+        /*myAudioManager.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_PLAY_SOUND);*/
 /*        Intent i = new Intent(context, ShowAlarm.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(i);*/
         //Log.d("Pilihan ringtone", intent.getStringExtra("ringtone_alarm"));
+        /*int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);*/
+        myAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, SettingAlarm.volume, AudioManager.FLAG_PLAY_SOUND);
         Uri uriuri = Uri.parse(intent.getStringExtra("ringtone_alarm"));
         MediaPlayer mp = MediaPlayer.create(context, uriuri);
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mp.start();
         /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         settingAlarm = new SettingAlarm();*/

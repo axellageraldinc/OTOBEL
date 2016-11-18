@@ -7,11 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 
@@ -60,6 +63,28 @@ public class ListActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //Apply menu supaya ada titik 3 di kanan atas
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.actionmenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.MenuSetting:
+                Intent i = new Intent(ListActivity.this, MenuSetting.class);
+                startActivity(i);
+                return true;
+            case R.id.MenuAbout:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // Todo : off in alarm pake switch

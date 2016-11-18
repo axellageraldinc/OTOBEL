@@ -6,14 +6,18 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
     SettingAlarm settingAlarm;
     private AudioManager myAudioManager;
+    private MediaPlayer mp;
+    int defaultRinger;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -30,12 +34,24 @@ public class AlarmReceiver extends BroadcastReceiver
         context.startActivity(i);*/
         //Log.d("Pilihan ringtone", intent.getStringExtra("ringtone_alarm"));
         /*int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);*/
+        defaultRinger = myAudioManager.getRingerMode();
         myAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-        myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, SettingAlarm.volume, AudioManager.FLAG_PLAY_SOUND);
+        myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, MenuSetting.volume, AudioManager.FLAG_PLAY_SOUND);
         Uri uriuri = Uri.parse(intent.getStringExtra("ringtone_alarm"));
-        MediaPlayer mp = MediaPlayer.create(context, uriuri);
+        mp = MediaPlayer.create(context, uriuri);
         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mp.start();
+        CountDownTimer c = new CountDownTimer(5000, 1000) {
+            @Override
+            public void onTick(long l) {
+                mp.start();
+            }
+
+            @Override
+            public void onFinish() {
+                mp.stop();
+                myAudioManager.setRingerMode(defaultRinger);
+            }
+        }; c.start();
         /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         settingAlarm = new SettingAlarm();*/
 //        if (uriuri == null)

@@ -41,13 +41,6 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="Alarm Volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnVolume"
-            android:layout_weight="1" />
-
-        <Button
             android:text="SAVE ALARM"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -61,7 +61,7 @@ public class SettingAlarm extends AppCompatActivity
                 hour = alarmTimePicker.getCurrentHour().toString();
                 minute = alarmTimePicker.getCurrentMinute().toString();
                 //Insert nilai-nilai variabel ke database
-                dbHelper.createAlarm(new AlarmModel(hour, minute, "", "", 0));
+                dbHelper.createAlarm(new AlarmModel(hour, minute, "", "", 1, 0));
                 SetAlarmOn();
                 Intent i = new Intent(SettingAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);

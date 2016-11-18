@@ -12,6 +12,7 @@ public class AlarmModel {
     private String ringtone;
     private String set_day;
     private int status;
+    private int vibrate;
 
     public AlarmModel() {
         this.hour = "";
@@ -19,14 +20,16 @@ public class AlarmModel {
         this.ringtone = "";
         this.set_day = "";
         this.status = 0;
+        this.vibrate = 0;
     }
 
-    public AlarmModel(String hour, String minute, String ringtone, String set_day, int status) {
+    public AlarmModel(String hour, String minute, String ringtone, String set_day, int status, int vibrate) {
         this.hour = hour;
         this.minute = minute;
         this.ringtone = ringtone;
         this.set_day = set_day;
         this.status = status;
+        this.vibrate = vibrate;
     }
 
     public int getId() { return id; }
@@ -47,7 +50,7 @@ public class AlarmModel {
         return minute;
     }
 
-    public void setMinutee(String minute) {
+    public void setMinute(String minute) {
         this.minute = minute;
     }
 
@@ -75,4 +78,11 @@ public class AlarmModel {
         this.status = status;
     }
 
+    public int getVibrate() {
+        return vibrate;
+    }
+
+    public void setVibrate(int vibrate) {
+        this.vibrate = vibrate;
+    }
 }

@@ -44,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
 
         dbHelper = new DBHelper(ListActivity.this);
         alarmModelList = dbHelper.getAllAlarm();
-        alarmAdapter = new AlarmAdapter(alarmModelList);
+        alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
         recView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();
 
@@ -62,6 +62,7 @@ public class ListActivity extends AppCompatActivity {
 
     }
 
+    // Todo : off in alarm pake switch
     private void initRecyclerView(){
         recView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recView, new RecyclerItemClickListener.ClickListener() {
@@ -69,8 +70,9 @@ public class ListActivity extends AppCompatActivity {
                     public void onClick(View view, int position) {
                         AlarmModel alarmModel = alarmModelList.get(position);
                         String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
+                        String id = String.valueOf(alarmModel.getId());
 
-                        Toast.makeText(ListActivity.this, "Klik di " + waktu, Toast.LENGTH_LONG).show();
+                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
                     }
 
                     @Override

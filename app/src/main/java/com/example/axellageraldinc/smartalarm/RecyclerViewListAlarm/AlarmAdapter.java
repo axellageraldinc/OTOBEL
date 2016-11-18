@@ -1,5 +1,6 @@
 package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
@@ -20,8 +22,10 @@ import java.util.List;
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
 
     private List<AlarmModel> alarmModelList = new ArrayList<>();
+    private DBHelper dbHelper;
 
-    public AlarmAdapter(List<AlarmModel> alarmModelList) {
+    public AlarmAdapter(Context context, List<AlarmModel> alarmModelList) {
+        dbHelper = new DBHelper(context);
         this.alarmModelList = alarmModelList;
     }
     @Override
@@ -35,10 +39,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public void onBindViewHolder(AlarmAdapter.AlarmViewHolder holder, int position) {
         String output = String.format("%02d : %02d", Integer.parseInt(alarmModelList.get(position).getHour()), Integer.parseInt(alarmModelList.get(position).getMinute()));
         holder.txtShowWaktu.setText(output);
-        /*holder.txtHour.setText(alarmModelList.get(position).getHour());
-        holder.txtMinute.setText(alarmModelList.get(position).getMinute());*/
-//        holder.txtId.setText(alarmModelList.get(position).getId());
         holder.txtSetDay.setText(alarmModelList.get(position).getSet_day());
+        holder.btnSwitch.setChecked(dbHelper.getAlarmStatus(alarmModelList.get(position).getHour()
+                , alarmModelList.get(position).getMinute()));
     }
 
     @Override
@@ -53,9 +56,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         public AlarmViewHolder(View view) {
             super(view);
-/*
-            txtHour = (TextView) view.findViewById(R.id.txtHour);
-            txtMinute = (TextView) view.findViewById(R.id.txtMinute);*/
             txtId = (TextView) view.findViewById(R.id.txtId);
             txtSetDay = (TextView) view.findViewById(R.id.txtSetDay);
             btnSwitch = (Switch) view.findViewById(R.id.btnSwitch);

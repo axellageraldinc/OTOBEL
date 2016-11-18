@@ -8,6 +8,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
@@ -28,6 +30,7 @@ public class ListActivity extends AppCompatActivity {
     private DBHelper dbHelper;
     private List<AlarmModel> alarmModelList = new ArrayList<>();
     private FloatingActionButton btnAddNew;
+    private Switch btnSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,15 @@ public class ListActivity extends AppCompatActivity {
 
         initRecyclerView();
 
+//        btnSwitch = (Switch) findViewById(R.id.btnSwitch);
+//        btnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if (b) {
+//
+//                }
+//            }
+//        });
         dbHelper = new DBHelper(ListActivity.this);
         alarmModelList = dbHelper.getAllAlarm();
         alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
@@ -72,7 +84,7 @@ public class ListActivity extends AppCompatActivity {
                         String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
                         String id = String.valueOf(alarmModel.getId());
 
-                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
                     }
 
                     @Override

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/BackgroundLayout">
 
     <TimePicker
         android:id="@+id/timePicker"
@@ -34,10 +35,10 @@
             android:layout_weight="1" />
 
         <Button
-            android:text="RINGTONE"
+            android:text="DELETE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btnRingtone"
+            android:id="@+id/btnDelete"
             android:layout_weight="1" />
 
         <Button

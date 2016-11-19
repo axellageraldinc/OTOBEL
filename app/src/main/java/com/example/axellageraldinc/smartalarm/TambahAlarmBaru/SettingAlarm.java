@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,24 +28,28 @@ import java.util.Calendar;
 public class SettingAlarm extends AppCompatActivity
 {
     TimePicker alarmTimePicker;
-    PendingIntent pendingIntent;
-    AlarmManager alarmManager;
+    public static PendingIntent pendingIntent;
+    public static AlarmManager alarmManager;
     Intent intent1;
     public String chosenRingtone;
     String hour, minute;
     DBHelper dbHelper;
     AlertDialog d;
+    public static long time;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm);
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("ADD ALARM");
+
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         dbHelper = new DBHelper(SettingAlarm.this);
-
 
         SetRingtone();
 
@@ -57,7 +62,7 @@ public class SettingAlarm extends AppCompatActivity
                 minute = alarmTimePicker.getCurrentMinute().toString();
                 //Insert nilai-nilai variabel ke database
                 SetAlarmOn();
-                dbHelper.createAlarm(new AlarmModel(hour, minute, "", "", 1, 0));
+                dbHelper.createAlarm(new AlarmModel(hour, minute, chosenRingtone, "", 1, 0));
                 Intent i = new Intent(SettingAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
@@ -138,7 +143,6 @@ public class SettingAlarm extends AppCompatActivity
 
     public void SetAlarmOn()
     {
-        long time;
 
         Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
         Calendar calendar = Calendar.getInstance();
@@ -152,51 +156,18 @@ public class SettingAlarm extends AppCompatActivity
             b.putString("ringtone_alarm", null);
         }
         intent1.putExtras(b);
-        pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
+        pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
         time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-        if(System.currentTimeMillis()>time)
+/*        if(System.currentTimeMillis()>time)
         {
             if (calendar.AM_PM == 0)
                 time = time + (1000*60*60*12);
             else
                 time = time + (1000*60*60*24);
-        }
+        }*/
         alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
     }
-
-    /*public void OnToggleClicked(View view)
-    {
-        long time;
-        if (((ToggleButton) view).isChecked())
-        {
-            Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-            calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-            Log.d("Chosen ringtone", chosenRingtone);
-            intent1 = new Intent(this, AlarmReceiver.class);
-            Bundle b = new Bundle();
-            b.putString("ringtone_alarm", chosenRingtone);
-            intent1.putExtras(b);
-            pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
-
-            time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-            if(System.currentTimeMillis()>time)
-            {
-                if (calendar.AM_PM == 0)
-                    time = time + (1000*60*60*12);
-                else
-                    time = time + (1000*60*60*24);
-            }
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
-        }
-        else
-        {
-            alarmManager.cancel(pendingIntent);
-            Toast.makeText(SettingAlarm.this, "ALARM OFF", Toast.LENGTH_SHORT).show();
-        }
-    }*/
 
     public void SetRingtone()
     {
@@ -223,14 +194,10 @@ public class SettingAlarm extends AppCompatActivity
             if (uri != null)
             {
                 chosenRingtone = uri.toString();
-                System.out.print(chosenRingtone);
-                Log.d("Chosen Ringtone", chosenRingtone);
-                //intent.putExtra("ringtone_alarm", chosenRingtone);
             }
             else
             {
                 chosenRingtone = null;
-               // Log.d("Chosen Ringtone", chosenRingtone);
             }
         }
     }

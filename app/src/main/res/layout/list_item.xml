@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:id="@+id/container"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:attr/selectableItemBackground">
+    android:background="?android:attr/selectableItemBackground"
+    android:elevation="5dp"
+    tools:background="@color/BackgroundLayout"
+    android:layout_height="52dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -54,14 +57,15 @@
                 android:id="@+id/txtShowWaktu"
                 android:textStyle="normal|bold"
                 android:textSize="20sp"
-                android:textColor="@android:color/background_dark"
+                android:textColor="@color/TextColor"
                 android:layout_marginLeft="10dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtId"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:textColor="@color/TextColor" />
 
             <TextView
                 android:text="MASUK SEKOLAH"
@@ -70,7 +74,7 @@
                 android:id="@+id/txtJudulAlarm"
                 android:gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:textColor="@android:color/background_dark"
+                android:textColor="@color/TextColor"
                 android:fontFamily="monospace" />
 
         </LinearLayout>
@@ -82,7 +86,7 @@
             android:id="@+id/txtSetDay"
             android:layout_weight="1"
             android:layout_marginLeft="10dp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/TextColor"
             android:textSize="15sp" />
     </LinearLayout>
 

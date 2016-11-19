@@ -33,12 +33,12 @@ public class MenuSetting extends AppCompatActivity {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setBackgroundDrawable(new ColorDrawable(Color.GRAY));
+        actionBar.setTitle("Setting");
 
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         listMenu = (ListView) findViewById(R.id.listMenuSetting);
-        String[] values = new String[] { "Set Volume",
-                            "Vibrate"};
+        String[] values = new String[] { "Set Volume"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuSetting.this, R.layout.activity_menu_setting_adapter, R.id.txtJudul, values);
         listMenu.setAdapter(adapter);
@@ -53,10 +53,6 @@ public class MenuSetting extends AppCompatActivity {
                 {
                     //Show builder set volume
                     ShowSetVolume();
-                }
-                else if (position==1)
-                {
-                    //Show builder set vibrate
                 }
 
             }

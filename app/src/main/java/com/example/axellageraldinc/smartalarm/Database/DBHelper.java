@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.axellageraldinc.smartalarm.ModifyAlarm;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,12 +64,28 @@ public class DBHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
+    // Update Alarm
+    public boolean updateAlarm(String hour, String minute) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(HOUR_ALARM, hour);
+        values.put(MINUTE_ALARM, minute);
+        /*values.put(RINGTONE_ALARM, alarmModel.getRingtone());
+        values.put(SETDAY_ALARM, alarmModel.getSet_day());
+        values.put(STATUS_ALARM, alarmModel.getStatus());
+        values.put(VIBRATE_ALARM, alarmModel.getVibrate());*/
+
+        long result = db.update(TABLE_ALARM, values, "hour= " + ModifyAlarm.hourModify + " AND minute= " + ModifyAlarm.menitModify, null);
+        db.close();
+        return result != -1;
+    }
+
     // Get 1 Alarm
-    public AlarmModel getAlarmModel(int id) {
+    public AlarmModel getAlarmModel(String hour, String minute) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_ALARM, new String[]{HOUR_ALARM,MINUTE_ALARM,RINGTONE_ALARM,SETDAY_ALARM,STATUS_ALARM,VIBRATE_ALARM},
-                "hour=? AND minute=?", new String[]{String.valueOf(id)}, null, null, null);
+        Cursor cursor = db.query(TABLE_ALARM, null,
+                "hour=? AND minute=?", new String[]{hour, minute}, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
@@ -137,9 +155,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Delete 1 alarm from database
-    public void deleteAlarm(AlarmModel alarmModel) {
+    public void deleteAlarm(String hour, String minute) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_ALARM, ID_ALARM + "=?", new String[]{String.valueOf(alarmModel.getId())});
+        db.delete(TABLE_ALARM, HOUR_ALARM + "=? AND " + MINUTE_ALARM + "=?", new String[]{hour, minute});
         db.close();
     }
 

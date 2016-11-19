@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -29,20 +30,23 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
-//    private DummyDataAdapter adapter;
-//    private Switch btnSwitch;
     private RecyclerView recView;
     private LinearLayoutManager layoutManager;
     private AlarmAdapter alarmAdapter;
     private DBHelper dbHelper;
     private List<AlarmModel> alarmModelList = new ArrayList<>();
     private FloatingActionButton btnAddNew;
-    private Switch btnSwitch;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("LIST ALARM");
+        // set the icon
+        //actionBar.setIcon(R.drawable.ico_actionbar);
 
         recView = (RecyclerView) findViewById(R.id.recView);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -52,23 +56,11 @@ public class ListActivity extends AppCompatActivity {
 
         initRecyclerView();
 
-//        btnSwitch = (Switch) findViewById(R.id.btnSwitch);
-//        btnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-//                if (b) {
-//
-//                }
-//            }
-//        });
         dbHelper = new DBHelper(ListActivity.this);
         alarmModelList = dbHelper.getAllAlarm();
         alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
         recView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();
-
-//        adapter = new DummyDataAdapter(DummyData.getListData(), this);
-//        recView.setAdapter(adapter);
 
         btnAddNew = (FloatingActionButton) findViewById(R.id.btnAddNew);
         btnAddNew.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +103,18 @@ public class ListActivity extends AppCompatActivity {
                     public void onClick(View view, int position) {
                         AlarmModel alarmModel = alarmModelList.get(position);
                         String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
-                        String id = String.valueOf(alarmModel.getId());
+                        String jam = alarmModel.getHour();
+                        String menit = alarmModel.getMinute();
+                        AlarmModel a = dbHelper.getAlarmModel(jam, menit);
+                        jam = a.getHour();
+                        menit = a.getMinute();
+
+                        Intent ii = new Intent(ListActivity.this, ModifyAlarm.class);
+                        ii.putExtra("jam", jam);
+                        ii.putExtra("menit", menit);
+                        startActivity(ii);
+
+                        /*String id = String.valueOf(alarmModel.getId());*/
 
 //                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
                     }

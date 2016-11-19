@@ -2,7 +2,10 @@ package com.example.axellageraldinc.smartalarm.Menu;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,12 +22,17 @@ public class MenuSetting extends AppCompatActivity {
 
     ListView listMenu;
     AudioManager myAudioManager;
-    public static int volume = 0;
+    public static int volume = 10;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_setting);
+
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setBackgroundDrawable(new ColorDrawable(Color.GRAY));
 
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
@@ -70,7 +78,8 @@ public class MenuSetting extends AppCompatActivity {
         int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         seek.setMax(maxVolume);
-        seek.setProgress(curVolume);
+        //Set default volume
+        seek.setProgress(10);
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override

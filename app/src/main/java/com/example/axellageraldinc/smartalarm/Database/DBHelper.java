@@ -67,7 +67,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_ALARM, new String[]{HOUR_ALARM,MINUTE_ALARM,RINGTONE_ALARM,SETDAY_ALARM,STATUS_ALARM,VIBRATE_ALARM},
-                ID_ALARM + "=?", new String[]{String.valueOf(id)}, null, null, null);
+                "hour=? AND minute=?", new String[]{String.valueOf(id)}, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }

@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver">
+        <receiver android:name=".Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -32,14 +32,18 @@
 
         <!-- Will not be called unless the application explicitly enables it -->
         <receiver
-            android:name=".DeviceBootReceiver"
+            android:name=".Receiver.DeviceBootReceiver"
             android:enabled="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".Menu.MenuSetting" />
+        <!-- Parent activity name untuk point parent activity nya waktu di klik tombol back navigation -->
+        <activity
+            android:name=".Menu.MenuSetting"
+            android:parentActivityName=".RecyclerViewListAlarm.ListActivity"></activity>
+        <activity android:name=".ModifyAlarm"></activity>
     </application>
 
 </manifest>

@@ -3,10 +3,8 @@ package com.example.axellageraldinc.smartalarm.TambahAlarmBaru;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,13 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
-import com.example.axellageraldinc.smartalarm.AlarmReceiver;
+import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
@@ -37,6 +33,7 @@ public class SettingAlarm extends AppCompatActivity
     public String chosenRingtone;
     String hour, minute;
     DBHelper dbHelper;
+    AlertDialog d;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -59,14 +56,85 @@ public class SettingAlarm extends AppCompatActivity
                 hour = alarmTimePicker.getCurrentHour().toString();
                 minute = alarmTimePicker.getCurrentMinute().toString();
                 //Insert nilai-nilai variabel ke database
-                dbHelper.createAlarm(new AlarmModel(hour, minute, "", "", 1, 0));
                 SetAlarmOn();
+                dbHelper.createAlarm(new AlarmModel(hour, minute, "", "", 1, 0));
                 Intent i = new Intent(SettingAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
         });
 
+        Button btnSetDay = (Button) findViewById(R.id.btnSetDay);
+        btnSetDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                final CharSequence[] items = {" Don't repeat "," Everyday "," Customize "};
+
+                final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
+                b.setTitle("Repeat Alarm");
+                b.setCancelable(true);
+                b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+
+                        switch (item)
+                        {
+                            case 0:
+                                //Kalau klik don't repeat
+
+                                break;
+                            case 1:
+                                //Kalau klik everyday
+                                break;
+                            case 2:
+                                //Klik kalau customize
+                                CustomRepeat();
+                                break;
+                        }
+                    }
+                });
+                d = b.create();
+                d.show();
+            }
+        });
+
     }
+
+    public void CustomRepeat() {
+        final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
+
+        final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
+        b.setTitle("Customize Day");
+        b.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+                if (isChecked) {
+                    //Kalau user milih hari itu, trus gimana (insert ke database)
+                } else {
+                    //Kalau item udah ada, remove (mbuh maksute piye)
+                }
+            }
+        });
+
+        // Button OK
+        b.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        //Button Cancel
+        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+
+        });
+        d = b.create();
+        d.show();
+    }
+
 
     public void SetAlarmOn()
     {
@@ -76,10 +144,13 @@ public class SettingAlarm extends AppCompatActivity
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-        Log.d("Chosen ringtone", chosenRingtone);
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
-        b.putString("ringtone_alarm", chosenRingtone);
+        if (chosenRingtone != null){
+            b.putString("ringtone_alarm", chosenRingtone);
+        } else {
+            b.putString("ringtone_alarm", null);
+        }
         intent1.putExtras(b);
         pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, 0);
 
@@ -91,7 +162,7 @@ public class SettingAlarm extends AppCompatActivity
             else
                 time = time + (1000*60*60*24);
         }
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 10000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
     }
 
     /*public void OnToggleClicked(View view)

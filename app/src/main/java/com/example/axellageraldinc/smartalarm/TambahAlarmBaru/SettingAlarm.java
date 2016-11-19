@@ -43,6 +43,7 @@ public class SettingAlarm extends AppCompatActivity
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        dbHelper = new DBHelper(SettingAlarm.this);
 
 
         SetRingtone();
@@ -51,7 +52,6 @@ public class SettingAlarm extends AppCompatActivity
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dbHelper = new DBHelper(SettingAlarm.this);
                 //Ambil nilai hour dan minute dari timePicker masuk ke variabel hour dan minute
                 hour = alarmTimePicker.getCurrentHour().toString();
                 minute = alarmTimePicker.getCurrentMinute().toString();
@@ -162,7 +162,7 @@ public class SettingAlarm extends AppCompatActivity
             else
                 time = time + (1000*60*60*24);
         }
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
     }
 
     /*public void OnToggleClicked(View view)

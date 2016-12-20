@@ -42,8 +42,9 @@
         <!-- Parent activity name untuk point parent activity nya waktu di klik tombol back navigation -->
         <activity
             android:name=".Menu.MenuSetting"
-            android:parentActivityName=".RecyclerViewListAlarm.ListActivity"></activity>
-        <activity android:name=".ModifyAlarm"></activity>
+            android:parentActivityName=".RecyclerViewListAlarm.ListActivity" />
+        <activity android:name=".ModifyAlarm" />
+        <activity android:name=".AlarmOption"></activity>
     </application>
 
 </manifest>

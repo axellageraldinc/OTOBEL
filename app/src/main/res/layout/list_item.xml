@@ -4,10 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:id="@+id/container"
-    android:clickable="true"
-    android:focusable="true"
     android:background="?android:attr/selectableItemBackground"
-    android:elevation="5dp"
     tools:background="@color/BackgroundLayout"
     android:layout_height="52dp">
 
@@ -56,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/txtShowWaktu"
                 android:textStyle="normal|bold"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 android:textColor="@color/TextColor"
                 android:layout_marginLeft="10dp" />
 
@@ -68,7 +65,6 @@
                 android:textColor="@color/TextColor" />
 
             <TextView
-                android:text="MASUK SEKOLAH"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/txtJudulAlarm"
@@ -80,7 +76,6 @@
         </LinearLayout>
 
         <TextView
-            android:text="EVERYDAY"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/txtSetDay"
@@ -97,13 +92,6 @@
         android:layout_alignParentRight="true"
         android:layout_weight="1">
 
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnSwitch"
-            android:layout_weight="1"
-            android:layout_marginTop="15dp"
-            android:switchTextAppearance="@style/TextAppearance.AppCompat" />
     </LinearLayout>
 
 </RelativeLayout>

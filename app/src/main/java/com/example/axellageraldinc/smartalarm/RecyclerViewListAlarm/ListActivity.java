@@ -13,11 +13,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.AlarmOption;
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
@@ -32,11 +35,12 @@ public class ListActivity extends AppCompatActivity {
 
     private RecyclerView recView;
     private LinearLayoutManager layoutManager;
-    private AlarmAdapter alarmAdapter;
+    private ListAdapter alarmAdapter;
     private DBHelper dbHelper;
     private List<AlarmModel> alarmModelList = new ArrayList<>();
     private FloatingActionButton btnAddNew;
     ActionBar actionBar;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +52,38 @@ public class ListActivity extends AppCompatActivity {
         // set the icon
         //actionBar.setIcon(R.drawable.ico_actionbar);
 
-        recView = (RecyclerView) findViewById(R.id.recView);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        recView.setItemAnimator(new DefaultItemAnimator());
-        recView.setLayoutManager(mLayoutManager);
-
-        initRecyclerView();
-
         dbHelper = new DBHelper(ListActivity.this);
         alarmModelList = dbHelper.getAllAlarm();
-        alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
-        recView.setAdapter(alarmAdapter);
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setEmptyView(findViewById(R.id.empty));
+        alarmAdapter = new ListAdapter(ListActivity.this, alarmModelList);
+        listView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    AlarmModel alarmModel = alarmModelList.get(position);
+                    String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
+                    String jam = alarmModel.getHour();
+                    String menit = alarmModel.getMinute();
+                    AlarmModel a = dbHelper.getAlarmModel(jam, menit);
+                    jam = a.getHour();
+                    menit = a.getMinute();
+
+                    Intent ii = new Intent(ListActivity.this, AlarmOption.class);
+                    ii.putExtra("jam", jam);
+                    ii.putExtra("menit", menit);
+                    startActivity(ii);
+
+                    String id = String.valueOf(alarmModel.getId());
+
+                    Toast.makeText(ListActivity.this, "Klik di " + waktu, Toast.LENGTH_LONG).show();
+                }
+            });
+        /*alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
+        recView.setAdapter(alarmAdapter);
+        alarmAdapter.notifyDataSetChanged();*/
 
         btnAddNew = (FloatingActionButton) findViewById(R.id.btnAddNew);
         btnAddNew.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +118,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
-    // Todo : off in alarm pake switch
+/*    // Todo : off in alarm pake switch
     private void initRecyclerView(){
         recView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getApplicationContext(), recView, new RecyclerItemClickListener.ClickListener() {
@@ -109,12 +132,12 @@ public class ListActivity extends AppCompatActivity {
                         jam = a.getHour();
                         menit = a.getMinute();
 
-                        Intent ii = new Intent(ListActivity.this, ModifyAlarm.class);
+                        Intent ii = new Intent(ListActivity.this, AlarmOption.class);
                         ii.putExtra("jam", jam);
                         ii.putExtra("menit", menit);
                         startActivity(ii);
 
-                        /*String id = String.valueOf(alarmModel.getId());*/
+                        String id = String.valueOf(alarmModel.getId());
 
 //                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
                     }
@@ -123,11 +146,11 @@ public class ListActivity extends AppCompatActivity {
                     public void onLongClick(View view, int position) {
 
                     }
-/*
+
                     @Override public void onItemClick(View view, int position) {
                         // TODO Handle item click
-                    }*/
+                    }
                 })
         );
-    }
+    }*/
 }

@@ -10,7 +10,7 @@
         android:id="@+id/timePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:headerBackground="?attr/actionModeSplitBackground"
+        android:headerBackground="?attr/colorPrimary"
         android:numbersSelectorColor="@android:color/holo_blue_dark"
         style="@android:style/Widget.Material.Light.TimePicker"
         android:layout_gravity="center" />

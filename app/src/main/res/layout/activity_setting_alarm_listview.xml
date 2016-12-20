@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BackgroundLayout"
+    android:backgroundTint="@color/BackgroundLayout">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:padding="10dp">
+
+        <TimePicker
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/timePicker"
+            android:timePickerMode="spinner" />
+
+        <Button
+            android:text="Repeat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRepeat"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
+
+        <Button
+            android:text="Ringtone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnRingtone"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
+
+        <Button
+            android:text="Alarm Off Method"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnOffMethod"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
+
+        <Button
+            android:text="Cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnCancel"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
+
+        <Button
+            android:text="OK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnSave"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
+    </LinearLayout>
+
+</LinearLayout>

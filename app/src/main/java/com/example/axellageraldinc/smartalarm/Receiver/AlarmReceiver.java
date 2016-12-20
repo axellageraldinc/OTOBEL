@@ -39,7 +39,16 @@ public class AlarmReceiver extends BroadcastReceiver
 
         /*defaultRinger = myAudioManager.getRingerMode();*/
         /*myAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);*/
-        myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, MenuSetting.volume, AudioManager.FLAG_PLAY_SOUND);
+        int volume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        if (volume==0)
+        {
+            int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume, AudioManager.FLAG_PLAY_SOUND);
+        }
+        else
+        {
+            myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, MenuSetting.volume, AudioManager.FLAG_PLAY_SOUND);
+        }
         String pasrseUri = intent.getStringExtra("ringtone_alarm");
 
         if (pasrseUri != null) {
@@ -51,7 +60,7 @@ public class AlarmReceiver extends BroadcastReceiver
         {
             //Gak ada lagu yang dipilih
             mp = MediaPlayer.create(context, R.raw.iphone7__2016);
-            CountDownTimer c = new CountDownTimer(10000, 1000) {
+            CountDownTimer c = new CountDownTimer(MenuSetting.durasifix, 1000) {
                 @Override
                 public void onTick(long l) {
                     mp.start();
@@ -70,7 +79,7 @@ public class AlarmReceiver extends BroadcastReceiver
         else {
             mp = MediaPlayer.create(context, uriuri);
             mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            CountDownTimer c = new CountDownTimer(10000, 1000) {
+            CountDownTimer c = new CountDownTimer(MenuSetting.durasifix, 1000) {
                 @Override
                 public void onTick(long l) {
                     mp.start();

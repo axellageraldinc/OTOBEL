@@ -2,6 +2,7 @@ package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 
 import android.app.AlarmManager;
 import android.content.Context;
+import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ListAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +57,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         hour = alarmModelList.get(position).getHour();
         minute = alarmModelList.get(position).getMinute();
         holder.txtSetDay.setText(alarmModelList.get(position).getSet_day());
-        holder.btnSwitch.setChecked(dbHelper.getAlarmStatus(hour, minute));
     }
 
     @Override
@@ -78,9 +79,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             this.context = context;
             txtId = (TextView) view.findViewById(R.id.txtId);
             txtSetDay = (TextView) view.findViewById(R.id.txtSetDay);
-            btnSwitch = (Switch) view.findViewById(R.id.btnSwitch);
             txtShowWaktu = (TextView) view.findViewById(R.id.txtShowWaktu);
-            btnSwitch.setOnCheckedChangeListener(this);
             dbHelper = new DBHelper(context);
         }
 

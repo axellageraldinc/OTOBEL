@@ -19,6 +19,7 @@ import java.util.List;
 public class DBHelper extends SQLiteOpenHelper {
 
     AlarmModel alarmModel;
+    SQLiteDatabase db;
 
     public static final String DATABASE_NAME = "Alarm.db";
     public static final String TABLE_ALARM = "alarm";

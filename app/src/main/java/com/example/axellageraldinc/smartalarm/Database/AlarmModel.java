@@ -7,8 +7,8 @@ package com.example.axellageraldinc.smartalarm.Database;
 public class AlarmModel {
 
     private int id;
-    private String hour;
-    private String minute;
+    private int hour;
+    private int minute;
     private String ringtone;
     private String set_day;
     private int status;
@@ -20,8 +20,8 @@ public class AlarmModel {
 
     public AlarmModel() {
         this.id = 0;
-        this.hour = "";
-        this.minute = "";
+        this.hour = 0;
+        this.minute = 0;
         this.ringtone = "";
         this.set_day = "";
         this.status = 0;
@@ -31,7 +31,7 @@ public class AlarmModel {
         this.order_alarm=0;
     }
 
-    public AlarmModel(String hour, String minute, String ringtone, String set_day, int status, int alarm_duration,
+    public AlarmModel(int hour, int minute, String ringtone, String set_day, int status, int alarm_duration,
                       int ID2, String judul_bel, int order_alarm) {
         this.hour = hour;
         this.minute = minute;
@@ -90,19 +90,19 @@ public class AlarmModel {
         this.id = id;
     }
 
-    public String getHour() {
+    public int getHour() {
         return hour;
     }
 
-    public void setHour(String hour) {
+    public void setHour(int hour) {
         this.hour = hour;
     }
 
-    public String getMinute() {
+    public int getMinute() {
         return minute;
     }
 
-    public void setMinute(String minute) {
+    public void setMinute(int minute) {
         this.minute = minute;
     }
 

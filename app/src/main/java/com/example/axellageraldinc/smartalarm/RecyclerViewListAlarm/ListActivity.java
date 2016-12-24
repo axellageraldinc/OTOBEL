@@ -37,7 +37,7 @@ public class ListActivity extends Fragment {
     ActionBar actionBar;
     private ListView listView;
     private TextView txtJudulAlarm;
-    private String jam, menit;
+    private int jam, menit;
     private int id;
 
     public ListActivity(){

@@ -3,11 +3,17 @@ package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,8 +38,13 @@ public class ListAdapter extends BaseAdapter {
     private AlarmModel alarmModel;
     private DBHelper dbHelper;
     private Context context;
-    public static String hour, minute;
+    public static int hour, minute;
     SettingAlarm settingAlarm;
+    MediaPlayer mp;
+    AudioManager am;
+    int DefaultVolume;
+    Ringtone r;
+    String ring;
 
     public ListAdapter(Context context, List<AlarmModel> alarmModelList) {
         dbHelper = new DBHelper(context);
@@ -71,17 +82,37 @@ public class ListAdapter extends BaseAdapter {
             TextView txtID = (TextView)MyView.findViewById(R.id.txtId);
             TextView txtID2 = (TextView) MyView.findViewById(R.id.txtID2);
             Switch switchAlarmStatus = (Switch) MyView.findViewById(R.id.SwitchAlarmStatus);
+            Button btnPlay = (Button) MyView.findViewById(R.id.btnPlay);
+
             final String id = String.valueOf(alarmModelList.get(position).getId());
             final String id2 = String.valueOf(alarmModelList.get(position).getID2());
+            final String ringtone = alarmModelList.get(position).getRingtone();
+            final Uri uri = Uri.parse(ringtone);
+            r = RingtoneManager.getRingtone(context, uri);
             txtID.setText(id);
             txtID2.setText(id2);
-            String output = String.format("%02d : %02d", Integer.parseInt(alarmModelList.get(position).getHour()), Integer.parseInt(alarmModelList.get(position).getMinute()));
+            String output = String.format("%02d : %02d", alarmModelList.get(position).getHour(), alarmModelList.get(position).getMinute());
             txtShowWaktu.setText(output);
             hour = alarmModelList.get(position).getHour();
             minute = alarmModelList.get(position).getMinute();
             txtSetDay.setText(alarmModelList.get(position).getSet_day());
             String judul = alarmModelList.get(position).getJudul_bel();
             txtJudulAlarm.setText(judul);
+
+            int VolumeDB = dbHelper.GetVolume();
+            am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+            btnPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "Ringtone : " + ringtone, Toast.LENGTH_SHORT).show();
+                    Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
+                    mp = MediaPlayer.create(context, uri);
+                    mp.start();
+                    am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
+                }
+            });
 
             int status = alarmModelList.get(position).getStatus();
             if (status==1){
@@ -115,6 +146,14 @@ public class ListAdapter extends BaseAdapter {
 
         }
         return MyView;
+    }
+
+    public void Stop(){
+        if (mp != null) {
+            mp.stop();
+            mp.release();
+            mp = null;
+        }
     }
 
 }

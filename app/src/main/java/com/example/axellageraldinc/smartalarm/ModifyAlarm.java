@@ -53,9 +53,9 @@ public class ModifyAlarm extends AppCompatActivity {
     ListView listViewSet;
     TextView txtRepeat;
     public int hourNow, minuteNow, jumlah_waktu;
-    public static int durasifix=10000, duration, selected, ID2, ID, status;
+    public static int durasifix=10000, duration, selected, ID2, ID, status, hourModify, menitModify;
     public static String durasi, title;
-    public static String hourModify, menitModify, repeat, JudulBel, ringtone;
+    public static String repeat, JudulBel, ringtone;
     private Button btnSave, btnCancel, btnDelete;
     ModelSettingAlarm fullObject, sr;
     MyCustomBaseAdapter adapter;
@@ -76,8 +76,8 @@ public class ModifyAlarm extends AppCompatActivity {
 
         Intent i = getIntent();
         ID = i.getIntExtra("ID", 0);
-        hourModify = i.getStringExtra("jam");
-        menitModify = i.getStringExtra("menit");
+        hourModify = i.getIntExtra("jam", 0);
+        menitModify = i.getIntExtra("menit", 0);
         repeat = i.getStringExtra("repeat");
         JudulBel = i.getStringExtra("judul_bel");
         ringtone = i.getStringExtra("ringtone");
@@ -86,8 +86,8 @@ public class ModifyAlarm extends AppCompatActivity {
         status = i.getIntExtra("status", 0);
 
         //Set di timepicker tanggal sesuai yang diklik
-        alarmTimePicker.setCurrentHour(Integer.parseInt(hourModify));
-        alarmTimePicker.setCurrentMinute(Integer.parseInt(menitModify));
+        alarmTimePicker.setCurrentHour(hourModify);
+        alarmTimePicker.setCurrentMinute(menitModify);
 
         btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -434,8 +434,8 @@ public class ModifyAlarm extends AppCompatActivity {
         d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                String hourEdited = alarmTimePicker.getCurrentHour().toString();
-                String minuteEdited = alarmTimePicker.getCurrentMinute().toString();
+                int hourEdited = alarmTimePicker.getCurrentHour();
+                int minuteEdited = alarmTimePicker.getCurrentMinute();
                 SetAlarmOn();
                 int uye = (int) time;
                 dbHelper.updateAlarm(new AlarmModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,

@@ -125,7 +125,7 @@ public class SettingAlarm extends AppCompatActivity
                 }*/
                 SetAlarmOn();
                 int uye = (int) time;
-                dbHelper.createAlarm(new AlarmModel(String.valueOf(hourNow), String.valueOf(minuteNow), chosenRingtone, repeat, 1,
+                dbHelper.createAlarm(new AlarmModel(hourNow, minuteNow, chosenRingtone, repeat, 1,
                         duration*1000, id2, JudulBel, uye));
                 Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
@@ -417,7 +417,8 @@ public class SettingAlarm extends AppCompatActivity
             }
             else
             {
-                chosenRingtone = null;
+                uri = Uri.parse("android.resource://" + getPackageName() + "/raw/iphone7__2016");
+                chosenRingtone = uri.toString();
             }
         }
     }

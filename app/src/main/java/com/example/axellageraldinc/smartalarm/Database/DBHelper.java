@@ -45,7 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Creating database
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE " + TABLE_ALARM + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, hour TEXT, minute TEXT, " +
+        db.execSQL("CREATE TABLE " + TABLE_ALARM + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, hour INTEGER, minute INTEGER, " +
                 "ringtone TEXT, set_day TEXT, status INTEGER, alarm_duration INTEGER, " +
                 "ID2 INTEGER, judul_bel TEXT, order_alarm INTEGER)");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_2 + " (volume_alarm INTEGER)");
@@ -171,8 +171,8 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         alarmModel = new AlarmModel();
         alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getString(1));
-        alarmModel.setMinute(cursor.getString(2));
+        alarmModel.setHour(cursor.getInt(1));
+        alarmModel.setMinute(cursor.getInt(2));
         alarmModel.setRingtone(cursor.getString(3));
         alarmModel.setSet_day(cursor.getString(4));
         alarmModel.setStatus(cursor.getInt(5));
@@ -186,7 +186,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // Get All alarm for alarm adapter
     public List<AlarmModel> getAllAlarm() {
         List<AlarmModel> alarmModelList = new ArrayList<>();
-        String selectQuery = "SELECT * FROM " + TABLE_ALARM + " ORDER BY " + order_alarm;
+        String selectQuery = "SELECT * FROM " + TABLE_ALARM + " ORDER BY " + HOUR_ALARM + ", " + MINUTE_ALARM;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -194,8 +194,8 @@ public class DBHelper extends SQLiteOpenHelper {
             do {
                 alarmModel = new AlarmModel();
                 alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-                alarmModel.setHour(cursor.getString(1));
-                alarmModel.setMinute(cursor.getString(2));
+                alarmModel.setHour(cursor.getInt(1));
+                alarmModel.setMinute(cursor.getInt(2));
                 alarmModel.setRingtone(cursor.getString(3));
                 alarmModel.setSet_day(cursor.getString(4));
                 alarmModel.setStatus(cursor.getInt(5));
@@ -237,8 +237,8 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         alarmModel = new AlarmModel();
         alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getString(1));
-        alarmModel.setMinute(cursor.getString(2));
+        alarmModel.setHour(cursor.getInt(1));
+        alarmModel.setMinute(cursor.getInt(2));
         alarmModel.setRingtone(cursor.getString(3));
         alarmModel.setRingtone(cursor.getString(4));
         alarmModel.setStatus(cursor.getInt(5));
@@ -268,8 +268,8 @@ public class DBHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
         alarmModel = new AlarmModel();
         alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getString(1));
-        alarmModel.setMinute(cursor.getString(2));
+        alarmModel.setHour(cursor.getInt(1));
+        alarmModel.setMinute(cursor.getInt(2));
         alarmModel.setRingtone(cursor.getString(3));
         alarmModel.setRingtone(cursor.getString(4));
         alarmModel.setStatus(cursor.getInt(5));

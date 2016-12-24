@@ -1,3 +1,4 @@
+/*
 package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 
 import android.app.AlarmManager;
@@ -23,9 +24,11 @@ import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * Created by almanalfaruq on 16/11/2016.
- */
+ *//*
+
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
 
@@ -88,19 +91,29 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         }
 
-        // Todo : matiin sama hidupin alarm
+        */
+/*//*
         @Override
         public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
             if (!b) {
                 dbHelper.updateAlarmStatus(0, hour, minute);
-                /*SettingAlarm.alarmManager.cancel(SettingAlarm.pendingIntent);
-                btnSwitch.setChecked(false);*/
+                *//*
+*/
+/*SettingAlarm.alarmManager.cancel(SettingAlarm.pendingIntent);
+                btnSwitch.setChecked(false);*//*
+*/
+/*
             } else {
                 dbHelper.updateAlarmStatus(1, hour, minute);
-                /*SettingAlarm.alarmManager.setRepeating(AlarmManager.RTC, SettingAlarm.time, 0, SettingAlarm.pendingIntent);
-                btnSwitch.setChecked(true);*/
+                *//*
+*/
+/*SettingAlarm.alarmManager.setRepeating(AlarmManager.RTC, SettingAlarm.time, 0, SettingAlarm.pendingIntent);
+                btnSwitch.setChecked(true);*//*
+*/
+/*
             }
-        }
+        }*//*
+
     }
 
     @Override
@@ -108,3 +121,4 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         super.onAttachedToRecyclerView(recyclerView);
     }
 }
+*/

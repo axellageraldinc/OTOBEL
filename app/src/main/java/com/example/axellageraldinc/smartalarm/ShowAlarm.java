@@ -41,6 +41,7 @@ public class ShowAlarm extends AppCompatActivity {
         window.addFlags(LayoutParams.FLAG_DISMISS_KEYGUARD);
         window.addFlags(LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         window.addFlags(LayoutParams.FLAG_TURN_SCREEN_ON);
+        this.setFinishOnTouchOutside(false);
 
 /*        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN |
                         WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |

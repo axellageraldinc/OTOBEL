@@ -5,42 +5,22 @@
     android:background="@color/BackgroundLayout"
     android:backgroundTint="@color/BackgroundLayout">
 
+    <TimePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"
+        android:timePickerMode="spinner" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        android:padding="10dp">
+        android:clickable="false">
 
-        <TimePicker
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/timePicker"
-            android:timePickerMode="spinner" />
-
-        <Button
-            android:text="Repeat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnRepeat"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
-
-        <Button
-            android:text="Ringtone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnRingtone"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
-
-        <Button
-            android:text="Alarm Off Method"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnOffMethod"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
+            android:id="@+id/listView"
+            android:layout_height="300dp" />
     </LinearLayout>
 
     <LinearLayout

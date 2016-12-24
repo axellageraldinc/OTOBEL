@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".RecyclerViewListAlarm.ListActivity">
+        <activity android:name=".HomeScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,9 +42,11 @@
         <!-- Parent activity name untuk point parent activity nya waktu di klik tombol back navigation -->
         <activity
             android:name=".Menu.MenuSetting"
-            android:parentActivityName=".RecyclerViewListAlarm.ListActivity" />
+            android:parentActivityName=".HomeScreen" />
         <activity android:name=".ModifyAlarm" />
-        <activity android:name=".AlarmOption"></activity>
+        <activity android:name=".TambahAlarmBaru.ModelSettingAlarm" />
+         <activity android:name=".ManualAlarm" />
+         <activity android:name=".RecyclerViewListAlarm.ListActivity"></activity>
     </application>
 
 </manifest>

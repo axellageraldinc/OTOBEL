@@ -28,7 +28,8 @@
         android:layout_marginEnd="18dp"
         android:src="@android:drawable/ic_input_add"
         android:tint="@android:color/background_light"
-        app:backgroundTint="@color/colorAccent" />
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal" />
 
     <TextView
         android:layout_width="wrap_content"

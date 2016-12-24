@@ -1,53 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/BackgroundLayout">
+    android:background="@color/BackgroundLayout"
+    android:backgroundTint="@color/BackgroundLayout">
 
     <TimePicker
-        android:id="@+id/timePicker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:headerBackground="?attr/colorPrimary"
-        android:numbersSelectorColor="@android:color/holo_blue_dark"
-        style="@android:style/Widget.Material.Light.TimePicker"
-        android:layout_gravity="center" />
+        android:id="@+id/timePicker"
+        android:timePickerMode="spinner" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:clickable="false">
+
+        <ListView
+            android:layout_width="match_parent"
+            android:id="@+id/listView"
+            android:layout_height="300dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
 
         <Button
-            android:text="Repeat"
-            android:layout_width="match_parent"
+            android:text="Cancel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnSetDay"
-            android:layout_weight="1" />
-
-        <Button
-            android:text="Alarm Name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnAlarmName"
-            android:layout_weight="1" />
+            android:id="@+id/btnCancel"
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
 
         <Button
             android:text="DELETE"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnDelete"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
 
         <Button
-            android:text="SAVE ALARM"
-            android:layout_width="match_parent"
+            android:text="OK"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSave"
-            android:layout_weight="1" />
-
+            android:layout_weight="1"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/BackgroundLayout" />
     </LinearLayout>
 
 </LinearLayout>

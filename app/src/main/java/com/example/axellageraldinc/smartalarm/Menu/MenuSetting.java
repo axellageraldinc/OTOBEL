@@ -1,34 +1,42 @@
 package com.example.axellageraldinc.smartalarm.Menu;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
+import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 
 public class MenuSetting extends AppCompatActivity {
 
     ListView listMenu;
     AudioManager myAudioManager;
-    public static int volume = 10;
+    public static int volume, VolumeDB;
     ActionBar actionBar;
-    public static String durasi;
-    public static int durasifix;
+    public static String durasi=null;
+    public static int durasifix=10000;
+    private DBHelper dbH;
+    private MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +45,15 @@ public class MenuSetting extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.GRAY));
+        //actionBar.setBackgroundDrawable(new ColorDrawable(Color.GRAY));
         actionBar.setTitle("Setting");
+
+        dbH = new DBHelper(MenuSetting.this);
 
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         listMenu = (ListView) findViewById(R.id.listMenuSetting);
-        String[] values = new String[] { "Volume", "Manual turn off alarm", "Song duration"};
+        String[] values = new String[] { "Volume", "Song duration"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuSetting.this, R.layout.activity_menu_setting_adapter, R.id.txtJudul, values);
         listMenu.setAdapter(adapter);
@@ -61,17 +71,10 @@ public class MenuSetting extends AppCompatActivity {
                 }
                 else if (position==1)
                 {
-                    //Show builder on / off (switch)
-                    //BELUM PASTI, DARI ADIN INI PEMIKIRANNYA
-                    //Kalau on, nanti dibuat notification di notif bar, kalau di klik pergi ke class utk turn off
-                }
-                else if (position==2)
-                {
                     //Show builder editText durasinya
                     //Lihat di bagian set hari alarm di setting alarm
                     SetDurasi();
                 }
-
             }
         });
 
@@ -79,44 +82,36 @@ public class MenuSetting extends AppCompatActivity {
 
     public void SetDurasi()
     {
-        durasi=null;
-        final AlertDialog.Builder setDurasi = new AlertDialog.Builder(this);
-        final EditText set = new EditText(this);
-        set.setText(durasi);
-        set.setInputType(InputType.TYPE_CLASS_NUMBER);
-        set.isFocused();
-        set.setTextSize(20);
-        setDurasi.setTitle("Alarm duration in seconds");
-        setDurasi.setView(set);
+        int duration = dbH.GetDuration();
+        Log.d("Duration: ", String.valueOf(duration));
+        durasi = String.valueOf(duration);
+        final Dialog d = new Dialog(MenuSetting.this);
+        d.setTitle("INPUT DURASI BEL");
+        d.setContentView(R.layout.input_box_number);
 
-        // Button OK
-        setDurasi.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        durasi = set.getText().toString();
-                        if(durasi!=null)
-                        {
-                            durasifix = Integer.parseInt(durasi)*1000;
-                        }
-                        else if (durasi==null)
-                        {
-                            durasifix=10000;
-                        }
-                        Toast.makeText(MenuSetting.this, "The duration is " + durasi + " seconds", Toast.LENGTH_LONG).show();
-                        dialog.dismiss();
-                    }
-                });
+        final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+        txtInput.setText(durasi);
 
-        //Button Cancel
-        setDurasi.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+        Button OK = (Button) d.findViewById(R.id.btnOK);
+        OK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                durasi = txtInput.getText().toString();
+                if(durasi!=null)
+                {
+                    durasifix = Integer.parseInt(durasi)*1000;
+                    dbH.InsertDuration(durasifix/1000);
+                }
+                else if (durasi==null)
+                {
+                    durasifix=10000;
+                    dbH.InsertDuration(durasifix/1000);
+                }
+                Toast.makeText(MenuSetting.this, "The duration is " + durasi + " seconds", Toast.LENGTH_LONG).show();
+                d.dismiss();
             }
         });
-        AlertDialog alertShow = setDurasi.create();
-        alertShow.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        alertShow.show();
-        alertShow.getWindow().setLayout(950,600);
+        d.show();
     }
 
     //Setting volume dari seekbar
@@ -124,23 +119,27 @@ public class MenuSetting extends AppCompatActivity {
     {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
         final SeekBar seek = new SeekBar(this);
-        seek.setMax(300);
+        int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         popDialog.setTitle("Set Alarm Volume");
         popDialog.setView(seek);
 
-        int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-
         seek.setMax(maxVolume);
+
+        VolumeDB = dbH.GetVolume();
+        seek.setProgress(VolumeDB);
         //Set default volume
-        seek.setProgress(10);
+
+        //volume=8;
+
+        volume=VolumeDB;
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
-                myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
                 volume = progress;
+                //myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
             }
 
             @Override
@@ -158,6 +157,7 @@ public class MenuSetting extends AppCompatActivity {
         popDialog.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        dbH.InsertVolume(volume);
                         dialog.dismiss();
                     }
                 });
@@ -173,4 +173,7 @@ public class MenuSetting extends AppCompatActivity {
         popDialog.show();
     }
 
+    public static int getVolume() {
+        return volume;
+    }
 }

@@ -2,53 +2,67 @@ package com.example.axellageraldinc.smartalarm.TambahAlarmBaru;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.Dialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.HomeScreen;
 import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
-import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SettingAlarm extends AppCompatActivity
 {
     TimePicker alarmTimePicker;
-    public static PendingIntent pendingIntent;
+    public static PendingIntent pendingIntent1;
     public static AlarmManager alarmManager;
     Intent intent1;
     public String chosenRingtone;
     String hour, minute;
     DBHelper dbHelper;
     AlertDialog d;
+    ArrayList<ModelSettingAlarm> results;
     public static long time;
     ActionBar actionBar;
     int mHour, mMinute;
     ListView listViewSet;
     TextView txtRepeat;
-    public int hourNow, minuteNow;
+    public static int hourNow, minuteNow, off_method;
+    public static int durasifix=10000, jumlah_waktu, duration;
+    public static String durasi;
+    ModelSettingAlarm fullObject, sr;
+    MyCustomBaseAdapter adapter;
+    ListView lv;
+    private Uri uri;
+    private String repeat, title, JudulBel;
+    long idItem;
+    public static int id2=0, selected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -58,20 +72,43 @@ public class SettingAlarm extends AppCompatActivity
         actionBar = getSupportActionBar();
         actionBar.setTitle("ADD ALARM");
 
-
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         dbHelper = new DBHelper(SettingAlarm.this);
 
-        //listViewSet = (ListView) findViewById(R.id.listSetAlarm);
-        /*String[] values = new String[] { "Time", "Repeat", "Ringtone", "Alarm Off Method" };
+        ArrayList<ModelSettingAlarm> searchResults = GetSearchResults();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(SettingAlarm.this, R.layout.activity_setting_alarm_listview_adapter, R.id.txtUtama, values);
-        listViewSet.setAdapter(adapter);
-        adapter.notifyDataSetChanged();*/
+        lv = (ListView) findViewById(R.id.listView);
+        adapter = new MyCustomBaseAdapter(this, searchResults);
+        lv.setAdapter(adapter);
 
-        //ItemClickSetAlarm();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+                Object o = lv.getItemAtPosition(position);
+                idItem = lv.getItemIdAtPosition(position);
+                fullObject = (ModelSettingAlarm) o;
+
+                switch((int) idItem){
+                    case 0:
+                        Repeat();
+                        break;
+                    case 1:
+                        SetRingtone();
+                        break;
+                    case 2:
+                        SetDuration();
+                        dbHelper.InsertDuration(duration);
+                        break;
+                    case 3:
+                        JudulBel();
+                        break;
+                }
+
+            }
+        });
+
         Button btnSave = (Button) findViewById(R.id.btnSave);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,9 +117,17 @@ public class SettingAlarm extends AppCompatActivity
                 //hour = alarmTimePicker.getCurrentHour().toString();
                 //minute = alarmTimePicker.getCurrentMinute().toString();
                 //Insert nilai-nilai variabel ke database
+                if (selected==0){
+                    repeat="Don't repeat";
+                }
+/*                if (chosenRingtone==null){
+                    chosenRingtone="Default";
+                }*/
                 SetAlarmOn();
-                dbHelper.createAlarm(new AlarmModel(String.valueOf(hourNow), String.valueOf(minuteNow), chosenRingtone, "", 1, 0));
-                Intent i = new Intent(SettingAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                int uye = (int) time;
+                dbHelper.createAlarm(new AlarmModel(String.valueOf(hourNow), String.valueOf(minuteNow), chosenRingtone, repeat, 1,
+                        duration*1000, id2, JudulBel, uye));
+                Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
         });
@@ -90,145 +135,187 @@ public class SettingAlarm extends AppCompatActivity
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(SettingAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent home = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(home);
             }
         });
-
-       Button btnSetDay = (Button) findViewById(R.id.btnRepeat);
-        btnSetDay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final CharSequence[] items = {" Don't repeat "," Everyday "," Customize "};
-
-                final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
-                b.setTitle("Repeat Alarm");
-                b.setCancelable(true);
-                b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int item) {
-
-                        switch (item)
-                        {
-                            case 0:
-                                //Kalau klik don't repeat
-                                break;
-                            case 1:
-                                //Kalau klik everyday
-                                txtRepeat.setText("Everyday");
-                                break;
-                            case 2:
-                                //Klik kalau customize
-                                CustomRepeat();
-                                break;
-                        }
-                    }
-                });
-                d = b.create();
-                d.show();
-            }
-        });
-        Button btnRingtone = (Button) findViewById(R.id.btnRingtone);
-        btnRingtone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SetRingtone();
-            }
-        });
-        Button btnOffMethod = (Button) findViewById(R.id.btnOffMethod);
-        btnOffMethod.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Setting disini
-            }
-        });
-
     }
 
-/*    public void ItemClickSetAlarm()
-    {
-        listViewSet.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void JudulBel(){
+        final Dialog d = new Dialog(SettingAlarm.this);
+        d.setTitle("INPUT NAMA BEL");
+        d.setContentView(R.layout.input_box);
+
+        final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+
+        Button OK = (Button) d.findViewById(R.id.btnOK);
+        OK.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String itemValue = (String) listViewSet.getItemAtPosition(position);
+            public void onClick(View view) {
+                JudulBel = txtInput.getText().toString();
+                fullObject.setSub(JudulBel);
+                adapter.notifyDataSetChanged();
+                d.dismiss();
+            }
+        });
+        d.show();
+    }
 
-                if (position==0){
-                    SetTime();
-                }
-                else if (position==2){
-                    final CharSequence[] items = {" Don't repeat "," Everyday "," Customize "};
+    public void Repeat(){
+        /*final Dialog d = new Dialog(SettingAlarm.this);
+        d.setTitle("PERULANGAN BEL");
+        d.setContentView(R.layout.input_box_radio_button_single);
+        final RadioGroup radioGroup = (RadioGroup)d.findViewById(R.id.radioGroup);
+        final RadioButton r1 = (RadioButton)d.findViewById(R.id.radioButton1);
+        final RadioButton r2 = (RadioButton)d.findViewById(R.id.radioButton2);
+        Button btnOK = (Button)d.findViewById(R.id.btnOK);
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selected = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = (RadioButton)d.findViewById(selected);
+                Toast.makeText(SettingAlarm.this, "Klik : " + radioButton.getText() + " " + selected, Toast.LENGTH_SHORT).show();
+                d.dismiss();
 
-                    final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
-                    b.setTitle("Repeat Alarm");
-                    b.setCancelable(true);
-                    b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int item) {
+                int idr1 = r1.getId();
+                int idr2 = r2.getId();
+                if (selected==idr1){
+                    repeat="Don't repeat";
+                }
+                else if (selected==idr2){
+                    CustomRepeat();
+                }
+                else{
+                    repeat="gulo jowo";
+                }
+                fullObject.setSub(repeat);
+                adapter.notifyDataSetChanged();
 
-                            switch (item)
-                            {
-                                case 0:
-                                    //Kalau klik don't repeat
-                                    break;
-                                case 1:
-                                    //Kalau klik everyday
-                                    break;
-                                case 2:
-                                    //Klik kalau customize
-                                    CustomRepeat();
-                                    break;
-                            }
-                        }
-                    });
-                    d = b.create();
-                    d.show();
-                }
-                else if (position==3){
-                    SetRingtone();
-                }
-                else if (position==4){
-                    //Alarm off method
+            }
+        });*/
+
+        final CharSequence[] items = {"Don't repeat", "Customize"};
+        final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
+        b.setTitle("Repeat Alarm");
+        b.setCancelable(true);
+        b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item)
+                {
+                    case 0:
+                        //Kalau klik don't repeat
+                        repeat = "Don't repeat";
+                        break;
+                    case 1:
+                        //Kalau klik everyday
+                        repeat = "Everyday";
+                        break;
+                    case 2:
+                        //Klik kalau customize
+                        CustomRepeat();
+                        break;
                 }
             }
         });
-    }*/
 
-    public void SetTime()
-    {
+        b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                fullObject.setSub(repeat);
+                adapter.notifyDataSetChanged();
+                Toast.makeText(SettingAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+            }
+        });
+        d = b.create();
 
+        d.show();
+    }
 
-        // Process to get Current Time
-        /*final Calendar c = Calendar.getInstance();
-        hourNow = c.get(Calendar.HOUR_OF_DAY);
-        minuteNow = c.get(Calendar.MINUTE);
+    public void SetDuration(){
+        final CharSequence[] items = {" Pakai Settingan Global ", " Set khusus alarm ini "};
 
-        // Launch Time Picker Dialog
-        TimePickerDialog tpd = new TimePickerDialog(SettingAlarm.this, TimePickerDialog.THEME_HOLO_LIGHT,
-                new TimePickerDialog.OnTimeSetListener() {
+        final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
+        b.setTitle("Durasi Alarm");
+        b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
 
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay,
-                                          int minute) {
-                        Calendar calNow = Calendar.getInstance();
-                        Calendar calSet = (Calendar) calNow.clone();
-                        TextView txtTime = (TextView) findViewById(R.id.txtTime);
-                        hourNow = hourOfDay;
-                        minuteNow = minute;
-                        calSet.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calSet.set(Calendar.MINUTE, minute);
-                        calSet.set(Calendar.SECOND, 0);
-                        calSet.set(Calendar.MILLISECOND, 0);
-                        String waktu = String.format("%02d : %02d", hourNow, minuteNow);
-                        // Display Selected time in textbox
-                        txtTime.setText(waktu);
-                        tpd.updateTime(calSet.get(Calendar.HOUR_OF_DAY), calSet.get(Calendar.MINUTE));
-                        time = (calSet.getTimeInMillis()-(calSet.getTimeInMillis()%60000));
+                switch (item)
+                {
+                    case 0:
+                        //Kalau pakai settingan global
+                        duration=dbHelper.GetDuration();
+                        break;
+                    case 1:
+                        //Kalau pakai settingan ini sendiri
+                        SetDurasiNew();
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        });
+        // Button OK
+        b.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        fullObject.setSub(duration + " detik");
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
                     }
-                }, hourNow, minuteNow, true);
-        tpd.show();*/
+                });
+
+        //Button Cancel
+        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        d = b.create();
+        d.show();
+    }
+
+    public void SetDurasiNew(){
+        final Dialog d = new Dialog(SettingAlarm.this);
+        d.setTitle("INPUT DURASI BEL");
+        d.setContentView(R.layout.input_box_number);
+
+        final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+
+        Button OK = (Button) d.findViewById(R.id.btnOK);
+        OK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                durasi = txtInput.getText().toString();
+                if(durasi!=null)
+                {
+                    durasifix = Integer.parseInt(durasi)*1000;
+                }
+                else if (durasi==null)
+                {
+                    durasifix=10000;
+                }
+                duration = durasifix/1000;
+                fullObject.setSub(duration + " detik");
+                adapter.notifyDataSetChanged();
+                d.dismiss();
+            }
+        });
+        d.show();
     }
 
     public void CustomRepeat() {
+
+        // TODO : Custom Repeat
+        // TODO : PRE-CODING,
+        // TODO : 1. misal sing dipilih Monday, Tuesday, metu ning setSub dadi Monday, Tuesday.
+        // TODO : 2. trus Monday, Tuesday mau kuwi yo metu ning ListView ning ListActivity
+        // TODO : 3. Monday, Tuesday kuwi yo mlebu ning DB kolom SetDay
+        // TODO : 4. FINAL, nek kuwi kabeh wes, dicoba ning dina Monday, Tuesday muni ora, trus selain Monday, Tuesday apakah tetep muni
+        // TODO : 5. Nek kuwi wes iso, trus dicoba ning pas ModifyAlarm, ning ModifyAlarm yo dicoba nomor 1-4 di atas.
+        // TODO : Nek golek golek masalah start alarm, goleki bagian bagian PendingIntent ning SetAlarmOn (class SettingAlarm & ModifyAlarm)
+        // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
+
         final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
@@ -266,7 +353,7 @@ public class SettingAlarm extends AppCompatActivity
 
     public void SetAlarmOn()
     {
-        Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
@@ -274,34 +361,43 @@ public class SettingAlarm extends AppCompatActivity
         minuteNow = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
+        jumlah_waktu = hourNow + minuteNow;
+        //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
         if (chosenRingtone != null){
             b.putString("ringtone_alarm", chosenRingtone);
         } else {
             b.putString("ringtone_alarm", null);
         }
+        b.putInt("durasi", duration*1000);
         intent1.putExtras(b);
-        //Supaya bisa multiple alarms
-        final int id = (int) System.currentTimeMillis();
-        pendingIntent = PendingIntent.getBroadcast(this, id, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        intent1.putExtra("repeat", repeat);
+        intent1.putExtra("duration", duration);
+
+        //Supaya bisa multiple alarms
+        id2 = (int) System.currentTimeMillis(); //id2 adalah id utk alarm-nya, supaya tiap alarm memiliki ID berbeda
+                                                //Ora nganggo ID DB, soale raiso, nek meh nganggo ID DB kuwi kan kudu wes ono sek ning DB
+                                                //Sedangkan iki kan rung mlebu ning DB
         time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-/*        if(System.currentTimeMillis()>time)
+
+        pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        if(System.currentTimeMillis()>time)
         {
             if (calendar.AM_PM == 0)
                 time = time + (1000*60*60*12);
             else
                 time = time + (1000*60*60*24);
-        }*/
-        alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
+        }
+        alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent1);
     }
 
-   public void SetRingtone()
+    public void SetRingtone()
     {
-                Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
-                intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
-                startActivityForResult(intent, 5);
+        Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "Select Tone");
+        intent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, (Uri) null);
+        startActivityForResult(intent, 5);
     }
 
     @Override
@@ -309,11 +405,15 @@ public class SettingAlarm extends AppCompatActivity
     {
         if (resultCode == Activity.RESULT_OK && requestCode == 5)
         {
-            Uri uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            uri = intent.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
 
             if (uri != null)
             {
                 chosenRingtone = uri.toString();
+                Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+                title = ringtone.getTitle(this);
+                fullObject.setSub(title);
+                adapter.notifyDataSetChanged();
             }
             else
             {
@@ -324,6 +424,33 @@ public class SettingAlarm extends AppCompatActivity
 
     public String getChosenRingtone() {
         return chosenRingtone;
+    }
+
+    private ArrayList<ModelSettingAlarm> GetSearchResults(){
+        results = new ArrayList<ModelSettingAlarm>();
+
+        sr = new ModelSettingAlarm();
+        sr.setJudul("Repeat");
+        sr.setSub("Don't repeat");
+        results.add(sr);
+
+        sr = new ModelSettingAlarm();
+        sr.setJudul("Ringtone");
+        sr.setSub("Default");
+        results.add(sr);
+
+        duration = dbHelper.GetDuration();
+        sr = new ModelSettingAlarm();
+        sr.setJudul("Durasi Bel");
+        sr.setSub(duration + " detik");
+        results.add(sr);
+
+        sr = new ModelSettingAlarm();
+        sr.setJudul("Nama Bel");
+        sr.setSub("Belum di-set");
+        results.add(sr);
+
+        return results;
     }
 
 }

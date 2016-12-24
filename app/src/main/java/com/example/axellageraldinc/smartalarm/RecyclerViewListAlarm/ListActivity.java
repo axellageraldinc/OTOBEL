@@ -1,29 +1,24 @@
 package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 
-import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.TimePicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.AlarmOption;
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
-import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
@@ -31,7 +26,7 @@ import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends Fragment {
 
     private RecyclerView recView;
     private LinearLayoutManager layoutManager;
@@ -41,116 +36,119 @@ public class ListActivity extends AppCompatActivity {
     private FloatingActionButton btnAddNew;
     ActionBar actionBar;
     private ListView listView;
+    private TextView txtJudulAlarm;
+    private String jam, menit;
+    private int id;
+
+    public ListActivity(){
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        //setContentView(R.layout.activity_list);
 
-        actionBar = getSupportActionBar();
-        actionBar.setTitle("LIST ALARM");
+    }
+
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view =  inflater.inflate(R.layout.activity_list, container, false);
         // set the icon
         //actionBar.setIcon(R.drawable.ico_actionbar);
 
-        dbHelper = new DBHelper(ListActivity.this);
+        dbHelper = new DBHelper(getActivity());
         alarmModelList = dbHelper.getAllAlarm();
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setEmptyView(findViewById(R.id.empty));
-        alarmAdapter = new ListAdapter(ListActivity.this, alarmModelList);
+        listView = (ListView) view.findViewById(R.id.listView);
+        listView.setEmptyView(view.findViewById(R.id.empty));
+        alarmAdapter = new ListAdapter(getContext(), alarmModelList);
         listView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    AlarmModel alarmModel = alarmModelList.get(position);
-                    String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
-                    String jam = alarmModel.getHour();
-                    String menit = alarmModel.getMinute();
-                    AlarmModel a = dbHelper.getAlarmModel(jam, menit);
-                    jam = a.getHour();
-                    menit = a.getMinute();
+        txtJudulAlarm = (TextView)view.findViewById(R.id.txtJudulAlarm);
 
-                    Intent ii = new Intent(ListActivity.this, AlarmOption.class);
-                    ii.putExtra("jam", jam);
-                    ii.putExtra("menit", menit);
-                    startActivity(ii);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                AlarmModel alarmModel = alarmModelList.get(position);
+                String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
+                jam = alarmModel.getHour();
+                menit = alarmModel.getMinute();
+                id = alarmModel.getId();
+                String repeat = alarmModel.getSet_day();
+                String JudulBel = alarmModel.getJudul_bel();
+                String ringtone = alarmModel.getRingtone();
+                int duration = alarmModel.getAlarm_duration();
+                int ID2 = alarmModel.getID2();
+                int status = alarmModel.getStatus();
+                AlarmModel a = dbHelper.getAlarmModel(id);
+                jam = a.getHour();
+                menit = a.getMinute();
+                repeat = a.getSet_day();
+                JudulBel = a.getJudul_bel();
+                ringtone = a.getRingtone();
+                duration = a.getAlarm_duration();
+                int durasi = duration/1000;
+                ID2 = a.getID2();
+                status = a.getStatus();
 
-                    String id = String.valueOf(alarmModel.getId());
+                //ShowBox();
 
-                    Toast.makeText(ListActivity.this, "Klik di " + waktu, Toast.LENGTH_LONG).show();
-                }
-            });
+                Intent ii = new Intent(getContext(), ModifyAlarm.class);
+                ii.putExtra("ID", id);
+                ii.putExtra("jam", jam);
+                ii.putExtra("menit", menit);
+                ii.putExtra("repeat", repeat);
+                ii.putExtra("judul_bel", JudulBel);
+                ii.putExtra("ringtone", ringtone);
+                ii.putExtra("duration", durasi);
+                ii.putExtra("ID2", ID2);
+                ii.putExtra("status", status);
+
+                //Gak pergi ke class ModifyAlarm
+                startActivity(ii);
+
+                Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
+            }
+        });
         /*alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
         recView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();*/
 
-        btnAddNew = (FloatingActionButton) findViewById(R.id.btnAddNew);
+        btnAddNew = (FloatingActionButton) view.findViewById(R.id.btnAddNew);
         btnAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ListActivity.this, SettingAlarm.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent i = new Intent(getContext(), SettingAlarm.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
         });
-
+        return view;
     }
 
-    //Apply menu supaya ada titik 3 di kanan atas
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.actionmenu, menu);
-        return true;
+    public void ShowBox(){
+        final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
+        d.setCancelable(true);
+        d.setTitle("Apakah anda yakin ingin hapus bel ini?");
+
+        d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dbHelper.deleteAlarm(id);
+                dialog.dismiss();
+            }
+        });
+
+        d.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        d.create();
+        d.show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.MenuSetting:
-                Intent i = new Intent(ListActivity.this, MenuSetting.class);
-                startActivity(i);
-                return true;
-            case R.id.MenuAbout:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-/*    // Todo : off in alarm pake switch
-    private void initRecyclerView(){
-        recView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getApplicationContext(), recView, new RecyclerItemClickListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        AlarmModel alarmModel = alarmModelList.get(position);
-                        String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
-                        String jam = alarmModel.getHour();
-                        String menit = alarmModel.getMinute();
-                        AlarmModel a = dbHelper.getAlarmModel(jam, menit);
-                        jam = a.getHour();
-                        menit = a.getMinute();
-
-                        Intent ii = new Intent(ListActivity.this, AlarmOption.class);
-                        ii.putExtra("jam", jam);
-                        ii.putExtra("menit", menit);
-                        startActivity(ii);
-
-                        String id = String.valueOf(alarmModel.getId());
-
-//                        Toast.makeText(ListActivity.this, "Klik di " + id, Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-
-                    }
-
-                    @Override public void onItemClick(View view, int position) {
-                        // TODO Handle item click
-                    }
-                })
-        );
-    }*/
 }

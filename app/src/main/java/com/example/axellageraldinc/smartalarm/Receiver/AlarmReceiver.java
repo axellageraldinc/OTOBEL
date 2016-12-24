@@ -79,12 +79,14 @@ public class AlarmReceiver extends BroadcastReceiver
                 //Gak ada lagu yang dipilih
                 mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                 OtomatisMati();
+                myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
             //Kalau user pilih lagu
             else {
                 mp = MediaPlayer.create(context, uriuri);
                 mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 OtomatisMati();
+                myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         /*Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         settingAlarm = new SettingAlarm();*/
@@ -105,7 +107,6 @@ public class AlarmReceiver extends BroadcastReceiver
             @Override
             public void run() {
                 mp.stop();
-                myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }};
 
         mp.seekTo(start);

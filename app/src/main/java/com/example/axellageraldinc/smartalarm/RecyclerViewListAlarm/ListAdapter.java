@@ -87,8 +87,6 @@ public class ListAdapter extends BaseAdapter {
             final String id = String.valueOf(alarmModelList.get(position).getId());
             final String id2 = String.valueOf(alarmModelList.get(position).getID2());
             final String ringtone = alarmModelList.get(position).getRingtone();
-            final Uri uri = Uri.parse(ringtone);
-            r = RingtoneManager.getRingtone(context, uri);
             txtID.setText(id);
             txtID2.setText(id2);
             String output = String.format("%02d : %02d", alarmModelList.get(position).getHour(), alarmModelList.get(position).getMinute());
@@ -108,7 +106,14 @@ public class ListAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Toast.makeText(context, "Ringtone : " + ringtone, Toast.LENGTH_SHORT).show();
                     Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
-                    mp = MediaPlayer.create(context, uri);
+                    if (ringtone==null){
+                        mp = MediaPlayer.create(context, R.raw.iphone7__2016);
+                    }
+                    else{
+                        final Uri uri = Uri.parse(ringtone);
+                        mp = MediaPlayer.create(context, uri);
+                        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    }
                     mp.start();
                     am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
                 }

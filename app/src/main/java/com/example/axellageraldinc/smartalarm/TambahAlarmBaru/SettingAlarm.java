@@ -120,8 +120,9 @@ public class SettingAlarm extends AppCompatActivity
                 if (selected==0){
                     repeat="Don't repeat";
                 }
-/*                if (chosenRingtone==null){
-                    chosenRingtone="Default";
+                /*if (chosenRingtone==null){
+                    uri = Uri.parse("android.resource://com.example.axellageraldinc.smartalarm.TambahAlarmBaru/raw/iphone7__2016");
+                    chosenRingtone = uri.toString();
                 }*/
                 SetAlarmOn();
                 int uye = (int) time;
@@ -417,7 +418,7 @@ public class SettingAlarm extends AppCompatActivity
             }
             else
             {
-                uri = Uri.parse("android.resource://" + getPackageName() + "/raw/iphone7__2016");
+                uri = Uri.parse("android.resource://com.example.axellageraldinc.smartalarm.TambahAlarmBaru/raw/iphone7__2016");
                 chosenRingtone = uri.toString();
             }
         }

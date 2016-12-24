@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.CustomRepeat;
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.HomeScreen;
 import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
@@ -317,7 +318,10 @@ public class SettingAlarm extends AppCompatActivity
         // TODO : Nek golek golek masalah start alarm, goleki bagian bagian PendingIntent ning SetAlarmOn (class SettingAlarm & ModifyAlarm)
         // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
 
-        final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
+        Intent i = new Intent(SettingAlarm.this, CustomRepeat.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+
+        /*final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
         b.setTitle("Customize Day");
@@ -349,7 +353,7 @@ public class SettingAlarm extends AppCompatActivity
 
         });
         d = b.create();
-        d.show();
+        d.show();*/
     }
 
     public void SetAlarmOn()

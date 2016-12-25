@@ -35,6 +35,7 @@ import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.MyCustomBaseAdapte
 import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Set;
 
@@ -58,6 +59,7 @@ public class ModifyAlarm extends AppCompatActivity {
     public static String repeat, JudulBel, ringtone;
     private Button btnSave, btnCancel, btnDelete;
     ModelSettingAlarm fullObject, sr;
+    ArrayList<Integer> daysOfWeek;
     MyCustomBaseAdapter adapter;
     ListView lv;
     ArrayList<ModelSettingAlarm> results;
@@ -173,37 +175,6 @@ public class ModifyAlarm extends AppCompatActivity {
     }
 
     public void Repeat(){
-        /*final Dialog d = new Dialog(ModifyAlarm.this);
-        d.setTitle("PERULANGAN BEL");
-        d.setContentView(R.layout.input_box_radio_button_single);
-        final RadioGroup radioGroup = (RadioGroup)d.findViewById(R.id.radioGroup);
-        final RadioButton r1 = (RadioButton)d.findViewById(R.id.radioButton1);
-        final RadioButton r2 = (RadioButton)d.findViewById(R.id.radioButton2);
-        Button btnOK = (Button)d.findViewById(R.id.btnOK);
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selected = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = (RadioButton)d.findViewById(selected);
-                Toast.makeText(ModifyAlarm.this, "Klik : " + radioButton.getText() + " " + selected, Toast.LENGTH_SHORT).show();
-                d.dismiss();
-
-                int idr1 = r1.getId();
-                int idr2 = r2.getId();
-                if (selected==idr1){
-                    repeat="Don't repeat";
-                }
-                else if (selected==idr2){
-                    CustomRepeat();
-                }
-                else{
-                    repeat="gulo jowo";
-                }
-                fullObject.setSub(repeat);
-                adapter.notifyDataSetChanged();
-
-            }
-        });*/
         final CharSequence[] items = {"Don't repeat", "Everyday", "Customize"};
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
         b.setTitle("Repeat Alarm");
@@ -232,9 +203,24 @@ public class ModifyAlarm extends AppCompatActivity {
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                fullObject.setSub(repeat);
-                adapter.notifyDataSetChanged();
-                Toast.makeText(ModifyAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                if (daysOfWeek == null) {
+                    fullObject.setSub(repeat);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(ModifyAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayList<String> stDaysOfWeek = SettingAlarm.getDaysOfWeek(daysOfWeek);
+                    StringBuilder sb = new StringBuilder();
+                    for (int a=0;a<stDaysOfWeek.size();a++) {
+                        sb.append(stDaysOfWeek.get(a));
+                        if (a<stDaysOfWeek.size()-1) {
+                            sb.append(", ");
+                        }
+                    }
+                    repeat = sb.toString();
+                    fullObject.setSub(repeat);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(ModifyAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         d = b.create();
@@ -316,54 +302,59 @@ public class ModifyAlarm extends AppCompatActivity {
 
     public void CustomRepeat() {
 
-        final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
-
-        final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
-        b.setTitle("Customize Day");
-        b.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                if (isChecked) {
-                    //Kalau user milih hari itu, trus gimana (insert ke database)
-                    //Set ke textview juga
-                } else {
-                    //Kalau item udah ada, remove (mbuh maksute piye)
-                }
-            }
-        });
-
-        // Button OK
-        b.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-
-        });
-        d = b.create();
-        d.show();
+        Intent i = new Intent(ModifyAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(i, 1);
+//        final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
+//
+//        final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
+//        b.setTitle("Customize Day");
+//        b.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
+//                if (isChecked) {
+//                    //Kalau user milih hari itu, trus gimana (insert ke database)
+//                    //Set ke textview juga
+//                } else {
+//                    //Kalau item udah ada, remove (mbuh maksute piye)
+//                }
+//            }
+//        });
+//
+//        // Button OK
+//        b.setPositiveButton("OK",
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//        //Button Cancel
+//        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.dismiss();
+//            }
+//
+//        });
+//        d = b.create();
+//        d.show();
     }
 
-    public void SetAlarmOn()
-    {
-        //Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+    public void setAlarmRepeat(int daysOfWeek) {
         Calendar calendar = Calendar.getInstance();
+        if (daysOfWeek != 0) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+        }
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+        }
         hourNow = alarmTimePicker.getCurrentHour();
         minuteNow = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
-        jumlah_waktu = hourNow + minuteNow;
         //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
         if (chosenRingtone != null){
             b.putString("ringtone_alarm", chosenRingtone);
@@ -375,19 +366,21 @@ public class ModifyAlarm extends AppCompatActivity {
 
         intent1.putExtra("repeat", repeat);
         intent1.putExtra("duration", duration);
-
-        //Supaya bisa multiple alarms
-        pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        //SettingAlarm.pendingIntent1.cancel(); //Cuma bisa cancel alarm yang terakhir kali aja. kalau ada 2 di edit, yg pertama tetep bunyi
-        /*alarmManager.cancel(pendingIntent);*/
-
+        intent1.putExtra("id2",ID2);
         time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+
+        pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         if(System.currentTimeMillis()>time)
         {
             if (calendar.AM_PM == 0)
                 time = time + (1000*60*60*12);
             else
                 time = time + (1000*60*60*24);
+        }
+        if (daysOfWeek == 0) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        } else {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
         }
     }
 
@@ -419,6 +412,8 @@ public class ModifyAlarm extends AppCompatActivity {
             {
                 chosenRingtone = null;
             }
+        } else if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+            daysOfWeek = intent.getIntegerArrayListExtra("daysOfWeek");
         }
     }
 
@@ -439,14 +434,62 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 int hourEdited = alarmTimePicker.getCurrentHour();
                 int minuteEdited = alarmTimePicker.getCurrentMinute();
-                SetAlarmOn();
+                ArrayList<String> stRepeat = new ArrayList<String>();
+                stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+                ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
                 int uye = (int) time;
                 dbHelper.updateAlarm(new AlarmModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
-                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
+//                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
+                    if (repeat.equals("Don't repeat")) {
+                        setAlarmRepeat(0);
+                    } else if (repeat.equals("Everyday")){
+                        for (int a=1;a<=7;a++) {
+                            setAlarmRepeat(a);
+                        }
+                    } else if (repeat.equals("Weekday")) {
+                        for (int a=2;a<=6;a++) {
+                            setAlarmRepeat(a);
+                        }
+                    } else if (repeat.equals("Weekend")) {
+                        setAlarmRepeat(1);
+                        setAlarmRepeat(7);
+                    } else {
+                        int list;
+                        for (int a=0;a<intRepeat.size();a++) {
+                            list = intRepeat.get(a);
+                            setAlarmRepeat(list);
+                        }
+                    }
                 }
                 else{
+                    if (repeat.equals("Don't repeat")) {
+                        setAlarmRepeat(0);
+                        pendingIntent.cancel();
+                    } else if (repeat.equals("Everyday")){
+                        for (int a=1;a<=7;a++) {
+                            setAlarmRepeat(a);
+                            pendingIntent.cancel();
+                        }
+                    } else if (repeat.equals("Weekday")) {
+                        for (int a=2;a<=6;a++) {
+                            setAlarmRepeat(a);
+                            pendingIntent.cancel();
+                        }
+                    } else if (repeat.equals("Weekend")) {
+                        setAlarmRepeat(1);
+                        pendingIntent.cancel();
+                        setAlarmRepeat(7);
+                        pendingIntent.cancel();
+                    } else {
+                        int list;
+                        for (int a=0;a<intRepeat.size();a++) {
+                            list = intRepeat.get(a);
+                            setAlarmRepeat(list);
+                            pendingIntent.cancel();
+                        }
+                    }
                     pendingIntent.cancel();
                 }
                 dialog.dismiss();
@@ -476,7 +519,34 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                SetAlarmOn();
+                ArrayList<String> stRepeat = (ArrayList<String>) Arrays.asList(repeat.split("\\s*,\\s*"));
+                ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
+                if (repeat.equals("Don't repeat")) {
+                    setAlarmRepeat(0);
+                    pendingIntent.cancel();
+                } else if (repeat.equals("Everyday")){
+                    for (int a=1;a<=7;a++) {
+                        setAlarmRepeat(a);
+                        pendingIntent.cancel();
+                    }
+                } else if (repeat.equals("Weekday")) {
+                    for (int a=2;a<=6;a++) {
+                        setAlarmRepeat(a);
+                        pendingIntent.cancel();
+                    }
+                } else if (repeat.equals("Weekend")) {
+                    setAlarmRepeat(1);
+                    pendingIntent.cancel();
+                    setAlarmRepeat(7);
+                    pendingIntent.cancel();
+                } else {
+                    int list;
+                    for (int a=0;a<intRepeat.size();a++) {
+                        list = intRepeat.get(a);
+                        setAlarmRepeat(list);
+                        pendingIntent.cancel();
+                    }
+                }
                 pendingIntent.cancel();
                 //pendingIntentDelete.cancel();
                 //pendingIntent.cancel();

@@ -118,6 +118,12 @@ public class ListActivity extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        alarmAdapter.notifyDataSetChanged();
+    }
+
     public void ShowBox(){
         final AlertDialog.Builder d = new AlertDialog.Builder(getContext());
         d.setCancelable(true);

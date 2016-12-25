@@ -28,12 +28,14 @@ public class AlarmReceiver extends BroadcastReceiver
     private MediaPlayer mp;
     private int DefaultVolume, VolumeDB, duration, id2;
     private DBHelper dbH;
+    private Context context;
 
     @Override
     public void onReceive(final Context context, Intent intent)
     {
 
         dbH = new DBHelper(context);
+        this.context = context;
         VolumeDB = dbH.GetVolume();
         duration = intent.getIntExtra("durasi", 0);
         id2 = intent.getIntExtra("id2", 0);
@@ -117,7 +119,13 @@ public class AlarmReceiver extends BroadcastReceiver
         handler.postDelayed(stopPlayerTask, end);
         String[] repeatID = dbH.getAlarmID2(id2);
         if (repeatID != null) {
-            if (repeatID[0].equals("Don't repeat")) dbH.updateAlarmStatus(Integer.parseInt(repeatID[1]), 0);
+            if (repeatID[0].equals("Don't repeat")) {
+                dbH.updateAlarmStatus(Integer.parseInt(repeatID[1]), 0);
+                Intent intent2 = new Intent(context, AlarmReceiver.class);
+                PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, id2, intent2,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                pendingIntent1.cancel();
+            }
         }
 
         /*CountDownTimer c = new CountDownTimer(duration*1000, 1000) { //10000 = 10detik (diganti dengan yang di setting nantinya)

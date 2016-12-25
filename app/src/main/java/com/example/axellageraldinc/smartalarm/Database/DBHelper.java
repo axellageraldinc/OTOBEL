@@ -281,12 +281,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public String[] getAlarmID2(int id2) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(true, TABLE_ALARM, null, ID2+"=?", new String[]{String.valueOf(id2)}, null, null, null, null);
-        if (cursor!=null)
-            cursor.moveToFirst();
-        Log.v(SETDAY_ALARM, cursor.getString(cursor.getColumnIndex(SETDAY_ALARM)));
-        return new String[]{cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
-                , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))};
+        String query = "SELECT * FROM " + TABLE_ALARM + " WHERE " + ID2 + "=" + id2;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            Log.v(SETDAY_ALARM, cursor.getString(cursor.getColumnIndex(SETDAY_ALARM)));
+            return new String[]{cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
+                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))};
+        } else {
+            return null;
+        }
     }
 
 }

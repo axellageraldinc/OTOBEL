@@ -24,15 +24,6 @@ public class CustomRepeat extends AppCompatActivity {
 
     private Button btnOK;
     private CheckBox chkSenin, chkSelasa, chkRabu, chkKamis, chkJumat, chkSabtu, chkMinggu;
-    private static final int[] DAY_ORDER = {
-            Calendar.SUNDAY,
-            Calendar.MONDAY,
-            Calendar.TUESDAY,
-            Calendar.WEDNESDAY,
-            Calendar.THURSDAY,
-            Calendar.FRIDAY,
-            Calendar.SATURDAY
-    };
     private ArrayList<Integer> daysOfWeek = new ArrayList<>();
 
     @Override
@@ -85,8 +76,8 @@ public class CustomRepeat extends AppCompatActivity {
         chkSabtu.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) daysOfWeek.add(6);
-                else if (!b && daysOfWeek.contains(6)) daysOfWeek.remove(Integer.valueOf(6));
+                if (b) daysOfWeek.add(7);
+                else if (!b && daysOfWeek.contains(7)) daysOfWeek.remove(Integer.valueOf(7));
             }
         });
         btnOK.setOnClickListener(new View.OnClickListener() {

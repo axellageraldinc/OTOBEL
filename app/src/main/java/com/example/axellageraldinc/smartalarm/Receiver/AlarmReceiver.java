@@ -26,7 +26,7 @@ public class AlarmReceiver extends BroadcastReceiver
     private AudioManager myAudioManager;
     Uri uriuri;
     private MediaPlayer mp;
-    private int DefaultVolume, VolumeDB, duration;
+    private int DefaultVolume, VolumeDB, duration, id2;
     private DBHelper dbH;
 
     @Override
@@ -36,6 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver
         dbH = new DBHelper(context);
         VolumeDB = dbH.GetVolume();
         duration = intent.getIntExtra("durasi", 0);
+        id2 = intent.getIntExtra("id2", 0);
         //Pakai duration di setting umum
         //duration = dbH.GetDuration();
         /*AlarmModel a = dbH.getAlarmModel(String.valueOf(SettingAlarm.hourNow), String.valueOf(SettingAlarm.minuteNow));
@@ -114,6 +115,10 @@ public class AlarmReceiver extends BroadcastReceiver
 
         Handler handler = new Handler();
         handler.postDelayed(stopPlayerTask, end);
+        String[] repeatID = dbH.getAlarmID2(id2);
+        if (repeatID != null) {
+            if (repeatID[0].equals("Don't repeat")) dbH.updateAlarmStatus(Integer.parseInt(repeatID[1]), 0);
+        }
 
         /*CountDownTimer c = new CountDownTimer(duration*1000, 1000) { //10000 = 10detik (diganti dengan yang di setting nantinya)
             @Override

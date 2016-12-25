@@ -59,7 +59,7 @@ public class ListActivity extends Fragment {
         //actionBar.setIcon(R.drawable.ico_actionbar);
 
         dbHelper = new DBHelper(getActivity());
-        alarmModelList = dbHelper.getAllAlarm();
+        alarmModelList.addAll(dbHelper.getAllAlarm());
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setEmptyView(view.findViewById(R.id.empty));
         alarmAdapter = new ListAdapter(getContext(), alarmModelList);
@@ -72,26 +72,17 @@ public class ListActivity extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 AlarmModel alarmModel = alarmModelList.get(position);
-                String waktu = alarmModel.getHour() + ":" + alarmModel.getMinute();
-                jam = alarmModel.getHour();
-                menit = alarmModel.getMinute();
                 id = alarmModel.getId();
-                String repeat = alarmModel.getSet_day();
-                String JudulBel = alarmModel.getJudul_bel();
-                String ringtone = alarmModel.getRingtone();
-                int duration = alarmModel.getAlarm_duration();
-                int ID2 = alarmModel.getID2();
-                int status = alarmModel.getStatus();
                 AlarmModel a = dbHelper.getAlarmModel(id);
                 jam = a.getHour();
                 menit = a.getMinute();
-                repeat = a.getSet_day();
-                JudulBel = a.getJudul_bel();
-                ringtone = a.getRingtone();
-                duration = a.getAlarm_duration();
+                String repeat = a.getSet_day();
+                String JudulBel = a.getJudul_bel();
+                String ringtone = a.getRingtone();
+                int duration = a.getAlarm_duration();
                 int durasi = duration/1000;
-                ID2 = a.getID2();
-                status = a.getStatus();
+                int ID2 = a.getID2();
+                int status = a.getStatus();
 
                 //ShowBox();
 

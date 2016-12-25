@@ -102,8 +102,9 @@ public class ModifyAlarm extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(ModifyAlarm.this, ListActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent home = new Intent(ModifyAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(home);
+                finish();
             }
         });
 
@@ -443,7 +444,7 @@ public class ModifyAlarm extends AppCompatActivity {
                 dbHelper.updateAlarm(new AlarmModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
                 }
                 else{
                     pendingIntent.cancel();

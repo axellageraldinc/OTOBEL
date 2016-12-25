@@ -37,6 +37,7 @@ import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 
 public class SettingAlarm extends AppCompatActivity
@@ -152,6 +153,7 @@ public class SettingAlarm extends AppCompatActivity
                         , duration*1000, id2, JudulBel, uye));
                 Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
+                finish();
             }
         });
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
@@ -160,6 +162,7 @@ public class SettingAlarm extends AppCompatActivity
             public void onClick(View view) {
                 Intent home = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(home);
+                finish();
             }
         });
     }
@@ -196,14 +199,17 @@ public class SettingAlarm extends AppCompatActivity
                 {
                     case 0:
                         //Kalau klik don't repeat
+                        selected = item;
                         repeat = "Don't repeat";
                         break;
                     case 1:
                         //Kalau klik everyday
+                        selected = item;
                         repeat = "Everyday";
                         break;
                     case 2:
                         //Klik kalau customize
+                        selected = item;
                         CustomRepeat();
                         break;
                 }
@@ -406,6 +412,7 @@ public class SettingAlarm extends AppCompatActivity
         id2 = (int) System.currentTimeMillis(); //id2 adalah id utk alarm-nya, supaya tiap alarm memiliki ID berbeda
         //Ora nganggo ID DB, soale raiso, nek meh nganggo ID DB kuwi kan kudu wes ono sek ning DB
         //Sedangkan iki kan rung mlebu ning DB
+        intent1.putExtra("id2",id2);
         time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
 
         pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -488,41 +495,100 @@ public class SettingAlarm extends AppCompatActivity
         return results;
     }
 
-    private ArrayList<String> getDaysOfWeek(ArrayList<Integer> daysOfWeek) {
-        ArrayList<String> stDaysofWeek = new ArrayList<>();
+    /**
+     * Method buat convert daysOfWeek Integer jadi String (buat ngeset sub-judul).
+     * @param daysOfWeek Berupa ArrayList<Integer> biar bisa dijabarin satu-satu jadi bentuk string
+     * @return Berupa ArrayList<String> biar bisa tau maksud hari/ngeset sub-judul.
+     *          Kalo size dari parameternya 8, return "Everyday".
+     *          Kalo isinya 2,3,4,5,6, return "Weekday".
+     *          Kalo isinya 1,7, return "Weekend".
+     */
+    public static ArrayList<String> getDaysOfWeek(ArrayList<Integer> daysOfWeek) {
+        ArrayList<String> stDaysOfWeek = new ArrayList<>();
+        Collections.sort(daysOfWeek);
         if (daysOfWeek.contains(1)) {
-            stDaysofWeek.add("Minggu");
+            stDaysOfWeek.add("Minggu");
         }
         if (daysOfWeek.contains(2)) {
-            stDaysofWeek.add("Senin");
+            stDaysOfWeek.add("Senin");
         }
         if (daysOfWeek.contains(3)) {
-            stDaysofWeek.add("Selasa");
+            stDaysOfWeek.add("Selasa");
         }
         if (daysOfWeek.contains(4)) {
-            stDaysofWeek.add("Rabu");
+            stDaysOfWeek.add("Rabu");
         }
         if (daysOfWeek.contains(5)) {
-            stDaysofWeek.add("Kamis");
+            stDaysOfWeek.add("Kamis");
         }
         if (daysOfWeek.contains(6)) {
-            stDaysofWeek.add("Jumat");
+            stDaysOfWeek.add("Jumat");
         }
         if (daysOfWeek.contains(7)) {
-            stDaysofWeek.add("Sabtu");
+            stDaysOfWeek.add("Sabtu");
         }
         if (daysOfWeek.size() == 8) {
-            stDaysofWeek.clear();
-            stDaysofWeek.add("Everyday");
+            stDaysOfWeek.clear();
+            stDaysOfWeek.add("Everyday");
         } else if (daysOfWeek.contains(2) && daysOfWeek.contains(3) && daysOfWeek.contains(4)
                 && daysOfWeek.contains(5) && daysOfWeek.contains(6)) {
-            stDaysofWeek.clear();
-            stDaysofWeek.add("Weekday");
+            stDaysOfWeek.clear();
+            stDaysOfWeek.add("Weekday");
         } else if (daysOfWeek.contains(1) && daysOfWeek.contains(7)) {
-            stDaysofWeek.clear();
-            stDaysofWeek.add("Weekend");
+            stDaysOfWeek.clear();
+            stDaysOfWeek.add("Weekend");
         }
-        return stDaysofWeek;
+        return stDaysOfWeek;
+    }
+
+    /**
+     * Method buat convert daysOfWeek String jadi Integer (buat ngeset di method setAlarmRepeat).
+     * @param daysOfWeek Berupa ArrayList<String> biar bisa dijabarin satu-satu jadi bentuk integer.
+     * @return Berupa ArrayList<String> biar bisa ngeset method setAlarmRepeat.
+     *         Kalo isinya "Everyday", return 1-7.
+     *         Kalo isinya "Weekday", return 2-6.
+     *         Kalo isinya "Weekend", return 1,7.
+     */
+    public static ArrayList<Integer> getIntDaysOfWeek(ArrayList<String> daysOfWeek) {
+        ArrayList<Integer> intDaysOfWeek = new ArrayList<>();
+        if (daysOfWeek.contains("Minggu")) {
+            intDaysOfWeek.add(1);
+        }
+        if (daysOfWeek.contains("Senin")) {
+            intDaysOfWeek.add(2);
+        }
+        if (daysOfWeek.contains("Selasa")) {
+            intDaysOfWeek.add(3);
+        }
+        if (daysOfWeek.contains("Rabu")) {
+            intDaysOfWeek.add(4);
+        }
+        if (daysOfWeek.contains("Kamis")) {
+            intDaysOfWeek.add(5);
+        }
+        if (daysOfWeek.contains("Jumat")) {
+            intDaysOfWeek.add(6);
+        }
+        if (daysOfWeek.contains("Sabtu")) {
+            intDaysOfWeek.add(7);
+        }
+        if (daysOfWeek.contains("Everyday")) {
+            intDaysOfWeek.clear();
+            for (int a=1;a<8;a++) {
+                intDaysOfWeek.add(a);
+            }
+        } else if (daysOfWeek.contains("Weekday")) {
+            intDaysOfWeek.clear();
+            for (int a=2;a<7;a++) {
+                intDaysOfWeek.add(a);
+            }
+        } else if (daysOfWeek.contains("Weekend")) {
+            intDaysOfWeek.clear();
+            intDaysOfWeek.add(1);
+            intDaysOfWeek.add(7);
+        }
+        Collections.sort(intDaysOfWeek);
+        return intDaysOfWeek;
     }
 
 }

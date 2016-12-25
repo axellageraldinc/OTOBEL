@@ -20,7 +20,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk1"
+            android:id="@+id/chkSenin"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -40,7 +40,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk2"
+            android:id="@+id/chkSelasa"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -60,7 +60,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk3"
+            android:id="@+id/chkRabu"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -80,7 +80,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk4"
+            android:id="@+id/chkKamis"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -100,7 +100,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk5"
+            android:id="@+id/chkJumat"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -120,7 +120,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk6"
+            android:id="@+id/chkSabtu"
             android:gravity="center_vertical" />
     </LinearLayout>
     <LinearLayout
@@ -140,7 +140,7 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/chk7"
+            android:id="@+id/chkMinggu"
             android:gravity="center_vertical" />
     </LinearLayout>
 
@@ -148,6 +148,6 @@
         android:text="OK"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnSetDay" />
+        android:id="@+id/btnOK" />
 
 </LinearLayout>

@@ -203,7 +203,7 @@ public class ModifyAlarm extends AppCompatActivity {
 
             }
         });*/
-        final CharSequence[] items = {"Don't repeat", "Customize"};
+        final CharSequence[] items = {"Don't repeat", "Everyday", "Customize"};
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
         b.setTitle("Repeat Alarm");
         b.setCancelable(true);
@@ -356,6 +356,8 @@ public class ModifyAlarm extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         hourNow = alarmTimePicker.getCurrentHour();
         minuteNow = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
@@ -441,7 +443,7 @@ public class ModifyAlarm extends AppCompatActivity {
                 dbHelper.updateAlarm(new AlarmModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
-                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
                 }
                 else{
                     pendingIntent.cancel();

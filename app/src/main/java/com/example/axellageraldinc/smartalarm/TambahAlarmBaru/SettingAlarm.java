@@ -37,6 +37,7 @@ import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class SettingAlarm extends AppCompatActivity
 {
@@ -45,17 +46,13 @@ public class SettingAlarm extends AppCompatActivity
     public static AlarmManager alarmManager;
     Intent intent1;
     public String chosenRingtone;
-    String hour, minute;
     DBHelper dbHelper;
     AlertDialog d;
     ArrayList<ModelSettingAlarm> results;
+    ArrayList<Integer> daysOfWeek;
     public static long time;
     ActionBar actionBar;
-    int mHour, mMinute;
-    ListView listViewSet;
-    TextView txtRepeat;
-    public static int hourNow, minuteNow, off_method;
-    public static int durasifix=10000, jumlah_waktu, duration;
+    public static int durasifix=10000, duration, hour, minute;
     public static String durasi;
     ModelSettingAlarm fullObject, sr;
     MyCustomBaseAdapter adapter;
@@ -64,6 +61,11 @@ public class SettingAlarm extends AppCompatActivity
     private String repeat, title, JudulBel;
     long idItem;
     public static int id2=0, selected;
+
+
+    public SettingAlarm() {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -125,10 +127,29 @@ public class SettingAlarm extends AppCompatActivity
                     uri = Uri.parse("android.resource://com.example.axellageraldinc.smartalarm.TambahAlarmBaru/raw/iphone7__2016");
                     chosenRingtone = uri.toString();
                 }*/
-                SetAlarmOn();
                 int uye = (int) time;
-                dbHelper.createAlarm(new AlarmModel(hourNow, minuteNow, chosenRingtone, repeat, 1,
-                        duration*1000, id2, JudulBel, uye));
+                if (repeat.equals("Don't repeat")) {
+                    setAlarmRepeat(0);
+                } else if (repeat.equals("Everyday")){
+                    for (int a=1;a<=7;a++) {
+                        setAlarmRepeat(a);
+                    }
+                } else if (repeat.equals("Weekday")) {
+                    for (int a=2;a<=6;a++) {
+                        setAlarmRepeat(a);
+                    }
+                } else if (repeat.equals("Weekend")) {
+                    setAlarmRepeat(1);
+                    setAlarmRepeat(7);
+                } else {
+                    int list;
+                    for (int a=0;a<daysOfWeek.size();a++) {
+                        list = daysOfWeek.get(a);
+                        setAlarmRepeat(list);
+                    }
+                }
+                dbHelper.createAlarm(new AlarmModel(hour, minute, chosenRingtone, repeat, 1
+                        , duration*1000, id2, JudulBel, uye));
                 Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
             }
@@ -164,39 +185,7 @@ public class SettingAlarm extends AppCompatActivity
     }
 
     public void Repeat(){
-        /*final Dialog d = new Dialog(SettingAlarm.this);
-        d.setTitle("PERULANGAN BEL");
-        d.setContentView(R.layout.input_box_radio_button_single);
-        final RadioGroup radioGroup = (RadioGroup)d.findViewById(R.id.radioGroup);
-        final RadioButton r1 = (RadioButton)d.findViewById(R.id.radioButton1);
-        final RadioButton r2 = (RadioButton)d.findViewById(R.id.radioButton2);
-        Button btnOK = (Button)d.findViewById(R.id.btnOK);
-        btnOK.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selected = radioGroup.getCheckedRadioButtonId();
-                RadioButton radioButton = (RadioButton)d.findViewById(selected);
-                Toast.makeText(SettingAlarm.this, "Klik : " + radioButton.getText() + " " + selected, Toast.LENGTH_SHORT).show();
-                d.dismiss();
-
-                int idr1 = r1.getId();
-                int idr2 = r2.getId();
-                if (selected==idr1){
-                    repeat="Don't repeat";
-                }
-                else if (selected==idr2){
-                    CustomRepeat();
-                }
-                else{
-                    repeat="gulo jowo";
-                }
-                fullObject.setSub(repeat);
-                adapter.notifyDataSetChanged();
-
-            }
-        });*/
-
-        final CharSequence[] items = {"Don't repeat", "Customize"};
+        final CharSequence[] items = {"Don't repeat", "Everyday", "Customize"};
         final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
         b.setTitle("Repeat Alarm");
         b.setCancelable(true);
@@ -224,9 +213,24 @@ public class SettingAlarm extends AppCompatActivity
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                fullObject.setSub(repeat);
-                adapter.notifyDataSetChanged();
-                Toast.makeText(SettingAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                if (daysOfWeek == null) {
+                    fullObject.setSub(repeat);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(SettingAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                } else {
+                    ArrayList<String> stDaysOfWeek = getDaysOfWeek(daysOfWeek);
+                    StringBuilder sb = new StringBuilder();
+                    for (int a=0;a<stDaysOfWeek.size();a++) {
+                        sb.append(stDaysOfWeek.get(a));
+                        if (a<stDaysOfWeek.size()-1) {
+                            sb.append(", ");
+                        }
+                    }
+                    repeat = sb.toString();
+                    fullObject.setSub(repeat);
+                    adapter.notifyDataSetChanged();
+                    Toast.makeText(SettingAlarm.this, repeat, Toast.LENGTH_SHORT).show();
+                }
             }
         });
         d = b.create();
@@ -318,8 +322,8 @@ public class SettingAlarm extends AppCompatActivity
         // TODO : Nek golek golek masalah start alarm, goleki bagian bagian PendingIntent ning SetAlarmOn (class SettingAlarm & ModifyAlarm)
         // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
 
-        Intent i = new Intent(SettingAlarm.this, CustomRepeat.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
+        Intent i = new Intent(SettingAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(i, 1);
 
         /*final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
 
@@ -356,17 +360,36 @@ public class SettingAlarm extends AppCompatActivity
         d.show();*/
     }
 
-    public void SetAlarmOn()
-    {
-        //Toast.makeText(SettingAlarm.this, "ALARM ON", Toast.LENGTH_SHORT).show();
+    /**
+     * Method buat Set On Alarm tak ganti ini, biar sekalian bisa repeat.
+     * Penjelasan penggunaan :
+     * - Kalo mau repeat everyday berarti pake for 1-7, didalem for dipanggil method ini, parameter diisi dengan variabel
+     *   untuk for.
+     * - Kalo mau repeat weekday berarti pake for 2-6, didalem for dipanggil method ini, parameter diisi dengan variabel
+     *   untuk for.
+     * - Kalo mau repeat hari lain, isi angka parameter seperti yg dijelaskan di atas.
+     *
+     * @param daysOfWeek
+     * 0 berarti ga repeat, makanya daysOfWeek gak ngeset calender.
+     * - Bukan 0 berarti repeat, tergantung dari masukan parameter. Urut dari 1 adalah Minggu, 2 Senin, dst. sampe 7
+     *
+     */
+    public void setAlarmRepeat(int daysOfWeek) {
         Calendar calendar = Calendar.getInstance();
+        if (daysOfWeek != 0) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+        }
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-        hourNow = alarmTimePicker.getCurrentHour();
-        minuteNow = alarmTimePicker.getCurrentMinute();
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+        }
+        hour = alarmTimePicker.getCurrentHour();
+        minute = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
-        jumlah_waktu = hourNow + minuteNow;
         //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
         if (chosenRingtone != null){
             b.putString("ringtone_alarm", chosenRingtone);
@@ -381,8 +404,8 @@ public class SettingAlarm extends AppCompatActivity
 
         //Supaya bisa multiple alarms
         id2 = (int) System.currentTimeMillis(); //id2 adalah id utk alarm-nya, supaya tiap alarm memiliki ID berbeda
-                                                //Ora nganggo ID DB, soale raiso, nek meh nganggo ID DB kuwi kan kudu wes ono sek ning DB
-                                                //Sedangkan iki kan rung mlebu ning DB
+        //Ora nganggo ID DB, soale raiso, nek meh nganggo ID DB kuwi kan kudu wes ono sek ning DB
+        //Sedangkan iki kan rung mlebu ning DB
         time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
 
         pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -393,7 +416,11 @@ public class SettingAlarm extends AppCompatActivity
             else
                 time = time + (1000*60*60*24);
         }
-        alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent1);
+        if (daysOfWeek == 0) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent1);
+        } else {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent1);
+        }
     }
 
     public void SetRingtone()
@@ -425,6 +452,8 @@ public class SettingAlarm extends AppCompatActivity
                 uri = Uri.parse("android.resource://com.example.axellageraldinc.smartalarm.TambahAlarmBaru/raw/iphone7__2016");
                 chosenRingtone = uri.toString();
             }
+        } else if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+            daysOfWeek = intent.getIntegerArrayListExtra("daysOfWeek");
         }
     }
 
@@ -457,6 +486,43 @@ public class SettingAlarm extends AppCompatActivity
         results.add(sr);
 
         return results;
+    }
+
+    private ArrayList<String> getDaysOfWeek(ArrayList<Integer> daysOfWeek) {
+        ArrayList<String> stDaysofWeek = new ArrayList<>();
+        if (daysOfWeek.contains(1)) {
+            stDaysofWeek.add("Minggu");
+        }
+        if (daysOfWeek.contains(2)) {
+            stDaysofWeek.add("Senin");
+        }
+        if (daysOfWeek.contains(3)) {
+            stDaysofWeek.add("Selasa");
+        }
+        if (daysOfWeek.contains(4)) {
+            stDaysofWeek.add("Rabu");
+        }
+        if (daysOfWeek.contains(5)) {
+            stDaysofWeek.add("Kamis");
+        }
+        if (daysOfWeek.contains(6)) {
+            stDaysofWeek.add("Jumat");
+        }
+        if (daysOfWeek.contains(7)) {
+            stDaysofWeek.add("Sabtu");
+        }
+        if (daysOfWeek.size() == 8) {
+            stDaysofWeek.clear();
+            stDaysofWeek.add("Everyday");
+        } else if (daysOfWeek.contains(2) && daysOfWeek.contains(3) && daysOfWeek.contains(4)
+                && daysOfWeek.contains(5) && daysOfWeek.contains(6)) {
+            stDaysofWeek.clear();
+            stDaysofWeek.add("Weekday");
+        } else if (daysOfWeek.contains(1) && daysOfWeek.contains(7)) {
+            stDaysofWeek.clear();
+            stDaysofWeek.add("Weekend");
+        }
+        return stDaysofWeek;
     }
 
 }

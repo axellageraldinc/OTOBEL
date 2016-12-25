@@ -49,6 +49,7 @@
         <activity android:name=".ModifyAlarm" />
         <activity android:name=".TambahAlarmBaru.ModelSettingAlarm" />
          <activity android:name=".ManualAlarm" />
+        <activity android:name=".CustomRepeat" />
          <activity android:name=".RecyclerViewListAlarm.ListActivity"></activity>
     </application>
 

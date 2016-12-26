@@ -40,16 +40,12 @@ public class ModifyAlarm extends AppCompatActivity {
     public static AlarmManager alarmManager;
     Intent intent1;
     public String chosenRingtone;
-    String hour, minute;
     DBHelper dbHelper;
     AlertDialog d;
     public static long time;
     ActionBar actionBar;
-    int mHour, mMinute;
-    ListView listViewSet;
-    TextView txtRepeat;
-    public int hourNow, minuteNow, jumlah_waktu;
-    public static int durasifix=10000, duration, selected, ID2, ID, status, hourModify, menitModify;
+    public int hourNow, minuteNow;
+    public static int durasifix=10000, duration, ID2, ID, status, hourModify, menitModify;
     public static String durasi, title;
     public static String repeat, JudulBel, ringtone;
     private Button btnSave, btnCancel, btnDelete;

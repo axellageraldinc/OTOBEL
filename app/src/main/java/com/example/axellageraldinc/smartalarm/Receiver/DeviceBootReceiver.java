@@ -39,6 +39,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             } else {
                 Toast.makeText(context, "Alarm set", Toast.LENGTH_LONG).show();
             }
+            Toast.makeText(context, "Testing boot", Toast.LENGTH_LONG).show();
         }
     }
 }

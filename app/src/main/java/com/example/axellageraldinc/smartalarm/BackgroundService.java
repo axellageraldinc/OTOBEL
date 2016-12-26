@@ -9,6 +9,7 @@ import android.content.*;
 import android.database.Cursor;
 import android.os.*;
 import android.support.v7.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
@@ -75,13 +76,10 @@ public class BackgroundService extends Service {
 // Builds the notification and issues it.
             mNotifyMgr.notify(mNotificationId, mBuilder.build());
         }
-        return START_STICKY;
-    }
-
-    @Override
-    public void onStart(Intent intent, int startId) {
-        super.onStart(intent, startId);
+        Toast.makeText(this, "Service running", Toast.LENGTH_LONG).show();
         loadAlarmFromDB();
+//        return START_STICKY;
+        return super.onStartCommand(intent, flags, startId);
     }
 
     private void loadAlarmFromDB() {

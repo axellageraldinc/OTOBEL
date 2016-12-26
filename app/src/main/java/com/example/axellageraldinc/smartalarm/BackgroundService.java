@@ -59,7 +59,7 @@ public class BackgroundService extends Service {
         if(!this.isRunning) {
             this.isRunning = true;
             this.backgroundThread.start();
-            android.support.v4.app.NotificationCompat.Builder mBuilder =
+            /*android.support.v4.app.NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.mipmap.ic_launcher)
                             .setContentTitle("Bel Sekolah Well")
@@ -76,7 +76,7 @@ public class BackgroundService extends Service {
             NotificationManager mNotifyMgr =
                     (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 // Builds the notification and issues it.
-            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());*/
         }
         // Nambah toast dan method loadAlarmFromDB, biar bisa setting alarm setelah booting (service start)
         Toast.makeText(this, "Service running", Toast.LENGTH_LONG).show();

@@ -102,16 +102,16 @@ public class ListAdapter extends BaseAdapter {
         holder.txtJudulAlarm.setText(judul);
         final int duration = belOtomatisModelList.get(position).getAlarm_duration();
 
-        int VolumeDB = dbHelper.GetVolume();
+        final int VolumeDB = dbHelper.GetVolume();
         am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "Ringtone : " + ringtone, Toast.LENGTH_SHORT).show();
-                Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
-                if (ringtone==null){
+                Toast.makeText(context, "Ringtone : " + ringtone + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
+                //Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
+                if (ringtone=="Default"){
                     mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                     int start = 0;
                     int end = duration;
@@ -148,7 +148,6 @@ public class ListAdapter extends BaseAdapter {
                     handler.postDelayed(stopPlayerTask, end);
                 }
                 mp.start();
-                am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         });
 

@@ -9,11 +9,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
-
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 
 /**

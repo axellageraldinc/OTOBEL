@@ -19,10 +19,10 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelManualModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.ModelSettingAlarm;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.MyCustomBaseAdapter;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.ModelSettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.MyCustomBaseAdapter;
 
 import java.util.ArrayList;
 

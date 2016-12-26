@@ -1,4 +1,4 @@
-package com.example.axellageraldinc.smartalarm.TambahAlarmBaru;
+package com.example.axellageraldinc.smartalarm.TambahBelOtomatis;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.axellageraldinc.smartalarm.R;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.ModelSettingAlarm;
 
 import java.util.ArrayList;
 

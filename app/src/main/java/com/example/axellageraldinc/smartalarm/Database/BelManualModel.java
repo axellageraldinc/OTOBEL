@@ -1,4 +1,4 @@
-package com.example.axellageraldinc.smartalarm;
+package com.example.axellageraldinc.smartalarm.Database;
 
 /**
  * Created by Axellageraldinc A on 25-Dec-16.

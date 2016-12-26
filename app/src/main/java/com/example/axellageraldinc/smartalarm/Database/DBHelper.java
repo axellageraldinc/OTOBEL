@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
+import com.example.axellageraldinc.smartalarm.ModifyBelManual;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +17,9 @@ import java.util.List;
  */
 public class DBHelper extends SQLiteOpenHelper {
 
-    AlarmModel alarmModel;
+    BelOtomatisModel belOtomatisModel;
     SQLiteDatabase db;
+    BelManualModel bmm;
 
     public static final String DATABASE_NAME = "Alarm.db";
     public static final String TABLE_ALARM = "alarm";
@@ -37,6 +39,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TABLE_2 = "alarm2";
     public static final String ALARM_VOLUME = "volume_alarm";
     public static final String TABLE_3 = "alarm3";
+    public static final String TABLE_4 = "ManualAlarm";
+    public static final String ID_MANUAL = "id_manual";
+    public static final String judul_manual = "judul_manual";
+    public static final String ringtone_manual = "ringtone_manual";
+    public static final String durasi_manual = "durasi_manual";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -52,6 +59,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_2 + " values (8)");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_3 + " (alarm_duration INTEGER)");
         db.execSQL("INSERT INTO " + TABLE_3 + " values (10)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_4 + " (id_manual INTEGER PRIMARY KEY AUTOINCREMENT, judul_manual TEXT, " +
+                "ringtone_manual TEXT, durasi_manual INTEGER)");
     }
 
     // Upgrading database
@@ -59,6 +68,71 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ALARM);
         onCreate(db);
+    }
+
+    public boolean createBelManual(BelManualModel bmm) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(judul_manual, bmm.getNama_bel_manual());
+        values.put(ringtone_manual, bmm.getRingtone_manual());
+        values.put(durasi_manual, bmm.getDurasi_manual());
+
+        long result = db.insert(TABLE_4, null, values);
+        db.close();
+        return result != -1;
+    }
+
+    public List<BelManualModel> getAllBelManual() {
+        List<BelManualModel> belManualModelList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_4;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                bmm = new BelManualModel();
+                bmm.setId_manual(cursor.getInt(0));
+                bmm.setNama_bel_manual(cursor.getString(1));
+                bmm.setRingtone_manual(cursor.getString(2));
+                bmm.setDurasi_manual(cursor.getInt(3));
+                belManualModelList.add(bmm);
+            } while (cursor.moveToNext());
+        }
+        return belManualModelList;
+    }
+
+    public BelManualModel getBelManualDetail(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_4, null,
+                "id_manual=?", new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        bmm = new BelManualModel();
+        bmm.setId_manual(cursor.getInt(0));
+        bmm.setNama_bel_manual(cursor.getString(1));
+        bmm.setRingtone_manual(cursor.getString(2));
+        bmm.setDurasi_manual(cursor.getInt(3));
+        return bmm;
+    }
+
+    public boolean updateBelManual(BelManualModel bmm) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(judul_manual, bmm.getNama_bel_manual());
+        values.put(ringtone_manual, bmm.getRingtone_manual());
+        values.put(durasi_manual, bmm.getDurasi_manual());
+
+        long result = db.update(TABLE_4, values, "id_manual=" + ModifyBelManual.ID, null);
+        db.close();
+        return result != -1;
+    }
+
+    public void deleteBelManual(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_4, ID_MANUAL + "=?", new String[]{String.valueOf(id)});
+        db.close();
     }
 
     public void InsertVolume(int volume){
@@ -123,18 +197,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Create alarm
-    public boolean createAlarm(AlarmModel alarmModel) {
+    public boolean createAlarm(BelOtomatisModel belOtomatisModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(HOUR_ALARM, alarmModel.getHour());
-        values.put(MINUTE_ALARM, alarmModel.getMinute());
-        values.put(RINGTONE_ALARM, alarmModel.getRingtone());
-        values.put(SETDAY_ALARM, alarmModel.getSet_day());
-        values.put(STATUS_ALARM, alarmModel.getStatus());
-        values.put(ALARM_DURATION, alarmModel.getAlarm_duration());
-        values.put(ID2,alarmModel.getID2());
-        values.put(JUDUL_BEL, alarmModel.getJudul_bel());
-        values.put(order_alarm, alarmModel.getOrder_alarm());
+        values.put(HOUR_ALARM, belOtomatisModel.getHour());
+        values.put(MINUTE_ALARM, belOtomatisModel.getMinute());
+        values.put(RINGTONE_ALARM, belOtomatisModel.getRingtone());
+        values.put(SETDAY_ALARM, belOtomatisModel.getSet_day());
+        values.put(STATUS_ALARM, belOtomatisModel.getStatus());
+        values.put(ALARM_DURATION, belOtomatisModel.getAlarm_duration());
+        values.put(ID2, belOtomatisModel.getID2());
+        values.put(JUDUL_BEL, belOtomatisModel.getJudul_bel());
+        values.put(order_alarm, belOtomatisModel.getOrder_alarm());
 
         long result = db.insert(TABLE_ALARM, null, values);
         db.close();
@@ -142,18 +216,18 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Update Alarm
-    public boolean updateAlarm(AlarmModel alarmModel) {
+    public boolean updateAlarm(BelOtomatisModel belOtomatisModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(HOUR_ALARM, alarmModel.getHour());
-        values.put(MINUTE_ALARM, alarmModel.getMinute());
-        values.put(RINGTONE_ALARM, alarmModel.getRingtone());
-        values.put(SETDAY_ALARM, alarmModel.getSet_day());
-        values.put(STATUS_ALARM, alarmModel.getStatus());
-        values.put(ALARM_DURATION, alarmModel.getAlarm_duration());
-        values.put(ID2,alarmModel.getID2());
-        values.put(JUDUL_BEL, alarmModel.getJudul_bel());
-        values.put(order_alarm, alarmModel.getOrder_alarm());
+        values.put(HOUR_ALARM, belOtomatisModel.getHour());
+        values.put(MINUTE_ALARM, belOtomatisModel.getMinute());
+        values.put(RINGTONE_ALARM, belOtomatisModel.getRingtone());
+        values.put(SETDAY_ALARM, belOtomatisModel.getSet_day());
+        values.put(STATUS_ALARM, belOtomatisModel.getStatus());
+        values.put(ALARM_DURATION, belOtomatisModel.getAlarm_duration());
+        values.put(ID2, belOtomatisModel.getID2());
+        values.put(JUDUL_BEL, belOtomatisModel.getJudul_bel());
+        values.put(order_alarm, belOtomatisModel.getOrder_alarm());
 
         long result = db.update(TABLE_ALARM, values, "_id= " + ModifyAlarm.ID, null);
         db.close();
@@ -161,7 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Get 1 Alarm
-    public AlarmModel getAlarmModel(int id) {
+    public BelOtomatisModel getAlarmModel(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(TABLE_ALARM, null,
@@ -169,44 +243,44 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             cursor.moveToFirst();
         }
-        alarmModel = new AlarmModel();
-        alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getInt(1));
-        alarmModel.setMinute(cursor.getInt(2));
-        alarmModel.setRingtone(cursor.getString(3));
-        alarmModel.setSet_day(cursor.getString(4));
-        alarmModel.setStatus(cursor.getInt(5));
-        alarmModel.setAlarm_duration(cursor.getInt(6));
-        alarmModel.setID2(cursor.getInt(7));
-        alarmModel.setJudul_bel(cursor.getString(8));
-        alarmModel.setOrder_alarm(cursor.getInt(9));
-        return alarmModel;
+        belOtomatisModel = new BelOtomatisModel();
+        belOtomatisModel.setId(Integer.parseInt(cursor.getString(0)));
+        belOtomatisModel.setHour(cursor.getInt(1));
+        belOtomatisModel.setMinute(cursor.getInt(2));
+        belOtomatisModel.setRingtone(cursor.getString(3));
+        belOtomatisModel.setSet_day(cursor.getString(4));
+        belOtomatisModel.setStatus(cursor.getInt(5));
+        belOtomatisModel.setAlarm_duration(cursor.getInt(6));
+        belOtomatisModel.setID2(cursor.getInt(7));
+        belOtomatisModel.setJudul_bel(cursor.getString(8));
+        belOtomatisModel.setOrder_alarm(cursor.getInt(9));
+        return belOtomatisModel;
     }
 
     // Get All alarm for alarm adapter
-    public List<AlarmModel> getAllAlarm() {
-        List<AlarmModel> alarmModelList = new ArrayList<>();
+    public List<BelOtomatisModel> getAllAlarm() {
+        List<BelOtomatisModel> belOtomatisModelList = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + TABLE_ALARM + " ORDER BY " + HOUR_ALARM + ", " + MINUTE_ALARM;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                alarmModel = new AlarmModel();
-                alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-                alarmModel.setHour(cursor.getInt(1));
-                alarmModel.setMinute(cursor.getInt(2));
-                alarmModel.setRingtone(cursor.getString(3));
-                alarmModel.setSet_day(cursor.getString(4));
-                alarmModel.setStatus(cursor.getInt(5));
-                alarmModel.setAlarm_duration(cursor.getInt(6));
-                alarmModel.setID2(cursor.getInt(7));
-                alarmModel.setJudul_bel(cursor.getString(8));
-                alarmModel.setOrder_alarm(cursor.getInt(9));
-                alarmModelList.add(alarmModel);
+                belOtomatisModel = new BelOtomatisModel();
+                belOtomatisModel.setId(Integer.parseInt(cursor.getString(0)));
+                belOtomatisModel.setHour(cursor.getInt(1));
+                belOtomatisModel.setMinute(cursor.getInt(2));
+                belOtomatisModel.setRingtone(cursor.getString(3));
+                belOtomatisModel.setSet_day(cursor.getString(4));
+                belOtomatisModel.setStatus(cursor.getInt(5));
+                belOtomatisModel.setAlarm_duration(cursor.getInt(6));
+                belOtomatisModel.setID2(cursor.getInt(7));
+                belOtomatisModel.setJudul_bel(cursor.getString(8));
+                belOtomatisModel.setOrder_alarm(cursor.getInt(9));
+                belOtomatisModelList.add(belOtomatisModel);
             } while (cursor.moveToNext());
         }
-        return alarmModelList;
+        return belOtomatisModelList;
     }
 
     // Update alarm status (on/off)
@@ -230,22 +304,22 @@ public class DBHelper extends SQLiteOpenHelper {
         return i == 1;
     }
 
-    public AlarmModel getID2 (String ID){
+    public BelOtomatisModel getID2 (String ID){
         String query = "SELECT " + ID2 + " FROM " + TABLE_ALARM + " WHERE " + ID_ALARM + "=" + ID;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor!=null)
             cursor.moveToFirst();
-        alarmModel = new AlarmModel();
-        alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getInt(1));
-        alarmModel.setMinute(cursor.getInt(2));
-        alarmModel.setRingtone(cursor.getString(3));
-        alarmModel.setRingtone(cursor.getString(4));
-        alarmModel.setStatus(cursor.getInt(5));
-        alarmModel.setAlarm_duration(cursor.getInt(6));
-        alarmModel.setID2(cursor.getInt(7));
-        alarmModel.setJudul_bel(cursor.getString(8));
-        return alarmModel;
+        belOtomatisModel = new BelOtomatisModel();
+        belOtomatisModel.setId(Integer.parseInt(cursor.getString(0)));
+        belOtomatisModel.setHour(cursor.getInt(1));
+        belOtomatisModel.setMinute(cursor.getInt(2));
+        belOtomatisModel.setRingtone(cursor.getString(3));
+        belOtomatisModel.setRingtone(cursor.getString(4));
+        belOtomatisModel.setStatus(cursor.getInt(5));
+        belOtomatisModel.setAlarm_duration(cursor.getInt(6));
+        belOtomatisModel.setID2(cursor.getInt(7));
+        belOtomatisModel.setJudul_bel(cursor.getString(8));
+        return belOtomatisModel;
     }
 
     // Delete 1 alarm from database
@@ -261,22 +335,34 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_ALARM);
     }
 
-    public AlarmModel getID (String ID){
+    public BelOtomatisModel getID (String ID){
         String query = "SELECT " + ID_ALARM + " FROM " + TABLE_ALARM + " WHERE " + ID_ALARM + "=" + ID;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor!=null)
             cursor.moveToFirst();
-        alarmModel = new AlarmModel();
-        alarmModel.setId(Integer.parseInt(cursor.getString(0)));
-        alarmModel.setHour(cursor.getInt(1));
-        alarmModel.setMinute(cursor.getInt(2));
-        alarmModel.setRingtone(cursor.getString(3));
-        alarmModel.setRingtone(cursor.getString(4));
-        alarmModel.setStatus(cursor.getInt(5));
-        alarmModel.setAlarm_duration(cursor.getInt(6));
-        alarmModel.setID2(cursor.getInt(7));
-        alarmModel.setJudul_bel(cursor.getString(8));
-        return alarmModel;
+        belOtomatisModel = new BelOtomatisModel();
+        belOtomatisModel.setId(Integer.parseInt(cursor.getString(0)));
+        belOtomatisModel.setHour(cursor.getInt(1));
+        belOtomatisModel.setMinute(cursor.getInt(2));
+        belOtomatisModel.setRingtone(cursor.getString(3));
+        belOtomatisModel.setRingtone(cursor.getString(4));
+        belOtomatisModel.setStatus(cursor.getInt(5));
+        belOtomatisModel.setAlarm_duration(cursor.getInt(6));
+        belOtomatisModel.setID2(cursor.getInt(7));
+        belOtomatisModel.setJudul_bel(cursor.getString(8));
+        return belOtomatisModel;
+    }
+
+    public String[] getAlarmID2(int id2) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ALARM + " WHERE " + ID2 + "=" + id2;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            return new String[]{cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
+                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))};
+        } else {
+            return null;
+        }
     }
 
 }

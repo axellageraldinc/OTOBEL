@@ -32,15 +32,15 @@ import java.util.List;
 
 public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
 
-    private List<AlarmModel> alarmModelList = new ArrayList<>();
-    private AlarmModel alarmModel;
+    private List<BelOtomatisModel> alarmModelList = new ArrayList<>();
+    private BelOtomatisModel alarmModel;
     private DBHelper dbHelper;
     private Context context;
     public static String hour, minute;
     SettingAlarm settingAlarm;
 
 
-    public AlarmAdapter(Context context, List<AlarmModel> alarmModelList) {
+    public AlarmAdapter(Context context, List<BelOtomatisModel> alarmModelList) {
         dbHelper = new DBHelper(context);
         this.context = context;
         this.alarmModelList = alarmModelList;

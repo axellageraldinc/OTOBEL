@@ -1,6 +1,5 @@
 package com.example.axellageraldinc.smartalarm;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
@@ -10,7 +9,6 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,24 +19,20 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
-import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.ModelSettingAlarm;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.MyCustomBaseAdapter;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.ModelSettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.MyCustomBaseAdapter;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Set;
 
 public class ModifyAlarm extends AppCompatActivity {
     TimePicker alarmTimePicker;
@@ -100,12 +94,7 @@ public class ModifyAlarm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Update data ke database
-                if (chosenRingtone==null || JudulBel==null){
-                    Toast.makeText(ModifyAlarm.this, "Mohon beri judul bel dan pilih ringtone", Toast.LENGTH_LONG).show();
-                }
-                else{
                     UpdateData();
-                }
             }
         });
 
@@ -453,7 +442,7 @@ public class ModifyAlarm extends AppCompatActivity {
                 stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
                 ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
                 int uye = (int) time;
-                dbHelper.updateAlarm(new AlarmModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
+                dbHelper.updateAlarm(new BelOtomatisModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
 //                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);

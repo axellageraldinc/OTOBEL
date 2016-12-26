@@ -4,7 +4,7 @@ package com.example.axellageraldinc.smartalarm.Database;
  * Created by almantera on 15/11/16.
  */
 
-public class AlarmModel {
+public class BelOtomatisModel {
 
     private int id;
     private int hour;
@@ -18,7 +18,7 @@ public class AlarmModel {
     private String judul_bel;
     private int order_alarm;
 
-    public AlarmModel() {
+    public BelOtomatisModel() {
         this.id = 0;
         this.hour = 0;
         this.minute = 0;
@@ -31,8 +31,8 @@ public class AlarmModel {
         this.order_alarm=0;
     }
 
-    public AlarmModel(int hour, int minute, String ringtone, String set_day, int status, int alarm_duration,
-                      int ID2, String judul_bel, int order_alarm) {
+    public BelOtomatisModel(int hour, int minute, String ringtone, String set_day, int status, int alarm_duration,
+                            int ID2, String judul_bel, int order_alarm) {
         this.hour = hour;
         this.minute = minute;
         this.ringtone = ringtone;

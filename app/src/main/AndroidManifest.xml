@@ -33,7 +33,7 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".TambahAlarmBaru.SettingAlarm" />
+        <activity android:name=".TambahBelOtomatis.SettingAlarm" />
         <activity android:name=".ShowAlarm" />
 
         <!-- Will not be called unless the application explicitly enables it -->
@@ -51,10 +51,10 @@
             android:name=".Menu.MenuSetting"
             android:parentActivityName=".HomeScreen" />
         <activity android:name=".ModifyAlarm" />
-        <activity android:name=".TambahAlarmBaru.ModelSettingAlarm" />
-        <activity android:name=".ManualAlarm" />
-        <activity android:name=".RecyclerViewListAlarm.ListActivity" />
-        <activity android:name=".AddManualAlarm" />
+        <activity android:name=".TambahBelOtomatis.ModelSettingAlarm" />
+        <activity android:name=".ListViewBelManual.ManualAlarm" />
+        <activity android:name=".ListViewBelOtomatis.ListActivity" />
+        <activity android:name=".TambahBelManual.AddManualAlarm" />
         <activity android:name=".ModifyBelManual"></activity>
     </application>
 

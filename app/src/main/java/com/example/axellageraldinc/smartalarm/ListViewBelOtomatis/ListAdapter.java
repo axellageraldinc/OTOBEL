@@ -1,4 +1,4 @@
-package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
+package com.example.axellageraldinc.smartalarm.ListViewBelOtomatis;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -6,25 +6,23 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
-import android.util.Log;
-import android.view.DragEvent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +33,8 @@ import java.util.List;
 
 public class ListAdapter extends BaseAdapter {
 
-    private List<AlarmModel> alarmModelList = new ArrayList<>();
-    private AlarmModel alarmModel;
+    private List<BelOtomatisModel> belOtomatisModelList = new ArrayList<>();
+    private BelOtomatisModel belOtomatisModel;
     private DBHelper dbHelper;
     private Context context;
     public static int hour, minute;
@@ -48,15 +46,15 @@ public class ListAdapter extends BaseAdapter {
     Ringtone r;
     String ring;
 
-    public ListAdapter(Context context, List<AlarmModel> alarmModelList) {
+    public ListAdapter(Context context, List<BelOtomatisModel> belOtomatisModelList) {
         dbHelper = new DBHelper(context);
         this.context = context;
-        this.alarmModelList = alarmModelList;
+        this.belOtomatisModelList = belOtomatisModelList;
     }
 
     @Override
     public int getCount() {
-        return alarmModelList.size();
+        return belOtomatisModelList.size();
     }
 
     @Override
@@ -85,23 +83,24 @@ public class ListAdapter extends BaseAdapter {
             holder.txtID = (TextView)MyView.findViewById(R.id.txtId);
             holder.txtID2 = (TextView) MyView.findViewById(R.id.txtID2);
             holder.switchAlarmStatus = (Switch) MyView.findViewById(R.id.SwitchAlarmStatus);
-            holder.btnPlay = (Button) MyView.findViewById(R.id.btnPlay);
+            holder.btnPlay = (ImageButton) MyView.findViewById(R.id.btnPlay);
             MyView.setTag(holder);
         } else {
             holder = (ItemViewHolder) MyView.getTag();
         }
-        id = String.valueOf(alarmModelList.get(position).getId());
-        id2 = String.valueOf(alarmModelList.get(position).getID2());
-        ringtone = alarmModelList.get(position).getRingtone();
+        id = String.valueOf(belOtomatisModelList.get(position).getId());
+        id2 = String.valueOf(belOtomatisModelList.get(position).getID2());
+        ringtone = belOtomatisModelList.get(position).getRingtone();
         holder.txtID.setText(id);
         holder.txtID2.setText(id2);
-        output = String.format("%02d : %02d", alarmModelList.get(position).getHour(), alarmModelList.get(position).getMinute());
+        output = String.format("%02d : %02d", belOtomatisModelList.get(position).getHour(), belOtomatisModelList.get(position).getMinute());
         holder.txtShowWaktu.setText(output);
-        hour = alarmModelList.get(position).getHour();
-        minute = alarmModelList.get(position).getMinute();
-        holder.txtSetDay.setText(alarmModelList.get(position).getSet_day());
-        String judul = alarmModelList.get(position).getJudul_bel();
+        hour = belOtomatisModelList.get(position).getHour();
+        minute = belOtomatisModelList.get(position).getMinute();
+        holder.txtSetDay.setText(belOtomatisModelList.get(position).getSet_day());
+        String judul = belOtomatisModelList.get(position).getJudul_bel();
         holder.txtJudulAlarm.setText(judul);
+        final int duration = belOtomatisModelList.get(position).getAlarm_duration();
 
         int VolumeDB = dbHelper.GetVolume();
         am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -114,18 +113,46 @@ public class ListAdapter extends BaseAdapter {
                 Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
                 if (ringtone==null){
                     mp = MediaPlayer.create(context, R.raw.iphone7__2016);
+                    int start = 0;
+                    int end = duration;
+
+                    Runnable stopPlayerTask = new Runnable(){
+                        @Override
+                        public void run() {
+                            mp.stop();
+                        }};
+
+                    mp.seekTo(start);
+                    mp.start();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(stopPlayerTask, end);
                 }
                 else{
                     final Uri uri = Uri.parse(ringtone);
                     mp = MediaPlayer.create(context, uri);
                     mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    int start = 0;
+                    int end = duration;
+
+                    Runnable stopPlayerTask = new Runnable(){
+                        @Override
+                        public void run() {
+                            mp.stop();
+                        }};
+
+                    mp.seekTo(start);
+                    mp.start();
+
+                    Handler handler = new Handler();
+                    handler.postDelayed(stopPlayerTask, end);
                 }
                 mp.start();
                 am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         });
 
-        int status = alarmModelList.get(position).getStatus();
+        int status = belOtomatisModelList.get(position).getStatus();
         if (status==1){
             holder.switchAlarmStatus.setChecked(true);
         }
@@ -168,6 +195,6 @@ public class ListAdapter extends BaseAdapter {
     private static class ItemViewHolder {
         TextView txtShowWaktu, txtSetDay, txtJudulAlarm, txtID, txtID2;
         Switch switchAlarmStatus;
-        Button btnPlay;
+        ImageButton btnPlay;
     }
 }

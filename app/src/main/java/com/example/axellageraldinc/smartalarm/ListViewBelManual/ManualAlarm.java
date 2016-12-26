@@ -1,15 +1,12 @@
-package com.example.axellageraldinc.smartalarm;
+package com.example.axellageraldinc.smartalarm.ListViewBelManual;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +14,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.TambahBelManual.AddManualAlarm;
+import com.example.axellageraldinc.smartalarm.Database.BelManualModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+import com.example.axellageraldinc.smartalarm.ModifyBelManual;
+import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
 import java.util.List;

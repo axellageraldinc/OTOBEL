@@ -1,9 +1,8 @@
-package com.example.axellageraldinc.smartalarm;
+package com.example.axellageraldinc.smartalarm.TambahBelManual;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -18,19 +17,16 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelManualModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
-import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.ModelSettingAlarm;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.MyCustomBaseAdapter;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
+import com.example.axellageraldinc.smartalarm.HomeScreen;
+import com.example.axellageraldinc.smartalarm.R;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.ModelSettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.MyCustomBaseAdapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class AddManualAlarm extends AppCompatActivity {
 

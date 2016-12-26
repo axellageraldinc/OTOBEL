@@ -1,6 +1,5 @@
 package com.example.axellageraldinc.smartalarm.Receiver;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,15 +8,10 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
-import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.BackgroundService;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
-import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
@@ -42,7 +36,7 @@ public class AlarmReceiver extends BroadcastReceiver
         id2 = intent.getIntExtra("id2", 0);
         //Pakai duration di setting umum
         //duration = dbH.GetDuration();
-        /*AlarmModel a = dbH.getAlarmModel(String.valueOf(SettingAlarm.hourNow), String.valueOf(SettingAlarm.minuteNow));
+        /*BelOtomatisModel a = dbH.getAlarmModel(String.valueOf(SettingAlarm.hourNow), String.valueOf(SettingAlarm.minuteNow));
         duration = a.getAlarm_duration();*/
 
         /*myAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);

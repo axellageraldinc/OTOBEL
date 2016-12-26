@@ -1,7 +1,6 @@
 package com.example.axellageraldinc.smartalarm;
 
 import android.content.Intent;
-import android.support.annotation.ColorInt;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,10 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toolbar;
 
+import com.example.axellageraldinc.smartalarm.ListViewBelManual.ManualAlarm;
 import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
-import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
+import com.example.axellageraldinc.smartalarm.ListViewBelOtomatis.ListActivity;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,5 @@
-package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
+package com.example.axellageraldinc.smartalarm.ListViewBelOtomatis;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -9,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,12 +17,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
-import com.example.axellageraldinc.smartalarm.HomeScreen;
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
 import com.example.axellageraldinc.smartalarm.R;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +32,7 @@ public class ListActivity extends Fragment {
     private LinearLayoutManager layoutManager;
     private ListAdapter alarmAdapter;
     private DBHelper dbHelper;
-    private List<AlarmModel> alarmModelList = new ArrayList<>();
+    private List<BelOtomatisModel> belOtomatisModelList = new ArrayList<>();
     private FloatingActionButton btnAddNew;
     ActionBar actionBar;
     private ListView listView;
@@ -63,10 +59,10 @@ public class ListActivity extends Fragment {
         //actionBar.setIcon(R.drawable.ico_actionbar);
 
         dbHelper = new DBHelper(getActivity());
-        alarmModelList.addAll(dbHelper.getAllAlarm());
+        belOtomatisModelList.addAll(dbHelper.getAllAlarm());
         listView = (ListView) view.findViewById(R.id.listView);
         listView.setEmptyView(view.findViewById(R.id.empty));
-        alarmAdapter = new ListAdapter(getContext(), alarmModelList);
+        alarmAdapter = new ListAdapter(getContext(), belOtomatisModelList);
         listView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();
 
@@ -75,9 +71,9 @@ public class ListActivity extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                AlarmModel alarmModel = alarmModelList.get(position);
-                id = alarmModel.getId();
-                AlarmModel a = dbHelper.getAlarmModel(id);
+                BelOtomatisModel belOtomatisModel = belOtomatisModelList.get(position);
+                id = belOtomatisModel.getId();
+                BelOtomatisModel a = dbHelper.getAlarmModel(id);
                 jam = a.getHour();
                 menit = a.getMinute();
                 String repeat = a.getSet_day();
@@ -107,7 +103,7 @@ public class ListActivity extends Fragment {
                 Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
             }
         });
-        /*alarmAdapter = new AlarmAdapter(ListActivity.this, alarmModelList);
+        /*alarmAdapter = new AlarmAdapter(ListActivity.this, belOtomatisModelList);
         recView.setAdapter(alarmAdapter);
         alarmAdapter.notifyDataSetChanged();*/
 

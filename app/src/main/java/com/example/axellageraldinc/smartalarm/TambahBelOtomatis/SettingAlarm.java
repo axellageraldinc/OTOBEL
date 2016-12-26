@@ -1,10 +1,9 @@
-package com.example.axellageraldinc.smartalarm.TambahAlarmBaru;
+package com.example.axellageraldinc.smartalarm.TambahBelOtomatis;
 
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -14,30 +13,23 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.CustomRepeat;
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.HomeScreen;
-import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 
 public class SettingAlarm extends AppCompatActivity
@@ -149,11 +141,11 @@ public class SettingAlarm extends AppCompatActivity
                         setAlarmRepeat(list);
                     }
                 }
-                dbHelper.createAlarm(new AlarmModel(hour, minute, chosenRingtone, repeat, 1
-                        , duration*1000, id2, JudulBel, uye));
-                Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(i);
-                finish();
+                    dbHelper.createAlarm(new BelOtomatisModel(hour, minute, chosenRingtone, repeat, 1
+                            , duration*1000, id2, JudulBel, uye));
+                    Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
             }
         });
         Button btnCancel = (Button) findViewById(R.id.btnCancel);

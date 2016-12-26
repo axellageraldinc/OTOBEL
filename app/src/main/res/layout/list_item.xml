@@ -6,14 +6,26 @@
     android:id="@+id/container"
     android:background="?android:attr/selectableItemBackground"
     tools:background="@color/BackgroundLayout"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="5dp">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:id="@+id/btnPlay"
+        android:background="@drawable/button_colors"
+        android:layout_gravity="center_vertical"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
 
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/SwitchAlarmStatus"
         android:switchTextAppearance="@style/TextAppearance.AppCompat"
-        android:paddingLeft="20dp"
+        android:paddingLeft="5dp"
         android:focusable="false"
         android:focusableInTouchMode="false"/>
 
@@ -62,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtId"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:textColor="@color/TextColor"
                 android:text="ID" />
 
@@ -93,7 +105,8 @@
                 android:id="@+id/txtID2"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
-                android:textSize="5sp" />
+                android:textSize="5sp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -105,14 +118,5 @@
             android:textSize="18sp"
             android:text="Repeat" />
     </LinearLayout>
-
-    <Button
-        android:text="BUNYIKAN BEL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnPlay"
-        android:layout_weight="1"
-        android:focusable="false"
-        android:focusableInTouchMode="false" />
 
 </LinearLayout>

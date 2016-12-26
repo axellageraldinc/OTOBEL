@@ -319,57 +319,12 @@ public class SettingAlarm extends AppCompatActivity
     }
 
     public void CustomRepeat() {
-
-        // TODO : Custom Repeat
-        // TODO : PRE-CODING,
-        // TODO : 1. misal sing dipilih Monday, Tuesday, metu ning setSub dadi Monday, Tuesday.
-        // TODO : 2. trus Monday, Tuesday mau kuwi yo metu ning ListView ning ListActivity
-        // TODO : 3. Monday, Tuesday kuwi yo mlebu ning DB kolom SetDay
-        // TODO : 4. FINAL, nek kuwi kabeh wes, dicoba ning dina Monday, Tuesday muni ora, trus selain Monday, Tuesday apakah tetep muni
-        // TODO : 5. Nek kuwi wes iso, trus dicoba ning pas ModifyAlarm, ning ModifyAlarm yo dicoba nomor 1-4 di atas.
-        // TODO : Nek golek golek masalah start alarm, goleki bagian bagian PendingIntent ning SetAlarmOn (class SettingAlarm & ModifyAlarm)
-        // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
-
         Intent i = new Intent(SettingAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intDaysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
         i.putIntegerArrayListExtra("daysOfWeek", intDaysOfWeek);
         startActivityForResult(i, 1);
-
-        /*final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
-
-        final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
-        b.setTitle("Customize Day");
-        b.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                if (isChecked) {
-                    //Kalau user milih hari itu, trus gimana (insert ke database)
-                    //Set ke textview juga
-                } else {
-                    //Kalau item udah ada, remove (mbuh maksute piye)
-                }
-            }
-        });
-
-        // Button OK
-        b.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-
-        });
-        d = b.create();
-        d.show();*/
     }
 
     /**

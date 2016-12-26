@@ -100,7 +100,9 @@ public class BackgroundService extends Service {
                 int hour = cursor.getInt(cursor.getColumnIndex(DBHelper.HOUR_ALARM));
                 int minute = cursor.getInt(cursor.getColumnIndex(DBHelper.MINUTE_ALARM));
                 int status = cursor.getInt(cursor.getColumnIndex(DBHelper.STATUS_ALARM));
-                activateAlarm(id2, date, repeat, hour, minute, status);
+                String chosenRingtone = cursor.getString(cursor.getColumnIndex(DBHelper.RINGTONE_ALARM));
+                int duration = cursor.getInt(cursor.getColumnIndex(DBHelper.ALARM_DURATION));
+                activateAlarm(id2, date, repeat, hour, minute, status, chosenRingtone, duration);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -114,12 +116,26 @@ public class BackgroundService extends Service {
      * @param hour jam alarm dari database
      * @param minute minute alarm dari database
      * @param status status alarm dari database
+     * @param chosenRingtone chosenRingtone alarm dari database
+     * @param duration duration alarm dari database
      */
-    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, int status) {
+    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, int status
+            , String chosenRingtone, int duration) {
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
         Intent intent = new Intent(BackgroundService.this, AlarmReceiver.class);
+        Bundle b = new Bundle();
+        if (chosenRingtone.equals("Default")){
+            b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
+        }
+        b.putInt("durasi", duration*1000);
+        intent.putExtras(b);
+        intent.putExtra("repeat", repeat);
+        intent.putExtra("duration", duration);
+        intent.putExtra("id2",id2);
         if (status == 1) {
             PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 

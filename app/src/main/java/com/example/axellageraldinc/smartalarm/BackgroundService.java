@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
+// TODO : Set alarm setelah booting
+
 public class BackgroundService extends Service {
 
     private boolean isRunning;
     private Context context;
     private Thread backgroundThread;
-    private DBHelper dbHelper;
+    private DBHelper dbHelper; // Manggil database
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,7 +37,7 @@ public class BackgroundService extends Service {
     public void onCreate() {
         this.context = this;
         this.isRunning = false;
-        this.dbHelper = new DBHelper(this);
+        this.dbHelper = new DBHelper(this); // Manggil database
         this.backgroundThread = new Thread(myTask);
 
     }
@@ -76,12 +78,18 @@ public class BackgroundService extends Service {
 // Builds the notification and issues it.
             mNotifyMgr.notify(mNotificationId, mBuilder.build());
         }
+        // Nambah toast dan method loadAlarmFromDB, biar bisa setting alarm setelah booting (service start)
         Toast.makeText(this, "Service running", Toast.LENGTH_LONG).show();
         loadAlarmFromDB();
 //        return START_STICKY;
+
+        // Ganti return value
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Method buat load alarm dari database
+     */
     private void loadAlarmFromDB() {
         Cursor cursor = dbHelper.cursorAlarm();
         if (cursor.moveToFirst()) {
@@ -91,46 +99,65 @@ public class BackgroundService extends Service {
                 String repeat = cursor.getString(cursor.getColumnIndex(DBHelper.SETDAY_ALARM));
                 int hour = cursor.getInt(cursor.getColumnIndex(DBHelper.HOUR_ALARM));
                 int minute = cursor.getInt(cursor.getColumnIndex(DBHelper.MINUTE_ALARM));
-                activateAlarm(id2, date, repeat, hour, minute);
+                int status = cursor.getInt(cursor.getColumnIndex(DBHelper.STATUS_ALARM));
+                activateAlarm(id2, date, repeat, hour, minute, status);
             } while (cursor.moveToNext());
         }
         cursor.close();
     }
 
-    private void activateAlarm(int id2, int date, String repeat, int hour, int minute) {
-        ArrayList<String> stRepeat = (ArrayList<String>) Arrays.asList(repeat.split("\\s*,\\s*"));
+    /**
+     * Method buat aktivasi alarm, didalemnya ada method buat ngeset repeat alarm
+     * @param id2 id2 alarm dari database
+     * @param date date(harusnya time) dari database (di database namanya order)
+     * @param repeat repeat alarm dari database
+     * @param hour jam alarm dari database
+     * @param minute minute alarm dari database
+     * @param status status alarm dari database
+     */
+    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, int status) {
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
         Intent intent = new Intent(BackgroundService.this, AlarmReceiver.class);
+        if (status == 1) {
+            PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        long time = (long) date;
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-        if (repeat.equals("Don't repeat")) {
-            am.set(AlarmManager.RTC_WAKEUP, time, pi);
-        } else {
-            if (repeat.equals("Everyday")) {
-                for (int i=1;i<8;i++) {
-                    setRepeatAlarm(i, hour, minute, am, pi);
-                }
-            } else if (repeat.equals("Weekday")) {
-                for (int i=2;i<7;i++) {
-                    setRepeatAlarm(i, hour, minute, am, pi);
-                }
-            } else if (repeat.equals("Weekend")) {
-                setRepeatAlarm(1, hour, minute, am, pi);
-                setRepeatAlarm(7, hour, minute, am, pi);
+            long time = (long) date;
+            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+            if (repeat.equals("Don't repeat")) {
+                am.set(AlarmManager.RTC_WAKEUP, time, pi);
             } else {
-                int list;
-                for (int a=0;a<intRepeat.size();a++) {
-                    list = intRepeat.get(a);
-                    setRepeatAlarm(list, hour, minute, am, pi);
+                if (repeat.equals("Everyday")) {
+                    for (int i=1;i<8;i++) {
+                        setRepeatAlarm(i, hour, minute, am, pi);
+                    }
+                } else if (repeat.equals("Weekday")) {
+                    for (int i=2;i<7;i++) {
+                        setRepeatAlarm(i, hour, minute, am, pi);
+                    }
+                } else if (repeat.equals("Weekend")) {
+                    setRepeatAlarm(1, hour, minute, am, pi);
+                    setRepeatAlarm(7, hour, minute, am, pi);
+                } else {
+                    int list;
+                    for (int a=0;a<intRepeat.size();a++) {
+                        list = intRepeat.get(a);
+                        setRepeatAlarm(list, hour, minute, am, pi);
+                    }
                 }
             }
         }
-
     }
 
+    /**
+     * Method buat Setting repeat alarm
+     * @param daysOfWeek hari yang mau diset (1 = Minggu, 2 = Senin, dst.)
+     * @param hour jam alarm
+     * @param minute menit alarm
+     * @param am AlarmManager yang digunain
+     * @param pi Pending intent yang digunain
+     */
     private void setRepeatAlarm(int daysOfWeek, int hour, int minute, AlarmManager am, PendingIntent pi) {
         Calendar calendar = Calendar.getInstance();
         if (daysOfWeek != 0) {

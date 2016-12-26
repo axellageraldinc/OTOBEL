@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.BackgroundService;
+
 /**
  * @author Nilanchala
  *         <p/>
@@ -31,15 +33,14 @@ public class DeviceBootReceiver extends BroadcastReceiver {
 //
 //            Toast.makeText(context, "Alarm Set", Toast.LENGTH_SHORT).show();
 
-            Intent mServiceIntent = new Intent();
-            mServiceIntent.setAction("com.example.axellageraldinc.smartalarm.BackgroundService");
+            // Ganti bagian ini (setelah booting jalanin class BackgroundService
+            Intent mServiceIntent = new Intent(context, BackgroundService.class);
             ComponentName service = context.startService(mServiceIntent);
             if (null == service) {
                 Toast.makeText(context, "Ga bisa", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(context, "Alarm set", Toast.LENGTH_LONG).show();
             }
-            Toast.makeText(context, "Testing boot", Toast.LENGTH_LONG).show();
         }
     }
 }

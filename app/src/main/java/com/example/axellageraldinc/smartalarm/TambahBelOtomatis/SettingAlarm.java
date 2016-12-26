@@ -39,7 +39,7 @@ public class SettingAlarm extends AppCompatActivity
     public static PendingIntent pendingIntent1;
     public static AlarmManager alarmManager;
     Intent intent1;
-    public String chosenRingtone;
+    public String chosenRingtone="Default";
     DBHelper dbHelper;
     AlertDialog d;
     ArrayList<ModelSettingAlarm> results;
@@ -357,11 +357,11 @@ public class SettingAlarm extends AppCompatActivity
         minute = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
-        //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
-        if (chosenRingtone != null){
-            b.putString("ringtone_alarm", chosenRingtone);
-        } else {
+        // Biar di database chosenRingtone gak kosong
+        if (chosenRingtone.equals("Default")){
             b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
         }
         b.putInt("durasi", duration*1000);
         intent1.putExtras(b);

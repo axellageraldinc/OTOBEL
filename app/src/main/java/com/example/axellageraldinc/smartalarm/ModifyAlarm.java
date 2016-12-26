@@ -34,22 +34,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 
+// TODO : Masih ada bug bagian UI setelah alarm di modify
+
 public class ModifyAlarm extends AppCompatActivity {
     TimePicker alarmTimePicker;
     public static PendingIntent pendingIntent;
     public static AlarmManager alarmManager;
     Intent intent1;
     public String chosenRingtone;
-    String hour, minute;
     DBHelper dbHelper;
     AlertDialog d;
     public static long time;
     ActionBar actionBar;
-    int mHour, mMinute;
-    ListView listViewSet;
-    TextView txtRepeat;
-    public int hourNow, minuteNow, jumlah_waktu;
-    public static int durasifix=10000, duration, selected, ID2, ID, status, hourModify, menitModify;
+    public int hourNow, minuteNow;
+    public static int durasifix=10000, duration, ID2, ID, status, hourModify, menitModify;
     public static String durasi, title;
     public static String repeat, JudulBel, ringtone;
     private Button btnSave, btnCancel, btnDelete;
@@ -536,7 +534,8 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                ArrayList<String> stRepeat = (ArrayList<String>) Arrays.asList(repeat.split("\\s*,\\s*"));
+                ArrayList<String> stRepeat = new ArrayList<String>();
+                stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
                 ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
                 if (repeat.equals("Don't repeat")) {
                     setAlarmRepeat(0);

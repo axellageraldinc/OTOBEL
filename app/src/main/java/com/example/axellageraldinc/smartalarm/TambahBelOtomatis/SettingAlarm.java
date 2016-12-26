@@ -39,7 +39,7 @@ public class SettingAlarm extends AppCompatActivity
     public static PendingIntent pendingIntent1;
     public static AlarmManager alarmManager;
     Intent intent1;
-    public String chosenRingtone;
+    public String chosenRingtone="Default";
     DBHelper dbHelper;
     AlertDialog d;
     ArrayList<ModelSettingAlarm> results;
@@ -319,57 +319,12 @@ public class SettingAlarm extends AppCompatActivity
     }
 
     public void CustomRepeat() {
-
-        // TODO : Custom Repeat
-        // TODO : PRE-CODING,
-        // TODO : 1. misal sing dipilih Monday, Tuesday, metu ning setSub dadi Monday, Tuesday.
-        // TODO : 2. trus Monday, Tuesday mau kuwi yo metu ning ListView ning ListActivity
-        // TODO : 3. Monday, Tuesday kuwi yo mlebu ning DB kolom SetDay
-        // TODO : 4. FINAL, nek kuwi kabeh wes, dicoba ning dina Monday, Tuesday muni ora, trus selain Monday, Tuesday apakah tetep muni
-        // TODO : 5. Nek kuwi wes iso, trus dicoba ning pas ModifyAlarm, ning ModifyAlarm yo dicoba nomor 1-4 di atas.
-        // TODO : Nek golek golek masalah start alarm, goleki bagian bagian PendingIntent ning SetAlarmOn (class SettingAlarm & ModifyAlarm)
-        // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
-
         Intent i = new Intent(SettingAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intDaysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
         i.putIntegerArrayListExtra("daysOfWeek", intDaysOfWeek);
         startActivityForResult(i, 1);
-
-        /*final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
-
-        final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
-        b.setTitle("Customize Day");
-        b.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i, boolean isChecked) {
-                if (isChecked) {
-                    //Kalau user milih hari itu, trus gimana (insert ke database)
-                    //Set ke textview juga
-                } else {
-                    //Kalau item udah ada, remove (mbuh maksute piye)
-                }
-            }
-        });
-
-        // Button OK
-        b.setPositiveButton("OK",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-        //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-
-        });
-        d = b.create();
-        d.show();*/
     }
 
     /**
@@ -393,8 +348,8 @@ public class SettingAlarm extends AppCompatActivity
         }
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 7);
         }
@@ -402,11 +357,11 @@ public class SettingAlarm extends AppCompatActivity
         minute = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
-        //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
-        if (chosenRingtone != null){
-            b.putString("ringtone_alarm", chosenRingtone);
-        } else {
+        // Biar di database chosenRingtone gak kosong
+        if (chosenRingtone.equals("Default")){
             b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
         }
         b.putInt("durasi", duration*1000);
         intent1.putExtras(b);

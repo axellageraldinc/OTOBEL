@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Senin"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Selasa"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Rabu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Kamis"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -88,7 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Jumat"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -108,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Sabtu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -128,7 +128,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Minggu"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -66,7 +66,8 @@ public class SettingAlarm extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_alarm_listview);
         actionBar = getSupportActionBar();
-        actionBar.setTitle("ADD ALARM");
+        actionBar.setTitle(this.getResources().getString(R.string.JudulSettingAlarm));
+        actionBar.setIcon(R.drawable.logoooo);
 
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);

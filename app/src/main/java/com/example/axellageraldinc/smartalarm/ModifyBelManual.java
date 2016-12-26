@@ -50,6 +50,7 @@ public class ModifyBelManual extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.JudulModifyManual));
+        actionBar.setIcon(R.drawable.logoooo);
 
         Intent i = getIntent();
         ID = i.getIntExtra("id", 0);

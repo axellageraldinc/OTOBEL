@@ -68,6 +68,7 @@ public class ModifyAlarm extends AppCompatActivity {
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.JudulModify));
+        actionBar.setIcon(R.drawable.logoooo);
 
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);

@@ -9,16 +9,22 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logoooo"
         android:label="@string/app_name"
         android:persistent="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service android:name=".BackgroundService" />
 
-        <activity android:name=".HomeScreen">
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,7 +61,9 @@
         <activity android:name=".ListViewBelManual.ManualAlarm" />
         <activity android:name=".ListViewBelOtomatis.ListActivity" />
         <activity android:name=".TambahBelManual.AddManualAlarm" />
-        <activity android:name=".ModifyBelManual"></activity>
+        <activity android:name=".ModifyBelManual" />
+        <activity android:name=".CustomRepeat" />
+        <activity android:name=".HomeScreen"></activity>
     </application>
 
 </manifest>

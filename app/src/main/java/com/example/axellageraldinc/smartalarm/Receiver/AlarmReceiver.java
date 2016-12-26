@@ -1,6 +1,6 @@
 package com.example.axellageraldinc.smartalarm.Receiver;
 
-import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,18 +8,16 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.view.Menu;
+import android.support.v7.app.NotificationCompat;
 import android.widget.Toast;
 
-import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
+import com.example.axellageraldinc.smartalarm.BackgroundService;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
-import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm.ListActivity;
-import com.example.axellageraldinc.smartalarm.ShowAlarm;
-import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;
+
+import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class AlarmReceiver extends BroadcastReceiver
 {
@@ -33,6 +31,9 @@ public class AlarmReceiver extends BroadcastReceiver
     @Override
     public void onReceive(final Context context, Intent intent)
     {
+
+        /*Intent background = new Intent(context, BackgroundService.class);
+        context.startService(background);*/
 
         dbH = new DBHelper(context);
         this.context = context;
@@ -144,7 +145,5 @@ public class AlarmReceiver extends BroadcastReceiver
             }
         }; c.start();*/
     }
-
-
 
 }

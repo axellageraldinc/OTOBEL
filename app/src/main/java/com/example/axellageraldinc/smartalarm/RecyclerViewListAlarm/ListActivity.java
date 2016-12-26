@@ -1,5 +1,7 @@
 package com.example.axellageraldinc.smartalarm.RecyclerViewListAlarm;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+import com.example.axellageraldinc.smartalarm.HomeScreen;
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.TambahAlarmBaru.SettingAlarm;

@@ -5,18 +5,6 @@
     android:background="@color/BackgroundLayout"
     android:backgroundTint="@color/BackgroundLayout">
 
-    <TimePicker
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/timePicker"
-        android:numbersBackgroundColor="@color/TextColor"
-        android:numbersInnerTextColor="@color/TextColor"
-        android:numbersTextColor="@color/TextColor"
-        android:amPmTextColor="@color/TextColor"
-        android:theme="@style/AppTheme"
-        android:backgroundTint="@color/TextColor"
-        android:timePickerMode="spinner" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -26,8 +14,7 @@
         <ListView
             android:layout_width="match_parent"
             android:id="@+id/listView"
-            android:layout_height="250dp"
-            android:scrollbars="vertical"/>
+            android:layout_height="300dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,21 +27,31 @@
 
         <Button
             android:text="@string/ButtonCancel"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnCancel"
             android:layout_weight="1"
-            android:background="@drawable/button_colors"
-            android:textColor="@color/BackgroundLayout" />
+            android:textColor="@color/BackgroundLayout"
+            android:background="@drawable/button_colors" />
 
         <Button
-            android:layout_width="match_parent"
+            android:text="@string/ButtonDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnDelete"
+            android:layout_weight="1"
+            android:textColor="@color/BackgroundLayout"
+            android:background="@drawable/button_colors" />
+
+
+        <Button
+            android:text="@string/ButtonOK"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSave"
             android:layout_weight="1"
-            android:background="@drawable/button_colors"
             android:textColor="@color/BackgroundLayout"
-            android:text="@string/ButtonOK" />
+            android:background="@drawable/button_colors" />
     </LinearLayout>
 
 </LinearLayout>

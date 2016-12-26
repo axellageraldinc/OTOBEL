@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,6 +72,9 @@ public class ModifyAlarm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_alarm);
 
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(getResources().getString(R.string.JudulModify));
+
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -96,7 +100,12 @@ public class ModifyAlarm extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Update data ke database
-                UpdateData();
+                if (chosenRingtone==null || JudulBel==null){
+                    Toast.makeText(ModifyAlarm.this, "Mohon beri judul bel dan pilih ringtone", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    UpdateData();
+                }
             }
         });
 
@@ -159,7 +168,10 @@ public class ModifyAlarm extends AppCompatActivity {
         d.setContentView(R.layout.input_box);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+        InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+        imm.showSoftInput(txtInput, InputMethodManager.SHOW_IMPLICIT);
         txtInput.setText(JudulBel);
+        txtInput.setSelection(txtInput.getText().length());
 
         Button OK = (Button) d.findViewById(R.id.btnOK);
         OK.setOnClickListener(new View.OnClickListener() {
@@ -276,7 +288,10 @@ public class ModifyAlarm extends AppCompatActivity {
         d.setContentView(R.layout.input_box);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+        InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);
+        imm.showSoftInput(txtInput, InputMethodManager.SHOW_IMPLICIT);
         txtInput.setText(String.valueOf(duration));
+        txtInput.setSelection(txtInput.getText().length());
 
         Button OK = (Button) d.findViewById(R.id.btnOK);
         OK.setOnClickListener(new View.OnClickListener() {

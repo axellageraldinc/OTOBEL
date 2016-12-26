@@ -27,34 +27,36 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:divider="@drawable/divider"
+        android:showDividers="middle">
 
         <Button
-            android:text="Cancel"
+            android:text="@string/ButtonCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnCancel"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
+            android:textColor="@color/BackgroundLayout"
+            android:background="@drawable/button_colors" />
 
         <Button
-            android:text="DELETE"
+            android:text="@string/ButtonDelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnDelete"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
+            android:textColor="@color/BackgroundLayout"
+            android:background="@drawable/button_colors" />
 
         <Button
-            android:text="OK"
+            android:text="@string/ButtonOK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnSave"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/BackgroundLayout" />
+            android:textColor="@color/BackgroundLayout"
+            android:background="@drawable/button_colors" />
     </LinearLayout>
 
 </LinearLayout>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
 
@@ -187,8 +186,9 @@ public class DBHelper extends SQLiteOpenHelper {
     // Get All alarm for alarm adapter
     public List<AlarmModel> getAllAlarm() {
         List<AlarmModel> alarmModelList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_ALARM + " ORDER BY " + HOUR_ALARM + ", " + MINUTE_ALARM;
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.query(TABLE_ALARM, null, null, null, null, null, HOUR_ALARM + "," + MINUTE_ALARM);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -277,19 +277,6 @@ public class DBHelper extends SQLiteOpenHelper {
         alarmModel.setID2(cursor.getInt(7));
         alarmModel.setJudul_bel(cursor.getString(8));
         return alarmModel;
-    }
-
-    public String[] getAlarmID2(int id2) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT * FROM " + TABLE_ALARM + " WHERE " + ID2 + "=" + id2;
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            Log.v(SETDAY_ALARM, cursor.getString(cursor.getColumnIndex(SETDAY_ALARM)));
-            return new String[]{cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
-                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))};
-        } else {
-            return null;
-        }
     }
 
 }

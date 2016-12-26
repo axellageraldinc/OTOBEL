@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">Alarm</string>
+    <string name="app_name">Bel Sekolah</string>
+    <string name="JudulModify">EDIT BEL OTOMATIS</string>
+    <string name="JudulSettingAlarm">TAMBAH BEL OTOMATIS</string>
+    <string name="JudulAddManual">TAMBAH BEL MANUAL</string>
+    <string name="JudulModifyManual">EDIT BEL MANUAL</string>
+    <string name="ButtonOK">OK</string>
+    <string name="ButtonCancel">CANCEL</string>
+    <string name="ButtonDelete">DELETE</string>
 </resources>

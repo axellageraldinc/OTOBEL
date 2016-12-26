@@ -1,6 +1,7 @@
 package com.example.axellageraldinc.smartalarm;
 
 import android.content.Intent;
+import android.support.annotation.ColorInt;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,13 +35,14 @@ public class HomeScreen extends AppCompatActivity {
         //Bagian tabs
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        //tabLayout.setSelectedTabIndicatorColor(this.getResources().getColor(R.color.FAB));
 
     }
 
     //Set tulisan untuk di tabs (gak terpakai karena pakainya icon [source code di atas])
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new ListActivity(), "Jadwal Bel");
+        adapter.addFrag(new ListActivity(), "Bel Otomatis");
         adapter.addFrag(new ManualAlarm(), "Bel Manual");
         viewPager.setAdapter(adapter);
     }

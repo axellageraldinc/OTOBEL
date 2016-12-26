@@ -7,26 +7,37 @@ import android.media.AudioManager;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.Database.AlarmModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ManualAlarm extends Fragment {
 
-    Button btnTest;
+    Button btnTest, btnAddNew;
     AudioManager am;
     MediaPlayer mp;
     DBHelper dbH;
     int VolumeDB, DefaultVolume;
     Context context;
     MediaMetadataRetriever metaRetriever;
+    private ListView listManual;
+    private List<BelManualModel> belManualModelList = new ArrayList<>();
+    private BelManualModel bmm;
+    private ListManualAdapter lma;
 
     public ManualAlarm(){
 
@@ -41,25 +52,48 @@ public class ManualAlarm extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        dbH = new DBHelper(getActivity());
-        VolumeDB = dbH.GetVolume();
-
-        am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
-        DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-
-        am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+        //DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         View view = inflater.inflate(R.layout.activity_manual_alarm, container, false);
 
-        btnTest = (Button)view.findViewById(R.id.btnTEST);
-        btnTest.setOnClickListener(new View.OnClickListener() {
+        dbH = new DBHelper(getActivity());
+        belManualModelList = dbH.getAllBelManual();
+
+        listManual = (ListView)view.findViewById(R.id.listManual);
+        listManual.setEmptyView(view.findViewById(R.id.empty));
+        lma = new ListManualAdapter(getContext(), belManualModelList);
+        listManual.setAdapter(lma);
+        lma.notifyDataSetChanged();
+
+        listManual.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                BelManualModel bmm = belManualModelList.get(position);
+                int id = bmm.getId_manual();
+                String nama_bel = bmm.getNama_bel_manual();
+                String ringtone = bmm.getRingtone_manual();
+                int durasi = bmm.getDurasi_manual();
+                BelManualModel bmm2 = dbH.getBelManualDetail(id);
+                nama_bel = bmm2.getNama_bel_manual();
+                ringtone = bmm2.getRingtone_manual();
+                durasi = bmm2.getDurasi_manual();
+                int durasi_cetak = durasi/1000;
+
+                Intent ii = new Intent(getContext(), ModifyBelManual.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                ii.putExtra("id", id);
+                ii.putExtra("nama_bel", nama_bel);
+                ii.putExtra("ringtone", ringtone);
+                ii.putExtra("durasi", durasi);
+                startActivity(ii);
+            }
+        });
+
+        FloatingActionButton btnAddNew = (FloatingActionButton)view.findViewById(R.id.btnAddNew);
+        btnAddNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
-                mp = MediaPlayer.create(getContext(), R.raw.bell_stasiun);
-                mp.start();
-                am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
+                Intent i = new Intent(getContext(), AddManualAlarm.class);
+                startActivity(i);
             }
         });
         return view;

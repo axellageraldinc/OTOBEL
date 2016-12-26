@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txtId"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:textColor="@color/TextColor"
                 android:text="ID" />
 
@@ -93,8 +93,7 @@
                 android:id="@+id/txtID2"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
-                android:textSize="5sp"
-                android:visibility="gone"/>
+                android:textSize="5sp" />
 
         </LinearLayout>
 

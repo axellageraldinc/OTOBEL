@@ -14,10 +14,11 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/txtInput"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:maxLength="15"/>
 
         <Button
-            android:text="OK"
+            android:text="@string/ButtonOK"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnOK"

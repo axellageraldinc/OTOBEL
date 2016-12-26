@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00695C</color>
-    <color name="colorPrimaryDark">#004D40</color>
-    <color name="colorAccent">#00bfa5</color>
-    <color name="BackgroundLayout">#fafafa</color>
-    <color name="TextColor">#212121</color>
+    <color name="colorPrimary">#2185C5</color>
+    <color name="colorPrimaryDark">#15567F</color>
+    <color name="colorAccent">#3791ca</color>
+    <color name="BackgroundLayout">#ecf0f1</color>
+    <color name="TextColor">#3E454C</color>
+    <color name="FAB">#3791ca</color>
+    <color name="FAB_TUA">#b83c51</color>
+    <color name="button_pressed">#1d77b1</color>
+    <color name="button_focused">#1a6a9d</color>
+    <color name="button_default">#2185C5</color>
 </resources>

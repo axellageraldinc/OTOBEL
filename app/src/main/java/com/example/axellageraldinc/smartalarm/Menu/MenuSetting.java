@@ -91,6 +91,7 @@ public class MenuSetting extends AppCompatActivity {
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
         txtInput.setText(durasi);
+        txtInput.setSelection(txtInput.getText().length());
 
         Button OK = (Button) d.findViewById(R.id.btnOK);
         OK.setOnClickListener(new View.OnClickListener() {

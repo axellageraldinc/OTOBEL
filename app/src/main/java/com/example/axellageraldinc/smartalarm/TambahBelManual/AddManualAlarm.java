@@ -51,6 +51,7 @@ public class AddManualAlarm extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.JudulAddManual));
+        actionBar.setIcon(R.drawable.logoooo);
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         dbHelper = new DBHelper(AddManualAlarm.this);

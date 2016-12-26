@@ -181,7 +181,15 @@ public class ModifyAlarm extends AppCompatActivity {
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
         b.setTitle("Repeat Alarm");
         b.setCancelable(true);
-        b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        int checkedItem;
+        if (repeat.equals("Don't repeat")) {
+            checkedItem = 0;
+        } else if (repeat.equals("Everyday")) {
+            checkedItem = 1;
+        } else {
+            checkedItem = 2;
+        }
+        b.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 switch (item)
@@ -308,6 +316,10 @@ public class ModifyAlarm extends AppCompatActivity {
     public void CustomRepeat() {
 
         Intent i = new Intent(ModifyAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+        ArrayList<Integer> intDaysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
+        i.putIntegerArrayListExtra("daysOfWeek", intDaysOfWeek);
         startActivityForResult(i, 1);
 //        final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};
 //

@@ -29,6 +29,7 @@ import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
@@ -53,7 +54,7 @@ public class SettingAlarm extends AppCompatActivity
     private Uri uri;
     private String repeat, title, JudulBel;
     long idItem;
-    public static int id2=0, selected;
+    public static int id2=0, selected=0;
 
 
     public SettingAlarm() {
@@ -185,7 +186,15 @@ public class SettingAlarm extends AppCompatActivity
         final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
         b.setTitle("Repeat Alarm");
         b.setCancelable(true);
-        b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        int checkedItem;
+        if (selected == 0 || repeat.equals("Don't repeat")) {
+            checkedItem = 0;
+        } else if (selected == 1 || repeat.equals("Everyday")) {
+            checkedItem = 1;
+        } else {
+            checkedItem = 2;
+        }
+        b.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 switch (item)
@@ -322,6 +331,10 @@ public class SettingAlarm extends AppCompatActivity
         // TODO : Nek golek golek masalah stop alarm (ben alarm ra muni), goleki bagian PendingIntent (SetAlarmOn) ning ModifyAlarm, trus ngko ning bagian DeleteData (class ModifyAlarm)
 
         Intent i = new Intent(SettingAlarm.this, CustomRepeat.class); //.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+        ArrayList<Integer> intDaysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
+        i.putIntegerArrayListExtra("daysOfWeek", intDaysOfWeek);
         startActivityForResult(i, 1);
 
         /*final CharSequence[] items = {" Monday ", " Tuesday ", " Wednesday ", " Thursday ", " Friday ", " Saturday ", " Sunday "};

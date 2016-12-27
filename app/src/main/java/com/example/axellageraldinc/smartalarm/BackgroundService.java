@@ -102,7 +102,9 @@ public class BackgroundService extends Service {
                 int status = cursor.getInt(cursor.getColumnIndex(DBHelper.STATUS_ALARM));
                 String chosenRingtone = cursor.getString(cursor.getColumnIndex(DBHelper.RINGTONE_ALARM));
                 int duration = cursor.getInt(cursor.getColumnIndex(DBHelper.ALARM_DURATION));
-                activateAlarm(id2, date, repeat, hour, minute, status, chosenRingtone, duration);
+                if (status == 1) {
+                    activateAlarm(id2, date, repeat, hour, minute, chosenRingtone, duration);
+                }
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -115,12 +117,10 @@ public class BackgroundService extends Service {
      * @param repeat repeat alarm dari database
      * @param hour jam alarm dari database
      * @param minute minute alarm dari database
-     * @param status status alarm dari database
      * @param chosenRingtone chosenRingtone alarm dari database
      * @param duration duration alarm dari database
      */
-    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, int status
-            , String chosenRingtone, int duration) {
+    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, String chosenRingtone, int duration) {
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
@@ -136,31 +136,29 @@ public class BackgroundService extends Service {
         intent.putExtra("repeat", repeat);
         intent.putExtra("duration", duration);
         intent.putExtra("id2",id2);
-        if (status == 1) {
-            PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-            long time = (long) date;
-            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            if (repeat.equals("Don't repeat")) {
-                am.set(AlarmManager.RTC_WAKEUP, time, pi);
+        long time = (long) date;
+        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        if (repeat.equals("Don't repeat")) {
+            am.set(AlarmManager.RTC_WAKEUP, time, pi);
+        } else {
+            if (repeat.equals("Everyday")) {
+                for (int i=1;i<8;i++) {
+                    setRepeatAlarm(i, hour, minute, am, pi);
+                }
+            } else if (repeat.equals("Weekday")) {
+                for (int i=2;i<7;i++) {
+                    setRepeatAlarm(i, hour, minute, am, pi);
+                }
+            } else if (repeat.equals("Weekend")) {
+                setRepeatAlarm(1, hour, minute, am, pi);
+                setRepeatAlarm(7, hour, minute, am, pi);
             } else {
-                if (repeat.equals("Everyday")) {
-                    for (int i=1;i<8;i++) {
-                        setRepeatAlarm(i, hour, minute, am, pi);
-                    }
-                } else if (repeat.equals("Weekday")) {
-                    for (int i=2;i<7;i++) {
-                        setRepeatAlarm(i, hour, minute, am, pi);
-                    }
-                } else if (repeat.equals("Weekend")) {
-                    setRepeatAlarm(1, hour, minute, am, pi);
-                    setRepeatAlarm(7, hour, minute, am, pi);
-                } else {
-                    int list;
-                    for (int a=0;a<intRepeat.size();a++) {
-                        list = intRepeat.get(a);
-                        setRepeatAlarm(list, hour, minute, am, pi);
-                    }
+                int list;
+                for (int a=0;a<intRepeat.size();a++) {
+                    list = intRepeat.get(a);
+                    setRepeatAlarm(list, hour, minute, am, pi);
                 }
             }
         }

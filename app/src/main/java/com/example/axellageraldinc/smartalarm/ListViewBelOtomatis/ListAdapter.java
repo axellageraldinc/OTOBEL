@@ -3,6 +3,7 @@ package com.example.axellageraldinc.smartalarm.ListViewBelOtomatis;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.Image;
 import android.media.MediaPlayer;
@@ -20,6 +21,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.axellageraldinc.smartalarm.BackgroundService;
 import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
@@ -33,7 +35,7 @@ import java.util.List;
  * Created by Axellageraldinc A on 10-Dec-16.
  */
 
-// TODO : Bug switch alarm on/off
+// TODO : Ringtone setelah switch on selalu default
 
 public class ListAdapter extends BaseAdapter {
 
@@ -87,6 +89,7 @@ public class ListAdapter extends BaseAdapter {
             holder.txtJudulAlarm = (TextView)MyView.findViewById(R.id.txtJudulAlarm);
             holder.txtID = (TextView)MyView.findViewById(R.id.txtId);
             holder.txtID2 = (TextView) MyView.findViewById(R.id.txtID2);
+            holder.txtStatus = (TextView) MyView.findViewById(R.id.txtStatus);
             holder.switchAlarmStatus = (Switch) MyView.findViewById(R.id.SwitchAlarmStatus);
             holder.btnPlay = (ImageButton) MyView.findViewById(R.id.btnPlay);
             MyView.setTag(holder);
@@ -98,15 +101,15 @@ public class ListAdapter extends BaseAdapter {
         id = String.valueOf(belOtomatisModelList.get(position).getId());
         id2 = String.valueOf(belOtomatisModelList.get(position).getID2());
         ringtone = belOtomatisModelList.get(position).getRingtone();
-        holder.txtID.setText(id);
-        holder.txtID2.setText(id2);
+        holder.txtID.setText(String.valueOf(belOtomatisModelList.get(position).getId()));
+        holder.txtID2.setText(String.valueOf(belOtomatisModelList.get(position).getID2()));
+        holder.txtStatus.setText(String.valueOf(belOtomatisModelList.get(position).getStatus()));
         output = String.format("%02d : %02d", belOtomatisModelList.get(position).getHour(), belOtomatisModelList.get(position).getMinute());
         holder.txtShowWaktu.setText(output);
         hour = belOtomatisModelList.get(position).getHour();
         minute = belOtomatisModelList.get(position).getMinute();
         holder.txtSetDay.setText(belOtomatisModelList.get(position).getSet_day());
-        String judul = belOtomatisModelList.get(position).getJudul_bel();
-        holder.txtJudulAlarm.setText(judul);
+        holder.txtJudulAlarm.setText(belOtomatisModelList.get(position).getJudul_bel());
         final int duration = belOtomatisModelList.get(position).getAlarm_duration();
 
         final int VolumeDB = dbHelper.GetVolume();
@@ -168,32 +171,35 @@ public class ListAdapter extends BaseAdapter {
             }
         });
 
-        int status = belOtomatisModelList.get(position).getStatus();
-        if (status==1){
+//        int status = belOtomatisModelList.get(position).getStatus();
+        if (holder.txtStatus.getText().toString().equals("1")){
             holder.switchAlarmStatus.setChecked(true);
         }
         else{
             holder.switchAlarmStatus.setChecked(false);
         }
-
+        final TextView txtID = holder.txtID;
+        final TextView txtID2 = holder.txtID2;
         holder.switchAlarmStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
-                    Toast.makeText(context, "Check : " + id, Toast.LENGTH_SHORT).show();
-                    dbHelper.updateAlarmStatus(Integer.parseInt(String.valueOf(id)), 1);
+                    Toast.makeText(context, "Check : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
+                    dbHelper.updateAlarmStatus(Integer.parseInt(txtID.getText().toString()), 1);
+                    loadActivateFromDB(Integer.parseInt(txtID.getText().toString()));
                     //alarm ON
                 }
                 else
                 {
-                    Toast.makeText(context, "Uncheck : " + id, Toast.LENGTH_SHORT).show();
-                    dbHelper.updateAlarmStatus(Integer.parseInt(String.valueOf(id)), 0);
+                    Toast.makeText(context, "Uncheck : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
+                    dbHelper.updateAlarmStatus(Integer.parseInt(txtID.getText().toString()), 0);
                     //alarm OFF
                     //Cari id2 berdasar id dari yang di off, lalu pendingIntent id2 disini. pendingintent di cancel
-                    Intent intent2 = new Intent(context, AlarmReceiver.class);
-                    PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, Integer.parseInt(id2), intent2,
-                            PendingIntent.FLAG_UPDATE_CURRENT);
-                    pendingIntent1.cancel();
+//                    Intent intent2 = new Intent(context, AlarmReceiver.class);
+//                    PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context
+//                            ,Integer.parseInt(txtID2.getText().toString()), intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+//                    pendingIntent1.cancel();
+                    stopAlarm(Integer.parseInt(txtID.getText().toString()));
                 }
             }
         });
@@ -209,9 +215,41 @@ public class ListAdapter extends BaseAdapter {
     }
 
     private static class ItemViewHolder {
-        TextView txtShowWaktu, txtSetDay, txtJudulAlarm, txtID, txtID2;
+        TextView txtShowWaktu, txtSetDay, txtJudulAlarm, txtID, txtID2, txtStatus;
         Switch switchAlarmStatus;
         ImageButton btnPlay;
     }
 
+    private void loadActivateFromDB(int id) {
+        Cursor cursor = dbHelper.cursorOneAlarm(id);
+        if (cursor.moveToFirst()) {
+            int id2 = cursor.getInt(cursor.getColumnIndex(DBHelper.ID2));
+            int date = cursor.getInt(cursor.getColumnIndex(DBHelper.order_alarm));
+            String repeat = cursor.getString(cursor.getColumnIndex(DBHelper.SETDAY_ALARM));
+            int hour = cursor.getInt(cursor.getColumnIndex(DBHelper.HOUR_ALARM));
+            int minute = cursor.getInt(cursor.getColumnIndex(DBHelper.MINUTE_ALARM));
+            int status = cursor.getInt(cursor.getColumnIndex(DBHelper.STATUS_ALARM));
+            String chosenRingtone = cursor.getString(cursor.getColumnIndex(DBHelper.RINGTONE_ALARM));
+            int duration = cursor.getInt(cursor.getColumnIndex(DBHelper.ALARM_DURATION));
+            if (status == 1) {
+                BackgroundService.activateAlarm(context, id2, date, repeat, hour, minute, chosenRingtone, duration);
+            }
+        }
+        cursor.close();
+    }
+
+    private void stopAlarm(int id) {
+        Cursor cursor = dbHelper.cursorOneAlarm(id);
+        if (cursor.moveToFirst()) {
+            int id2 = cursor.getInt(cursor.getColumnIndex(DBHelper.ID2));
+            int date = cursor.getInt(cursor.getColumnIndex(DBHelper.order_alarm));
+            String repeat = cursor.getString(cursor.getColumnIndex(DBHelper.SETDAY_ALARM));
+            int hour = cursor.getInt(cursor.getColumnIndex(DBHelper.HOUR_ALARM));
+            int minute = cursor.getInt(cursor.getColumnIndex(DBHelper.MINUTE_ALARM));
+            String chosenRingtone = cursor.getString(cursor.getColumnIndex(DBHelper.RINGTONE_ALARM));
+            int duration = cursor.getInt(cursor.getColumnIndex(DBHelper.ALARM_DURATION));
+            BackgroundService.stopAlarm(context, id2, date, repeat, hour, minute, chosenRingtone, duration);
+        }
+        cursor.close();
+    }
 }

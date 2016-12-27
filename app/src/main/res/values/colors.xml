@@ -10,4 +10,5 @@
     <color name="button_pressed">#1d77b1</color>
     <color name="button_focused">#1a6a9d</color>
     <color name="button_default">#2185C5</color>
+    <color name="toolbar_color">#d4d8d8</color>
 </resources>

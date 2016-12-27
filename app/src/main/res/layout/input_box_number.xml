@@ -14,7 +14,8 @@
             android:inputType="numberDecimal"
             android:ems="10"
             android:id="@+id/txtInput"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:hint="Satuan detik" />
 
         <Button
             android:text="@string/ButtonOK"

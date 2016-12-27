@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.AudioManager;
 
+import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
 import com.example.axellageraldinc.smartalarm.ModifyAlarm;
 import com.example.axellageraldinc.smartalarm.ModifyBelManual;
 

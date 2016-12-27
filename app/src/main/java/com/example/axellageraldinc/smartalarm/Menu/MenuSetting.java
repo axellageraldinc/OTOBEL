@@ -32,6 +32,7 @@ public class MenuSetting extends AppCompatActivity {
     public static int durasifix=10000;
     private DBHelper dbH;
     private MediaPlayer mp;
+    public static int maxVolume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class MenuSetting extends AppCompatActivity {
     {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
         final SeekBar seek = new SeekBar(this);
-        int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
         popDialog.setTitle("Set Alarm Volume");

@@ -33,6 +33,8 @@ import java.util.List;
  * Created by Axellageraldinc A on 10-Dec-16.
  */
 
+// TODO : Bug switch alarm on/off
+
 public class ListAdapter extends BaseAdapter {
 
     private List<BelOtomatisModel> belOtomatisModelList = new ArrayList<>();

@@ -46,7 +46,6 @@ public class HomeScreen extends AppCompatActivity {
 
     }
 
-    //Set tulisan untuk di tabs (gak terpakai karena pakainya icon [source code di atas])
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new ListActivity(), "Bel Otomatis");

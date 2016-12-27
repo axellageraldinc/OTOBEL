@@ -73,9 +73,11 @@
                 android:gravity="center_vertical"
                 android:textColor="@color/TextColor"
                 android:fontFamily="sans-serif"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:text="Judul"
-                android:paddingLeft="15dp" />
+                android:paddingLeft="15dp"
+                android:maxLines="2"
+                android:lines="2"/>
 
             <TextView
                 android:text="id2"

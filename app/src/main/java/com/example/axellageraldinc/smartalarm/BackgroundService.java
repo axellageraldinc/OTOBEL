@@ -9,6 +9,7 @@ import android.content.*;
 import android.database.Cursor;
 import android.os.*;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
@@ -127,7 +128,9 @@ public class BackgroundService extends Service {
         ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
         Intent intent = new Intent(context, AlarmReceiver.class);
         Bundle b = new Bundle();
-        if (chosenRingtone.equals("Default")){
+        if (chosenRingtone == null){
+            b.putString("ringtone_alarm", null);
+        } else if (chosenRingtone.equals("Default")) {
             b.putString("ringtone_alarm", null);
         } else {
             b.putString("ringtone_alarm", chosenRingtone);
@@ -142,7 +145,7 @@ public class BackgroundService extends Service {
         long time = (long) date;
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         if (repeat.equals("Don't repeat")) {
-            am.set(AlarmManager.RTC_WAKEUP, time, pi);
+            setRepeatAlarm(0, hour, minute, am, pi);
         } else {
             if (repeat.equals("Everyday")) {
                 for (int i=1;i<8;i++) {
@@ -185,15 +188,56 @@ public class BackgroundService extends Service {
         if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
             calendar.add(Calendar.DAY_OF_YEAR, 7);
         }
-        long time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-        if(System.currentTimeMillis()>time)
+//        Log.v("Calendar in millis", String.valueOf(calendar.getTimeInMillis()));
+//        long time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+//        Log.v("Time", String.valueOf(time));
+        long time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+        if(daysOfWeek==0 && System.currentTimeMillis()>time)
         {
             if (calendar.AM_PM == 0)
                 time = time + (1000*60*60*12);
             else
                 time = time + (1000*60*60*24);
+        }else {
+            if (calendar.AM_PM == 0) {
+                am.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*12, pi);
+            } else {
+                am.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pi);
+            }
         }
-        am.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pi);
     }
 
+    /**
+     * Method buat aktivasi alarm, didalemnya ada method buat ngeset repeat alarm
+     * @param id2 id2 alarm dari database
+     * @param date date(harusnya time) dari database (di database namanya order)
+     * @param repeat repeat alarm dari database
+     * @param hour jam alarm dari database
+     * @param minute minute alarm dari database
+     * @param chosenRingtone chosenRingtone alarm dari database
+     * @param duration duration alarm dari database
+     */
+    public static void stopAlarm(Context context, int id2, int date, String repeat, int hour, int minute
+            , String chosenRingtone, int duration) {
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+        ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
+        Intent intent = new Intent(context, AlarmReceiver.class);
+        Bundle b = new Bundle();
+        if (chosenRingtone == null){
+            b.putString("ringtone_alarm", null);
+        } else if (chosenRingtone.equals("Default")) {
+            b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
+        }
+        b.putInt("durasi", duration*1000);
+        intent.putExtras(b);
+        intent.putExtra("repeat", repeat);
+        intent.putExtra("duration", duration);
+        intent.putExtra("id2",id2);
+        PendingIntent pi = PendingIntent.getBroadcast(context, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+        am.cancel(pi);
+    }
 }

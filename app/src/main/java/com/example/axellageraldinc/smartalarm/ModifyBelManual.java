@@ -121,8 +121,9 @@ public class ModifyBelManual extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(ModifyBelManual.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(home);
+                // Set result cancel / sama dengan back terus finish
+                setResult(Activity.RESULT_CANCELED);
+                finish();
             }
         });
     }
@@ -297,9 +298,11 @@ public class ModifyBelManual extends AppCompatActivity {
         d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                dbHelper.updateBelManual(new BelManualModel(JudulBel, chosenRingtone, duration*1000));
+                dbHelper.updateBelManual(new BelManualModel(JudulBel, chosenRingtone, duration));
                 dialog.dismiss();
-                ReturnHome();
+                // Set result ok, terus finish(di back ga balik sini)
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -325,7 +328,8 @@ public class ModifyBelManual extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteBelManual(ID);
                 dialog.dismiss();
-                ReturnHome();
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 

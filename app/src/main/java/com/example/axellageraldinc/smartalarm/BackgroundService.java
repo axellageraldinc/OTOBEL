@@ -135,7 +135,7 @@ public class BackgroundService extends Service {
         } else {
             b.putString("ringtone_alarm", chosenRingtone);
         }
-        b.putInt("durasi", duration*1000);
+        b.putInt("durasi", duration);
         intent.putExtras(b);
         intent.putExtra("repeat", repeat);
         intent.putExtra("duration", duration);
@@ -231,7 +231,7 @@ public class BackgroundService extends Service {
         } else {
             b.putString("ringtone_alarm", chosenRingtone);
         }
-        b.putInt("durasi", duration*1000);
+        b.putInt("durasi", duration);
         intent.putExtras(b);
         intent.putExtra("repeat", repeat);
         intent.putExtra("duration", duration);

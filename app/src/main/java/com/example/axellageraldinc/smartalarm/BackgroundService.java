@@ -103,7 +103,7 @@ public class BackgroundService extends Service {
                 String chosenRingtone = cursor.getString(cursor.getColumnIndex(DBHelper.RINGTONE_ALARM));
                 int duration = cursor.getInt(cursor.getColumnIndex(DBHelper.ALARM_DURATION));
                 if (status == 1) {
-                    activateAlarm(id2, date, repeat, hour, minute, chosenRingtone, duration);
+                    activateAlarm(BackgroundService.this, id2, date, repeat, hour, minute, chosenRingtone, duration);
                 }
             } while (cursor.moveToNext());
         }
@@ -120,11 +120,12 @@ public class BackgroundService extends Service {
      * @param chosenRingtone chosenRingtone alarm dari database
      * @param duration duration alarm dari database
      */
-    private void activateAlarm(int id2, int date, String repeat, int hour, int minute, String chosenRingtone, int duration) {
+    public static void activateAlarm(Context context, int id2, int date, String repeat, int hour, int minute
+            , String chosenRingtone, int duration) {
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
-        Intent intent = new Intent(BackgroundService.this, AlarmReceiver.class);
+        Intent intent = new Intent(context, AlarmReceiver.class);
         Bundle b = new Bundle();
         if (chosenRingtone.equals("Default")){
             b.putString("ringtone_alarm", null);
@@ -136,10 +137,10 @@ public class BackgroundService extends Service {
         intent.putExtra("repeat", repeat);
         intent.putExtra("duration", duration);
         intent.putExtra("id2",id2);
-        PendingIntent pi = PendingIntent.getBroadcast(BackgroundService.this, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pi = PendingIntent.getBroadcast(context, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long time = (long) date;
-        AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         if (repeat.equals("Don't repeat")) {
             am.set(AlarmManager.RTC_WAKEUP, time, pi);
         } else {
@@ -172,7 +173,7 @@ public class BackgroundService extends Service {
      * @param am AlarmManager yang digunain
      * @param pi Pending intent yang digunain
      */
-    private void setRepeatAlarm(int daysOfWeek, int hour, int minute, AlarmManager am, PendingIntent pi) {
+    public static void setRepeatAlarm(int daysOfWeek, int hour, int minute, AlarmManager am, PendingIntent pi) {
         Calendar calendar = Calendar.getInstance();
         if (daysOfWeek != 0) {
             calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);

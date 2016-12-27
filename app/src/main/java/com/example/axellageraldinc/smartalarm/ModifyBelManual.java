@@ -33,7 +33,7 @@ public class ModifyBelManual extends AppCompatActivity {
     DBHelper dbHelper;
     AlertDialog d;
     ArrayList<ModelSettingAlarm> results;
-    public static int durasifix=10000, jumlah_waktu, duration;
+    public static int durasifix=10000, jumlah_waktu, duration, DurasiDB;
     public static String durasi;
     ModelSettingAlarm fullObject, sr;
     MyCustomBaseAdapter adapter;
@@ -61,6 +61,8 @@ public class ModifyBelManual extends AppCompatActivity {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         dbHelper = new DBHelper(ModifyBelManual.this);
 
+        DurasiDB = dbHelper.GetDuration();
+
         ArrayList<ModelSettingAlarm> searchResults = GetSearchResults();
 
         lv = (ListView) findViewById(R.id.listView);
@@ -83,7 +85,7 @@ public class ModifyBelManual extends AppCompatActivity {
                         break;
                     case 2:
                         SetDuration();
-                        dbHelper.InsertDuration(duration);
+                        //dbHelper.InsertDuration(duration);
                         break;
                 }
 
@@ -96,6 +98,9 @@ public class ModifyBelManual extends AppCompatActivity {
             public void onClick(View view) {
                 if (JudulBel==null){
                     Toast.makeText(ModifyBelManual.this, "Mohon beri judul bel dan pilih ringtone", Toast.LENGTH_LONG).show();
+                }
+                if (chosenRingtone==null){
+                    chosenRingtone = ringtone;
                 }
                 else{
                     UpdateData();
@@ -149,7 +154,14 @@ public class ModifyBelManual extends AppCompatActivity {
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyBelManual.this);
         b.setTitle("Durasi Alarm");
-        b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+        int checkedItem;
+        if (duration==DurasiDB){
+            checkedItem = 0;
+        }
+        else{
+            checkedItem = 1;
+        }
+        b.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
@@ -193,6 +205,7 @@ public class ModifyBelManual extends AppCompatActivity {
         d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
+        txtInput.setText(String.valueOf(duration/1000));
         txtInput.setSelection(txtInput.getText().length());
 
         Button OK = (Button) d.findViewById(R.id.btnOK);
@@ -266,10 +279,10 @@ public class ModifyBelManual extends AppCompatActivity {
         sr.setSub(ringtone);
         results.add(sr);
 
-        duration = dbHelper.GetDuration();
+        //duration = dbHelper.GetDuration();
         sr = new ModelSettingAlarm();
         sr.setJudul("Durasi Bel");
-        sr.setSub(String.valueOf(duration) + " detik");
+        sr.setSub(String.valueOf(duration/1000) + " detik");
         results.add(sr);
 
         return results;

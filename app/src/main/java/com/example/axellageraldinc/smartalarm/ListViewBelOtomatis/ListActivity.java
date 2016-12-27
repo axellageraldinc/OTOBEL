@@ -47,14 +47,14 @@ public class ListActivity extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_list);
+        //setContentView(R.layout.activity_bel_otomatis_view);
 
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.activity_list, container, false);
+        View view =  inflater.inflate(R.layout.activity_bel_otomatis_manual_list_view, container, false);
         // set the icon
         //actionBar.setIcon(R.drawable.ico_actionbar);
 

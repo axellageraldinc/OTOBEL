@@ -41,7 +41,6 @@
         </receiver>
 
         <activity android:name=".TambahBelOtomatis.SettingAlarm" />
-        <activity android:name=".ShowAlarm" />
 
         <!-- Will not be called unless the application explicitly enables it -->
         <receiver
@@ -64,7 +63,8 @@
         <activity android:name=".TambahBelManual.AddManualAlarm" />
         <activity android:name=".ModifyBelManual" />
         <activity android:name=".CustomRepeat" />
-        <activity android:name=".HomeScreen"></activity>
+        <activity android:name=".HomeScreen" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>

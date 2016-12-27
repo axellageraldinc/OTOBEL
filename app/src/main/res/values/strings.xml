@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bel Sekolah</string>
+    <string name="app_name">Bel Sekolah Gege</string>
     <string name="JudulModify">EDIT BEL OTOMATIS</string>
     <string name="JudulSettingAlarm">TAMBAH BEL OTOMATIS</string>
     <string name="JudulAddManual">TAMBAH BEL MANUAL</string>
@@ -7,4 +7,10 @@
     <string name="ButtonOK">OK</string>
     <string name="ButtonCancel">CANCEL</string>
     <string name="ButtonDelete">DELETE</string>
+    <string name="credit">Credit</string>
+    <string name="NamaAxell">Axellageraldinc Adryamarthanino</string>
+    <string name="NamaAlman">Almantera Tiantana Al Faruqi</string>
+    <string name="Info1">App Order :</string>
+    <string name="Info2">axella.gerald@gmail.com</string>
+    <string name="Info3">daiserver.com</string>
 </resources>

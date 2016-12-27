@@ -47,7 +47,7 @@ public class AddManualAlarm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_manual_alarm);
+        setContentView(R.layout.activity_add_bel_manual);
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.JudulAddManual));

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:id="@+id/container"
+    android:background="?android:attr/selectableItemBackground"
+    tools:background="@color/BackgroundLayout"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:paddingLeft="5dp">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_media_play"
+        android:id="@+id/btnPlay"
+        android:background="@drawable/button_colors"
+        android:layout_gravity="center_vertical"
+        android:focusable="false"
+        android:focusableInTouchMode="false" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/SwitchAlarmStatus"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat"
+        android:paddingLeft="5dp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="false"
+        android:paddingLeft="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtId"
+                android:visibility="gone"
+                android:textColor="@color/TextColor"
+                android:text="ID" />
+
+            <com.example.axellageraldinc.smartalarm.CustomTextViewBold
+                android:text="WAKTU"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtShowWaktu"
+                android:textStyle="normal|bold"
+                android:textSize="30sp"
+                android:textColor="@color/TextColor" />
+
+            <com.example.axellageraldinc.smartalarm.CustomTextViewMedium
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/txtJudulAlarm"
+                android:gravity="center_vertical"
+                android:textColor="@color/TextColor"
+                android:fontFamily="sans-serif"
+                android:textSize="25sp"
+                android:text="Judul"
+                android:paddingLeft="15dp" />
+
+            <TextView
+                android:text="id2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtID2"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
+                android:textSize="5sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSetDay"
+            android:textColor="@color/TextColor"
+            android:textSize="18sp"
+            android:text="Repeat" />
+    </LinearLayout>
+
+</LinearLayout>

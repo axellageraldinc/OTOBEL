@@ -65,7 +65,7 @@ public class SettingAlarm extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_alarm_listview);
+        setContentView(R.layout.activity_add_bel_otomatis);
         actionBar = getSupportActionBar();
         actionBar.setTitle(this.getResources().getString(R.string.JudulSettingAlarm));
         actionBar.setIcon(R.drawable.logoooo);
@@ -97,7 +97,7 @@ public class SettingAlarm extends AppCompatActivity
                         break;
                     case 2:
                         SetDuration();
-                        dbHelper.InsertDuration(duration);
+                        //dbHelper.InsertDuration(duration);
                         break;
                     case 3:
                         JudulBel();

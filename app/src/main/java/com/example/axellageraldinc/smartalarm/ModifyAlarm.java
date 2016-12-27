@@ -19,7 +19,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -47,7 +46,7 @@ public class ModifyAlarm extends AppCompatActivity {
     public static long time;
     ActionBar actionBar;
     public int hourNow, minuteNow;
-    public static int durasifix=10000, duration, ID2, ID, status, hourModify, menitModify;
+    public static int durasifix=10000, duration, ID2, ID, status, hourModify, menitModify, DurasiDB;
     public static String durasi, title;
     public static String repeat, JudulBel, ringtone;
     private Button btnSave, btnCancel, btnDelete;
@@ -62,7 +61,7 @@ public class ModifyAlarm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modify_alarm);
+        setContentView(R.layout.activity_modify_bel_otomatis);
 
         actionBar = getSupportActionBar();
         actionBar.setTitle(getResources().getString(R.string.JudulModify));
@@ -83,6 +82,8 @@ public class ModifyAlarm extends AppCompatActivity {
         duration = i.getIntExtra("duration", 0);
         ID2 = i.getIntExtra("ID2", 0);
         status = i.getIntExtra("status", 0);
+
+        DurasiDB = dbHelper.GetDuration()*1000;
 
         //Set di timepicker tanggal sesuai yang diklik
         alarmTimePicker.setCurrentHour(hourModify);
@@ -138,7 +139,7 @@ public class ModifyAlarm extends AppCompatActivity {
                         break;
                     case 2:
                         SetDuration();
-                        dbHelper.InsertDuration(duration);
+                        //dbHelper.InsertDuration(duration);
                         break;
                     case 3:
                         JudulBel();
@@ -240,7 +241,13 @@ public class ModifyAlarm extends AppCompatActivity {
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
         b.setTitle("Durasi Alarm");
-        b.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+        int checkedItem;
+        if (duration*1000==DurasiDB){
+            checkedItem = 0;
+        } else{
+            checkedItem = 1;
+        }
+        b.setSingleChoiceItems(items, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
@@ -606,12 +613,12 @@ public class ModifyAlarm extends AppCompatActivity {
         sr.setSub(String.valueOf(duration) + " detik");
         results.add(sr);
 
-        if (JudulBel==null){
-            JudulBel="Belum di-set";
-        }
         sr = new ModelSettingAlarm();
         sr.setJudul("Nama Bel");
-        sr.setSub(JudulBel);
+        if (JudulBel==null)
+            sr.setSub("Belum di-set");
+        else
+            sr.setSub(JudulBel);
         results.add(sr);
 
         return results;

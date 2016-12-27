@@ -45,7 +45,7 @@ public class ManualAlarm extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_manual_alarm);
+        //setContentView(R.layout.activity_bel_manual_view);
 
     }
 
@@ -53,12 +53,12 @@ public class ManualAlarm extends Fragment {
                              Bundle savedInstanceState) {
         //DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        View view = inflater.inflate(R.layout.activity_manual_alarm, container, false);
+        View view = inflater.inflate(R.layout.activity_bel_otomatis_manual_list_view, container, false);
 
         dbH = new DBHelper(getActivity());
         belManualModelList = dbH.getAllBelManual();
 
-        listManual = (ListView)view.findViewById(R.id.listManual);
+        listManual = (ListView)view.findViewById(R.id.listView);
         listManual.setEmptyView(view.findViewById(R.id.empty));
         lma = new ListManualAdapter(getContext(), belManualModelList);
         listManual.setAdapter(lma);

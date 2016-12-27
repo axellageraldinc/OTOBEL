@@ -65,7 +65,7 @@ public class ListManualAdapter extends BaseAdapter {
          /*we define the view that will display on the grid*/
             //Inflate the layout
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            MyView = inflater.inflate(R.layout.activity_manual_alarm_adapter, viewGroup, false);
+            MyView = inflater.inflate(R.layout.activity_bel_manual_view_adapter, viewGroup, false);
 
             TextView txtID = (TextView)MyView.findViewById(R.id.txtId);
             TextView txtJudul = (TextView)MyView.findViewById(R.id.txtJudul);
@@ -88,7 +88,7 @@ public class ListManualAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     Toast.makeText(context, "Ringtone : " + ringtone + " Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                     //Stop();
-                    if (ringtone==null){
+                    if (ringtone.equals("Default")){
                         mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                         int start = 0;
                         int end = duration;

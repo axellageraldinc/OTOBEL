@@ -75,7 +75,7 @@ public class ListAdapter extends BaseAdapter {
          /*we define the view that will display on the grid*/
             //Inflate the layout
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            MyView = inflater.inflate(R.layout.list_item, viewGroup, false);
+            MyView = inflater.inflate(R.layout.activity_bel_otomatis_view_adapter, viewGroup, false);
             holder = new ItemViewHolder();
             holder.txtShowWaktu = (TextView) MyView.findViewById(R.id.txtShowWaktu);
             holder.txtSetDay = (TextView) MyView.findViewById(R.id.txtSetDay);

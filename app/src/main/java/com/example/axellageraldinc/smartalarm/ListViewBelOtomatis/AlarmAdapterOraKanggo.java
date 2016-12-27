@@ -47,7 +47,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     }
     @Override
     public AlarmAdapter.AlarmViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_bel_otomatis_view_adapter, parent, false);
         AlarmViewHolder alarmViewHolder = new AlarmViewHolder(context, view, hour, minute);
         settingAlarm = new SettingAlarm();
         return alarmViewHolder;

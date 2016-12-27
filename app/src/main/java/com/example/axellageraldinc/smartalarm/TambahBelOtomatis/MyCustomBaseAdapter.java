@@ -40,7 +40,7 @@ public class MyCustomBaseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.activity_setting_alarm_listview_adapter, null);
+            convertView = mInflater.inflate(R.layout.activity_adapter_judul_sub, null);
             holder = new ViewHolder();
             holder.txtJudul = (TextView) convertView.findViewById(R.id.txtJudul);
             holder.txtSub = (TextView) convertView.findViewById(R.id.txtSub);

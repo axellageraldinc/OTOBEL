@@ -1,5 +1,6 @@
 package com.example.axellageraldinc.smartalarm.ListViewBelOtomatis;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,15 +99,12 @@ public class ListActivity extends Fragment {
                 ii.putExtra("ID2", ID2);
                 ii.putExtra("status", status);
 
-                //Gak pergi ke class ModifyAlarm
-                startActivity(ii);
+                // Ganti ini biar bisa cancel
+                startActivityForResult(ii, 1);
 
                 Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
             }
         });
-        /*alarmAdapter = new AlarmAdapter(ListActivity.this, belOtomatisModelList);
-        recView.setAdapter(alarmAdapter);
-        alarmAdapter.notifyDataSetChanged();*/
 
         btnAddNew = (FloatingActionButton) view.findViewById(R.id.btnAddNew);
         btnAddNew.setOnClickListener(new View.OnClickListener() {
@@ -148,11 +147,15 @@ public class ListActivity extends Fragment {
         d.show();
     }
 
-    /**
-     * Method buat refresh adapter
-     */
-    public void refreshAdapter() {
-        alarmAdapter.notifyDataSetChanged();
+    // Kalo di modify langsung ke refresh
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            Log.v("Fragment result", "refresh adapter");
+            belOtomatisModelList.clear();
+            belOtomatisModelList.addAll(dbHelper.getAllAlarm());
+            alarmAdapter.notifyDataSetChanged();
+        }
     }
-
 }

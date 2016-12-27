@@ -107,6 +107,14 @@ public class HomeScreen extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 /*    *//**
      * Method buat getFragment
      * @param pos 0 untuk Bel Otomatis, 1 untuk Bel Manual

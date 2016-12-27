@@ -148,6 +148,7 @@ public class ListAdapter extends BaseAdapter {
                     handler.postDelayed(stopPlayerTask, end);
                 }
                 mp.start();
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         });
 

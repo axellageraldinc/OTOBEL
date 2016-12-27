@@ -92,10 +92,10 @@ public class AlarmReceiver extends BroadcastReceiver
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 pendingIntent1.cancel();
                 // Biar adapter ke refresh setelah alarm mati
-                Fragment belOtomatis = new HomeScreen().getFragment(0);
+                /*Fragment belOtomatis = new HomeScreen().getFragment(0);
                 if (belOtomatis != null) {
                     ((ListActivity) belOtomatis).refreshAdapter();
-                }
+                }*/
             }
         }
     }

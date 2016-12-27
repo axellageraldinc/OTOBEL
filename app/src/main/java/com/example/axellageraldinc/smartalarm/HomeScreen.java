@@ -107,12 +107,12 @@ public class HomeScreen extends AppCompatActivity {
         }
     }
 
-    /**
+/*    *//**
      * Method buat getFragment
      * @param pos 0 untuk Bel Otomatis, 1 untuk Bel Manual
      * @return 0 Bel Otomatis, 1 Bel Manual
-     */
+     *//*
     public Fragment getFragment(int pos) {
         return adapter.getItem(pos);
-    }
+    }*/
 }

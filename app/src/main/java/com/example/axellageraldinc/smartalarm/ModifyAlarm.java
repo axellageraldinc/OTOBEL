@@ -34,7 +34,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 // TODO : Masih ada bug bagian UI setelah alarm di modify
-// TODO : Dipencet cancel tombol play bermasalah lagi
 
 public class ModifyAlarm extends AppCompatActivity {
     TimePicker alarmTimePicker;
@@ -103,8 +102,8 @@ public class ModifyAlarm extends AppCompatActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(ModifyAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(home);
+                // Set result cancel / sama dengan back terus finish
+                setResult(Activity.RESULT_CANCELED);
                 finish();
             }
         });
@@ -516,7 +515,9 @@ public class ModifyAlarm extends AppCompatActivity {
                     pendingIntent.cancel();
                 }
                 dialog.dismiss();
-                ReturnHome();
+                // Set result ok, terus finish(di back ga balik sini)
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -575,7 +576,9 @@ public class ModifyAlarm extends AppCompatActivity {
                 //pendingIntentDelete.cancel();
                 //pendingIntent.cancel();
                 dialog.dismiss();
-                ReturnHome();
+                // Set result ok, terus finish(di back ga balik sini)
+                setResult(Activity.RESULT_OK);
+                finish();
             }
         });
 
@@ -588,12 +591,6 @@ public class ModifyAlarm extends AppCompatActivity {
 
         d.create();
         d.show();
-    }
-
-    public void ReturnHome()
-    {
-        Intent home = new Intent(ModifyAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(home);
     }
 
     private ArrayList<ModelSettingAlarm> GetSearchResults(){

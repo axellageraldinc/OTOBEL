@@ -362,6 +362,77 @@ public class ModifyAlarm extends AppCompatActivity {
 //        d.show();
     }
 
+    public void setAlarmOn() {
+        hourNow = alarmTimePicker.getCurrentHour();
+        minuteNow = alarmTimePicker.getCurrentMinute();
+        intent1 = new Intent(this, AlarmReceiver.class);
+        Bundle b = new Bundle();
+        // Biar di database chosenRingtone gak kosong
+        if (chosenRingtone.equals("Default")){
+            b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
+        }
+        b.putInt("durasi", duration*1000);
+        intent1.putExtras(b);
+
+        intent1.putExtra("repeat", repeat);
+        intent1.putExtra("duration", duration);
+        intent1.putExtra("id2", ID2);
+        pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (repeat.equals("Don't repeat")) {
+            setRepeatAlarm(0);
+        } else if (repeat.equals("Everyday")){
+            for (int a=1;a<=7;a++) {
+                setRepeatAlarm(a);
+            }
+        } else if (repeat.equals("Weekday")) {
+            for (int a=2;a<=6;a++) {
+                setRepeatAlarm(a);
+            }
+        } else if (repeat.equals("Weekend")) {
+            setRepeatAlarm(1);
+            setRepeatAlarm(7);
+        } else {
+            int list;
+            for (int a=0;a<this.daysOfWeek.size();a++) {
+                list = this.daysOfWeek.get(a);
+                setRepeatAlarm(list);
+            }
+        }
+    }
+
+    public void setRepeatAlarm(int daysOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        if (daysOfWeek != 0) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+        }
+        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+        if(daysOfWeek==0 && System.currentTimeMillis()>time)
+        {
+            if (calendar.AM_PM == 0)
+                time = time + (1000*60*60*12);
+            else
+                time = time + (1000*60*60*24);
+        }
+        if (daysOfWeek == 0) {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        } else {
+            if (calendar.AM_PM == 0) {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*12, pendingIntent);
+            } else {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent);
+            }
+        }
+    }
+
     public void setAlarmRepeat(int daysOfWeek) {
         Calendar calendar = Calendar.getInstance();
         if (daysOfWeek != 0) {
@@ -465,55 +536,10 @@ public class ModifyAlarm extends AppCompatActivity {
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
 //                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
-                    if (repeat.equals("Don't repeat")) {
-                        setAlarmRepeat(0);
-                    } else if (repeat.equals("Everyday")){
-                        for (int a=1;a<=7;a++) {
-                            setAlarmRepeat(a);
-                        }
-                    } else if (repeat.equals("Weekday")) {
-                        for (int a=2;a<=6;a++) {
-                            setAlarmRepeat(a);
-                        }
-                    } else if (repeat.equals("Weekend")) {
-                        setAlarmRepeat(1);
-                        setAlarmRepeat(7);
-                    } else {
-                        int list;
-                        for (int a=0;a<intRepeat.size();a++) {
-                            list = intRepeat.get(a);
-                            setAlarmRepeat(list);
-                        }
-                    }
+                    setAlarmOn();
                 }
                 else{
-                    if (repeat.equals("Don't repeat")) {
-                        setAlarmRepeat(0);
-                        pendingIntent.cancel();
-                    } else if (repeat.equals("Everyday")){
-                        for (int a=1;a<=7;a++) {
-                            setAlarmRepeat(a);
-                            pendingIntent.cancel();
-                        }
-                    } else if (repeat.equals("Weekday")) {
-                        for (int a=2;a<=6;a++) {
-                            setAlarmRepeat(a);
-                            pendingIntent.cancel();
-                        }
-                    } else if (repeat.equals("Weekend")) {
-                        setAlarmRepeat(1);
-                        pendingIntent.cancel();
-                        setAlarmRepeat(7);
-                        pendingIntent.cancel();
-                    } else {
-                        int list;
-                        for (int a=0;a<intRepeat.size();a++) {
-                            list = intRepeat.get(a);
-                            setAlarmRepeat(list);
-                            pendingIntent.cancel();
-                        }
-                    }
-                    pendingIntent.cancel();
+                    alarmManager.cancel(pendingIntent);
                 }
                 dialog.dismiss();
                 // Set result ok, terus finish(di back ga balik sini)
@@ -544,36 +570,7 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                ArrayList<String> stRepeat = new ArrayList<String>();
-                stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
-                ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
-                if (repeat.equals("Don't repeat")) {
-                    setAlarmRepeat(0);
-                    pendingIntent.cancel();
-                } else if (repeat.equals("Everyday")){
-                    for (int a=1;a<=7;a++) {
-                        setAlarmRepeat(a);
-                        pendingIntent.cancel();
-                    }
-                } else if (repeat.equals("Weekday")) {
-                    for (int a=2;a<=6;a++) {
-                        setAlarmRepeat(a);
-                        pendingIntent.cancel();
-                    }
-                } else if (repeat.equals("Weekend")) {
-                    setAlarmRepeat(1);
-                    pendingIntent.cancel();
-                    setAlarmRepeat(7);
-                    pendingIntent.cancel();
-                } else {
-                    int list;
-                    for (int a=0;a<intRepeat.size();a++) {
-                        list = intRepeat.get(a);
-                        setAlarmRepeat(list);
-                        pendingIntent.cancel();
-                    }
-                }
-                pendingIntent.cancel();
+                alarmManager.cancel(pendingIntent);
                 //pendingIntentDelete.cancel();
                 //pendingIntent.cancel();
                 dialog.dismiss();

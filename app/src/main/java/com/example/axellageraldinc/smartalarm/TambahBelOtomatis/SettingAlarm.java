@@ -123,31 +123,12 @@ public class SettingAlarm extends AppCompatActivity
                     chosenRingtone = uri.toString();
                 }*/
                 int uye = (int) time;
-                if (repeat.equals("Don't repeat")) {
-                    setAlarmRepeat(0);
-                } else if (repeat.equals("Everyday")){
-                    for (int a=1;a<=7;a++) {
-                        setAlarmRepeat(a);
-                    }
-                } else if (repeat.equals("Weekday")) {
-                    for (int a=2;a<=6;a++) {
-                        setAlarmRepeat(a);
-                    }
-                } else if (repeat.equals("Weekend")) {
-                    setAlarmRepeat(1);
-                    setAlarmRepeat(7);
-                } else {
-                    int list;
-                    for (int a=0;a<daysOfWeek.size();a++) {
-                        list = daysOfWeek.get(a);
-                        setAlarmRepeat(list);
-                    }
-                }
-                    dbHelper.createAlarm(new BelOtomatisModel(hour, minute, chosenRingtone, repeat, 1
-                            , duration*1000, id2, JudulBel, uye));
-                    Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(i);
-                    finish();
+                setAlarmOn();
+                dbHelper.createAlarm(new BelOtomatisModel(hour, minute, chosenRingtone, repeat, 1
+                        , duration*1000, id2, JudulBel, uye));
+                Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
             }
         });
         Button btnCancel = (Button) findViewById(R.id.btnCancel);
@@ -336,23 +317,8 @@ public class SettingAlarm extends AppCompatActivity
      *   untuk for.
      * - Kalo mau repeat hari lain, isi angka parameter seperti yg dijelaskan di atas.
      *
-     * @param daysOfWeek
-     * 0 berarti ga repeat, makanya daysOfWeek gak ngeset calender.
-     * - Bukan 0 berarti repeat, tergantung dari masukan parameter. Urut dari 1 adalah Minggu, 2 Senin, dst. sampe 7
-     *
      */
-    public void setAlarmRepeat(int daysOfWeek) {
-        Calendar calendar = Calendar.getInstance();
-        if (daysOfWeek != 0) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-        }
+    public void setAlarmOn() {
         hour = alarmTimePicker.getCurrentHour();
         minute = alarmTimePicker.getCurrentMinute();
         intent1 = new Intent(this, AlarmReceiver.class);
@@ -374,10 +340,43 @@ public class SettingAlarm extends AppCompatActivity
         //Ora nganggo ID DB, soale raiso, nek meh nganggo ID DB kuwi kan kudu wes ono sek ning DB
         //Sedangkan iki kan rung mlebu ning DB
         intent1.putExtra("id2",id2);
-        time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-
         pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        if(System.currentTimeMillis()>time)
+        if (repeat.equals("Don't repeat")) {
+            setRepeatAlarm(0);
+        } else if (repeat.equals("Everyday")){
+            for (int a=1;a<=7;a++) {
+                setRepeatAlarm(a);
+            }
+        } else if (repeat.equals("Weekday")) {
+            for (int a=2;a<=6;a++) {
+                setRepeatAlarm(a);
+            }
+        } else if (repeat.equals("Weekend")) {
+            setRepeatAlarm(1);
+            setRepeatAlarm(7);
+        } else {
+            int list;
+            for (int a=0;a<this.daysOfWeek.size();a++) {
+                list = this.daysOfWeek.get(a);
+                setRepeatAlarm(list);
+            }
+        }
+    }
+
+    public void setRepeatAlarm(int daysOfWeek) {
+        Calendar calendar = Calendar.getInstance();
+        if (daysOfWeek != 0) {
+            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 7);
+        }
+        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+        if(daysOfWeek==0 && System.currentTimeMillis()>time)
         {
             if (calendar.AM_PM == 0)
                 time = time + (1000*60*60*12);
@@ -387,7 +386,11 @@ public class SettingAlarm extends AppCompatActivity
         if (daysOfWeek == 0) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent1);
         } else {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent1);
+            if (calendar.AM_PM == 0) {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*12, pendingIntent1);
+            } else {
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent1);
+            }
         }
     }
 

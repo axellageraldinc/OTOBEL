@@ -4,10 +4,12 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v7.view.menu.MenuView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ public class ListAdapter extends BaseAdapter {
     private Context context;
     public static int hour, minute;
     private String id, id2, ringtone, output;
+    private int selectedButton=-1; // Kalo -1, ga ada yg dipencet
     SettingAlarm settingAlarm;
     MediaPlayer mp;
     AudioManager am;
@@ -68,7 +71,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup viewGroup) {
+    public View getView(final int position, View convertView, ViewGroup viewGroup) {
         ItemViewHolder holder = null;
         View MyView = convertView;
         if (convertView == null) {
@@ -88,6 +91,8 @@ public class ListAdapter extends BaseAdapter {
         } else {
             holder = (ItemViewHolder) MyView.getTag();
         }
+        // btnPlay enable kalo ga ada yg dipencet
+        holder.btnPlay.setEnabled(selectedButton == -1);
         id = String.valueOf(belOtomatisModelList.get(position).getId());
         id2 = String.valueOf(belOtomatisModelList.get(position).getID2());
         ringtone = belOtomatisModelList.get(position).getRingtone();
@@ -108,9 +113,12 @@ public class ListAdapter extends BaseAdapter {
         am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(final View view) {
                 Toast.makeText(context, "Ringtone : " + ringtone + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                 //Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
+                ((ImageButton) view).setEnabled(false); // btnPlay yg di pencet di disable
+                selectedButton = position; // selectedButton diubah biar button lainnya ga bisa dipencet
+                notifyDataSetChanged(); // Ngasih tau adapter kalo btnPlay ga bisa dipencet(disable)
                 if (ringtone.equals("Default")){
                     mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                     int start = 0;
@@ -120,6 +128,9 @@ public class ListAdapter extends BaseAdapter {
                         @Override
                         public void run() {
                             mp.stop();
+                            ((ImageButton) view).setEnabled(true); // btnPlay yg di pencet di enable lagi
+                            selectedButton = -1; // selectedButton diubar biar button lainnya bisa dipencet
+                            notifyDataSetChanged(); // Ngasih tau adapter kalo btnPlay bisa dipencet lagi (enable)
                         }};
 
                     mp.seekTo(start);
@@ -139,6 +150,9 @@ public class ListAdapter extends BaseAdapter {
                         @Override
                         public void run() {
                             mp.stop();
+                            ((ImageButton) view).setEnabled(true);
+                            selectedButton = -1;
+                            notifyDataSetChanged();
                         }};
 
                     mp.seekTo(start);

@@ -197,4 +197,5 @@ public class ListAdapter extends BaseAdapter {
         Switch switchAlarmStatus;
         ImageButton btnPlay;
     }
+
 }

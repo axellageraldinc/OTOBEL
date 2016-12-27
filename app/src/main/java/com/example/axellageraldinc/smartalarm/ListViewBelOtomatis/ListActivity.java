@@ -148,4 +148,11 @@ public class ListActivity extends Fragment {
         d.show();
     }
 
+    /**
+     * Method buat refresh adapter
+     */
+    public void refreshAdapter() {
+        alarmAdapter.notifyDataSetChanged();
+    }
+
 }

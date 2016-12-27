@@ -23,6 +23,7 @@ public class HomeScreen extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    ViewPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class HomeScreen extends AppCompatActivity {
 
     //Set tulisan untuk di tabs (gak terpakai karena pakainya icon [source code di atas])
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new ListActivity(), "Bel Otomatis");
         adapter.addFrag(new ManualAlarm(), "Bel Manual");
         viewPager.setAdapter(adapter);
@@ -103,4 +104,12 @@ public class HomeScreen extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method buat getFragment
+     * @param pos 0 untuk Bel Otomatis, 1 untuk Bel Manual
+     * @return 0 Bel Otomatis, 1 Bel Manual
+     */
+    public Fragment getFragment(int pos) {
+        return adapter.getItem(pos);
+    }
 }

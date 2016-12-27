@@ -8,9 +8,12 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+import com.example.axellageraldinc.smartalarm.HomeScreen;
+import com.example.axellageraldinc.smartalarm.ListViewBelOtomatis.ListActivity;
 import com.example.axellageraldinc.smartalarm.R;
 
 public class AlarmReceiver extends BroadcastReceiver
@@ -88,6 +91,11 @@ public class AlarmReceiver extends BroadcastReceiver
                 PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, id2, intent2,
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 pendingIntent1.cancel();
+                // Biar adapter ke refresh setelah alarm mati
+                Fragment belOtomatis = new HomeScreen().getFragment(0);
+                if (belOtomatis != null) {
+                    ((ListActivity) belOtomatis).refreshAdapter();
+                }
             }
         }
     }

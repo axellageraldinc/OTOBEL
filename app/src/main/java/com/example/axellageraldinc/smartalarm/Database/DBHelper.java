@@ -370,4 +370,10 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(TABLE_ALARM, null, null, null, null, null, HOUR_ALARM + "," +MINUTE_ALARM);
         return cursor;
     }
+
+    public Cursor cursorOneAlarm(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_ALARM, null, ID_ALARM+"=?", new String[]{String.valueOf(id)}, null, null, null, null);
+        return cursor;
+    }
 }

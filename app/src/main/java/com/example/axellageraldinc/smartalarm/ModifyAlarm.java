@@ -433,51 +433,6 @@ public class ModifyAlarm extends AppCompatActivity {
         }
     }
 
-    public void setAlarmRepeat(int daysOfWeek) {
-        Calendar calendar = Calendar.getInstance();
-        if (daysOfWeek != 0) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
-        }
-        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
-        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-        }
-        hourNow = alarmTimePicker.getCurrentHour();
-        minuteNow = alarmTimePicker.getCurrentMinute();
-        intent1 = new Intent(this, AlarmReceiver.class);
-        Bundle b = new Bundle();
-        //Toast.makeText(SettingAlarm.this, jumlah_waktu, Toast.LENGTH_SHORT).show();
-        if (chosenRingtone != null){
-            b.putString("ringtone_alarm", chosenRingtone);
-        } else {
-            b.putString("ringtone_alarm", null);
-        }
-        b.putInt("durasi", duration*1000);
-        intent1.putExtras(b);
-
-        intent1.putExtra("repeat", repeat);
-        intent1.putExtra("duration", duration);
-        intent1.putExtra("id2",ID2);
-        time=(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-
-        pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        if(System.currentTimeMillis()>time)
-        {
-            if (calendar.AM_PM == 0)
-                time = time + (1000*60*60*12);
-            else
-                time = time + (1000*60*60*24);
-        }
-        if (daysOfWeek == 0) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        } else {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 0, pendingIntent);
-        }
-    }
-
     public void SetRingtone()
     {
         Intent intent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
@@ -539,6 +494,7 @@ public class ModifyAlarm extends AppCompatActivity {
                     setAlarmOn();
                 }
                 else{
+                    setAlarmOn();
                     alarmManager.cancel(pendingIntent);
                 }
                 dialog.dismiss();
@@ -570,6 +526,7 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+                setAlarmOn();
                 alarmManager.cancel(pendingIntent);
                 //pendingIntentDelete.cancel();
                 //pendingIntent.cancel();

@@ -36,7 +36,7 @@ public class CustomRepeat extends AppCompatActivity {
             chkRabu.setChecked(daysOfWeek.contains(4));
             chkKamis.setChecked(daysOfWeek.contains(5));
             chkJumat.setChecked(daysOfWeek.contains(6));
-            chkMinggu.setChecked(daysOfWeek.contains(7));
+            chkSabtu.setChecked(daysOfWeek.contains(7));
         }
         checkListener();
         btnOK.setOnClickListener(new View.OnClickListener() {

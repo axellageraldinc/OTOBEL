@@ -69,7 +69,7 @@ public class SettingAlarm extends AppCompatActivity
         actionBar = getSupportActionBar();
         actionBar.setTitle(this.getResources().getString(R.string.JudulSettingAlarm));
         actionBar.setIcon(R.drawable.logoooo);
-
+        repeat="Don't repeat";
         alarmTimePicker = (TimePicker) findViewById(R.id.timePicker);
         alarmTimePicker.setIs24HourView(true);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -221,7 +221,7 @@ public class SettingAlarm extends AppCompatActivity
         b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (daysOfWeek == null) {
+                if (selected == 0 || selected == 1) {
                     fullObject.setSub(repeat);
                     adapter.notifyDataSetChanged();
                     Toast.makeText(SettingAlarm.this, repeat, Toast.LENGTH_SHORT).show();
@@ -488,7 +488,7 @@ public class SettingAlarm extends AppCompatActivity
         if (daysOfWeek.contains(7)) {
             stDaysOfWeek.add("Sabtu");
         }
-        if (daysOfWeek.size() == 8) {
+        if (daysOfWeek.size() == 7) {
             stDaysOfWeek.clear();
             stDaysOfWeek.add("Everyday");
         } else if (daysOfWeek.contains(2) && daysOfWeek.contains(3) && daysOfWeek.contains(4)

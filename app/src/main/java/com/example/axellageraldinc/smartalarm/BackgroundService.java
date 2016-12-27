@@ -39,7 +39,7 @@ public class BackgroundService extends Service {
         this.isRunning = false;
         this.dbHelper = new DBHelper(this); // Manggil database
         this.backgroundThread = new Thread(myTask);
-
+        loadAlarmFromDB();
     }
 
     private Runnable myTask = new Runnable() {

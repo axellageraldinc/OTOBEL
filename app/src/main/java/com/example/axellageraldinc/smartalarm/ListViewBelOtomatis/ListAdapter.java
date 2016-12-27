@@ -111,7 +111,7 @@ public class ListAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Toast.makeText(context, "Ringtone : " + ringtone + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                 //Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
-                if (ringtone=="Default"){
+                if (ringtone.equals("Default")){
                     mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                     int start = 0;
                     int end = duration;
@@ -148,6 +148,7 @@ public class ListAdapter extends BaseAdapter {
                     handler.postDelayed(stopPlayerTask, end);
                 }
                 mp.start();
+                am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         });
 
@@ -196,4 +197,5 @@ public class ListAdapter extends BaseAdapter {
         Switch switchAlarmStatus;
         ImageButton btnPlay;
     }
+
 }

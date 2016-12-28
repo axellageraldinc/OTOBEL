@@ -57,6 +57,14 @@
                 android:textColor="@color/TextColor"
                 android:text="Status" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtRingtone"
+                android:visibility="gone"
+                android:textColor="@color/TextColor"
+                android:text="Ringtone" />
+
             <com.example.axellageraldinc.smartalarm.CustomTextViewBold
                 android:text="WAKTU"
                 android:layout_width="wrap_content"

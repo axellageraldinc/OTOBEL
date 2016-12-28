@@ -1,5 +1,6 @@
 package com.example.axellageraldinc.smartalarm.ListViewBelManual;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -8,6 +9,7 @@ import android.media.MediaPlayer;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +58,7 @@ public class ManualAlarm extends Fragment {
         View view = inflater.inflate(R.layout.activity_bel_otomatis_manual_list_view, container, false);
 
         dbH = new DBHelper(getActivity());
-        belManualModelList = dbH.getAllBelManual();
+        belManualModelList.addAll(dbH.getAllBelManual());
 
         listManual = (ListView)view.findViewById(R.id.listView);
         listManual.setEmptyView(view.findViewById(R.id.empty));
@@ -69,21 +71,18 @@ public class ManualAlarm extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 BelManualModel bmm = belManualModelList.get(position);
                 int id = bmm.getId_manual();
-                String nama_bel = bmm.getNama_bel_manual();
-                String ringtone = bmm.getRingtone_manual();
-                int durasi = bmm.getDurasi_manual();
                 BelManualModel bmm2 = dbH.getBelManualDetail(id);
-                nama_bel = bmm2.getNama_bel_manual();
-                ringtone = bmm2.getRingtone_manual();
-                durasi = bmm2.getDurasi_manual();
-                int durasi_cetak = durasi/1000;
+                String nama_bel = bmm2.getNama_bel_manual();
+                String ringtone = bmm2.getRingtone_manual();
+                int durasi = bmm2.getDurasi_manual();
 
-                Intent ii = new Intent(getContext(), ModifyBelManual.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent ii = new Intent(getContext(), ModifyBelManual.class);
                 ii.putExtra("id", id);
                 ii.putExtra("nama_bel", nama_bel);
                 ii.putExtra("ringtone", ringtone);
                 ii.putExtra("durasi", durasi);
-                startActivity(ii);
+                // Ganti ini biar bisa cancel
+                startActivityForResult(ii, 10);
             }
         });
 
@@ -98,11 +97,29 @@ public class ManualAlarm extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        lma.notifyDataSetChanged();
+    }
+
     public void Stop(){
         if (mp != null) {
             mp.stop();
             mp.release();
             mp = null;
+        }
+    }
+
+    // Kalo di modify langsung ke refresh
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == 10) {
+            Log.v("Fragment result", "refresh adapter");
+            belManualModelList.clear();
+            belManualModelList.addAll(dbH.getAllBelManual());
+            lma.notifyDataSetChanged();
         }
     }
 

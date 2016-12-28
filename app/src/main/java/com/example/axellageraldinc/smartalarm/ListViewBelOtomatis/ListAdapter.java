@@ -35,7 +35,6 @@ import java.util.List;
  * Created by Axellageraldinc A on 10-Dec-16.
  */
 
-// TODO : Ringtone setelah switch on selalu default
 
 public class ListAdapter extends BaseAdapter {
 

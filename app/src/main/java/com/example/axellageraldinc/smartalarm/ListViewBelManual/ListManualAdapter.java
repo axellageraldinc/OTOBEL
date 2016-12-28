@@ -73,34 +73,36 @@ public class ListManualAdapter extends BaseAdapter {
             holder.txtID = (TextView) MyView.findViewById(R.id.txtId);
             holder.txtJudul = (TextView) MyView.findViewById(R.id.txtJudul);
             holder.btnPlay = (ImageButton) MyView.findViewById(R.id.btnPlay);
+            holder.txtRingtone = (TextView) MyView.findViewById(R.id.txtRingtone);
             MyView.setTag(holder);
         }
         else {
             holder = (ItemViewHolder)MyView.getTag();
         }
-            holder.btnPlay.setEnabled(selectedButton == -1);
+        holder.btnPlay.setEnabled(selectedButton == -1);
 
-            final String id = String.valueOf(belManualModelList.get(position).getId_manual());
-            final String ringtone = belManualModelList.get(position).getRingtone_manual();
-            final String judul = belManualModelList.get(position).getNama_bel_manual();
-            final int duration = belManualModelList.get(position).getDurasi_manual();
+        String id = String.valueOf(belManualModelList.get(position).getId_manual());
+        String judul = belManualModelList.get(position).getNama_bel_manual();
+        final int duration = belManualModelList.get(position).getDurasi_manual();
 
-            final int VolumeDB = dbHelper.GetVolume();
-            am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+        final int VolumeDB = dbHelper.GetVolume();
+        am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
 
-            holder.txtID.setText(id);
-            holder.txtJudul.setText(judul);
-
-            holder.btnPlay.setOnClickListener(new View.OnClickListener() {
+        holder.txtID.setText(String.valueOf(belManualModelList.get(position).getId_manual()));
+        holder.txtJudul.setText(belManualModelList.get(position).getNama_bel_manual());
+        holder.txtRingtone.setText(belManualModelList.get(position).getRingtone_manual());
+        final TextView txtRingtone = holder.txtRingtone;
+        holder.btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Toast.makeText(context, "Ringtone : " + ringtone + " Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + " Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                     //Stop();
                     ((ImageButton) view).setEnabled(false); // btnPlay yg di pencet di disable
                     selectedButton = position; // selectedButton diubah biar button lainnya ga bisa dipencet
                     notifyDataSetChanged(); // Ngasih tau adapter kalo btnPlay ga bisa dipencet(disable)
-                    if (ringtone.equals("Default")){
+                    if (txtRingtone.getText().toString().equals("Default") || txtRingtone.getText().toString() == null
+                            || txtRingtone.getText().toString().equals("")){
                         mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                         int start = 0;
                         int end = duration;
@@ -121,7 +123,7 @@ public class ListManualAdapter extends BaseAdapter {
                         handler.postDelayed(stopPlayerTask, end);
                     }
                     else{
-                        final Uri uri = Uri.parse(ringtone);
+                        final Uri uri = Uri.parse(txtRingtone.getText().toString());
                         mp = MediaPlayer.create(context, uri);
                         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         int start = 0;
@@ -157,7 +159,7 @@ public class ListManualAdapter extends BaseAdapter {
     }
 
     private static class ItemViewHolder {
-        TextView txtID, txtJudul;
+        TextView txtID, txtJudul, txtRingtone;
         ImageButton btnPlay;
     }
 }

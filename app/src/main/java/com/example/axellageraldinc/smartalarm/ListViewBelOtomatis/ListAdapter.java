@@ -44,7 +44,7 @@ public class ListAdapter extends BaseAdapter {
     private DBHelper dbHelper;
     private Context context;
     public static int hour, minute;
-    private String id, id2, ringtone, output;
+    private String id, id2, output;
     private int selectedButton=-1; // Kalo -1, ga ada yg dipencet
     SettingAlarm settingAlarm;
     MediaPlayer mp;
@@ -90,6 +90,7 @@ public class ListAdapter extends BaseAdapter {
             holder.txtID = (TextView)MyView.findViewById(R.id.txtId);
             holder.txtID2 = (TextView) MyView.findViewById(R.id.txtID2);
             holder.txtStatus = (TextView) MyView.findViewById(R.id.txtStatus);
+            holder.txtRingtone = (TextView) MyView.findViewById(R.id.txtRingtone);
             holder.switchAlarmStatus = (Switch) MyView.findViewById(R.id.SwitchAlarmStatus);
             holder.btnPlay = (ImageButton) MyView.findViewById(R.id.btnPlay);
             MyView.setTag(holder);
@@ -100,7 +101,7 @@ public class ListAdapter extends BaseAdapter {
         holder.btnPlay.setEnabled(selectedButton == -1);
         id = String.valueOf(belOtomatisModelList.get(position).getId());
         id2 = String.valueOf(belOtomatisModelList.get(position).getID2());
-        ringtone = belOtomatisModelList.get(position).getRingtone();
+        holder.txtRingtone.setText(belOtomatisModelList.get(position).getRingtone());
         holder.txtID.setText(String.valueOf(belOtomatisModelList.get(position).getId()));
         holder.txtID2.setText(String.valueOf(belOtomatisModelList.get(position).getID2()));
         holder.txtStatus.setText(String.valueOf(belOtomatisModelList.get(position).getStatus()));
@@ -116,15 +117,17 @@ public class ListAdapter extends BaseAdapter {
         am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         DefaultVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         am.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+        final TextView txtRingtone = holder.txtRingtone;
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Toast.makeText(context, "Ringtone : " + ringtone + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                 //Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
                 ((ImageButton) view).setEnabled(false); // btnPlay yg di pencet di disable
                 selectedButton = position; // selectedButton diubah biar button lainnya ga bisa dipencet
                 notifyDataSetChanged(); // Ngasih tau adapter kalo btnPlay ga bisa dipencet(disable)
-                if (ringtone.equals("Default")){
+                if (txtRingtone.getText().toString().equals("Default") || txtRingtone.getText().toString() == null
+                        || txtRingtone.getText().toString().equals("")){
                     mp = MediaPlayer.create(context, R.raw.iphone7__2016);
                     int start = 0;
                     int end = duration;
@@ -145,7 +148,7 @@ public class ListAdapter extends BaseAdapter {
                     handler.postDelayed(stopPlayerTask, end);
                 }
                 else{
-                    final Uri uri = Uri.parse(ringtone);
+                    final Uri uri = Uri.parse(txtRingtone.getText().toString());
                     mp = MediaPlayer.create(context, uri);
                     mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                     int start = 0;
@@ -215,7 +218,7 @@ public class ListAdapter extends BaseAdapter {
     }
 
     private static class ItemViewHolder {
-        TextView txtShowWaktu, txtSetDay, txtJudulAlarm, txtID, txtID2, txtStatus;
+        TextView txtShowWaktu, txtSetDay, txtJudulAlarm, txtID, txtID2, txtStatus,  txtRingtone;
         Switch switchAlarmStatus;
         ImageButton btnPlay;
     }

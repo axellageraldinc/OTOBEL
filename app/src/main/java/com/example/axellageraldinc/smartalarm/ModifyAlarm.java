@@ -368,7 +368,7 @@ public class ModifyAlarm extends AppCompatActivity {
         intent1 = new Intent(this, AlarmReceiver.class);
         Bundle b = new Bundle();
         // Biar di database chosenRingtone gak kosong
-        if (chosenRingtone.equals("Default")){
+        if (chosenRingtone.equals("Default") || chosenRingtone == null){
             b.putString("ringtone_alarm", null);
         } else {
             b.putString("ringtone_alarm", chosenRingtone);
@@ -558,7 +558,12 @@ public class ModifyAlarm extends AppCompatActivity {
 
         sr = new ModelSettingAlarm();
         sr.setJudul("Ringtone");
-        sr.setSub(ringtone);
+        if (ringtone == null || ringtone.equals("Default")) {
+            chosenRingtone = "Default";
+        } else {
+            chosenRingtone = ringtone;
+        }
+        sr.setSub(chosenRingtone);
         results.add(sr);
 
         sr = new ModelSettingAlarm();

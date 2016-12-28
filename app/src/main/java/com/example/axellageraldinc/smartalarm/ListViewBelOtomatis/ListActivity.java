@@ -100,7 +100,7 @@ public class ListActivity extends Fragment {
                 ii.putExtra("status", status);
 
                 // Ganti ini biar bisa cancel
-                startActivityForResult(ii, 1);
+                startActivityForResult(ii, 10);
 
                 Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
             }
@@ -151,7 +151,7 @@ public class ListActivity extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 10) {
             Log.v("Fragment result", "refresh adapter");
             belOtomatisModelList.clear();
             belOtomatisModelList.addAll(dbHelper.getAllAlarm());

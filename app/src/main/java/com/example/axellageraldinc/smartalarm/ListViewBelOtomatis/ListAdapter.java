@@ -172,16 +172,14 @@ public class ListAdapter extends BaseAdapter {
                 am.setStreamVolume(AudioManager.STREAM_MUSIC, DefaultVolume, 0);
             }
         });
-
-//        int status = belOtomatisModelList.get(position).getStatus();
-        if (holder.txtStatus.getText().toString().equals("1")){
+        final TextView txtID = holder.txtID;
+        // status didapet langsung dari database
+        if (dbHelper.getAlarmStatus(Integer.parseInt(txtID.getText().toString()))){
             holder.switchAlarmStatus.setChecked(true);
         }
         else{
             holder.switchAlarmStatus.setChecked(false);
         }
-        final TextView txtID = holder.txtID;
-        final TextView txtID2 = holder.txtID2;
         holder.switchAlarmStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -189,6 +187,14 @@ public class ListAdapter extends BaseAdapter {
                     Toast.makeText(context, "Check : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
                     dbHelper.updateAlarmStatus(Integer.parseInt(txtID.getText().toString()), 1);
                     loadActivateFromDB(Integer.parseInt(txtID.getText().toString()));
+                    Runnable updateData = new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged(); // notify kalo datanya berubah
+                        }
+                    };
+                    Handler handler = new Handler();
+                    handler.postDelayed(updateData, 10);
                     //alarm ON
                 }
                 else
@@ -202,6 +208,15 @@ public class ListAdapter extends BaseAdapter {
 //                            ,Integer.parseInt(txtID2.getText().toString()), intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 //                    pendingIntent1.cancel();
                     stopAlarm(Integer.parseInt(txtID.getText().toString()));
+                    Runnable updateData = new Runnable() {
+                        @Override
+                        public void run() {
+                            notifyDataSetChanged();
+                        }
+                    };
+                    Handler handler = new Handler();
+                    handler.postDelayed(updateData, 100);
+
                 }
             }
         });

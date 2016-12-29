@@ -49,7 +49,7 @@ public class MenuSetting extends AppCompatActivity {
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         listMenu = (ListView) findViewById(R.id.listMenuSetting);
-        String[] values = new String[] { "Volume", "Song duration"};
+        String[] values = new String[] { "Volume"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuSetting.this, R.layout.activity_menu_setting_adapter, R.id.txtJudul, values);
         listMenu.setAdapter(adapter);
@@ -65,12 +65,12 @@ public class MenuSetting extends AppCompatActivity {
                     //Show builder set volume
                     ShowSetVolume();
                 }
-                else if (position==1)
+                /*else if (position==1)
                 {
                     //Show builder editText durasinya
                     //Lihat di bagian set hari alarm di setting alarm
                     SetDurasi();
-                }
+                }*/
             }
         });
 

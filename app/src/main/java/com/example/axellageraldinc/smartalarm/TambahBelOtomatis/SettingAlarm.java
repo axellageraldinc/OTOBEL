@@ -228,7 +228,7 @@ public class SettingAlarm extends AppCompatActivity
     }
 
     public void SetDuration(){
-        final CharSequence[] items = {" Pakai Settingan Global ", " Set khusus alarm ini "};
+        final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(SettingAlarm.this);
         b.setTitle("Durasi Alarm");

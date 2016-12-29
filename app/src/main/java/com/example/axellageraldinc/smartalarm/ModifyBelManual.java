@@ -151,12 +151,12 @@ public class ModifyBelManual extends AppCompatActivity {
     }
 
     public void SetDuration(){
-        final CharSequence[] items = {" Pakai Settingan Global ", " Set khusus alarm ini "};
+        final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyBelManual.this);
         b.setTitle("Durasi Alarm");
         int checkedItem;
-        if (duration==DurasiDB){
+        if (duration==DurasiDB*1000){
             checkedItem = 0;
         }
         else{
@@ -170,7 +170,7 @@ public class ModifyBelManual extends AppCompatActivity {
                 {
                     case 0:
                         //Kalau pakai settingan global
-                        duration=dbHelper.GetDuration();
+                        duration=dbHelper.GetDuration()*1000;
                         break;
                     case 1:
                         //Kalau pakai settingan ini sendiri
@@ -184,7 +184,7 @@ public class ModifyBelManual extends AppCompatActivity {
         b.setPositiveButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        fullObject.setSub(duration + " detik");
+                        fullObject.setSub(duration/1000 + " detik");
                         adapter.notifyDataSetChanged();
                         dialog.dismiss();
                     }
@@ -222,8 +222,8 @@ public class ModifyBelManual extends AppCompatActivity {
                 {
                     durasifix=10000;
                 }
-                duration = durasifix/1000;
-                fullObject.setSub(duration + " detik");
+                duration = durasifix;
+                fullObject.setSub(duration/1000 + " detik");
                 adapter.notifyDataSetChanged();
                 d.dismiss();
             }

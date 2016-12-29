@@ -238,7 +238,7 @@ public class ModifyAlarm extends AppCompatActivity {
     }
 
     public void SetDuration(){
-        final CharSequence[] items = {" Pakai Settingan Global ", " Set khusus alarm ini "};
+        final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
         b.setTitle("Durasi Alarm");
@@ -289,7 +289,7 @@ public class ModifyAlarm extends AppCompatActivity {
     public void SetDurasiNew(){
         final Dialog d = new Dialog(ModifyAlarm.this);
         d.setTitle("INPUT DURASI BEL");
-        d.setContentView(R.layout.input_box);
+        d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
         InputMethodManager imm = (InputMethodManager) getSystemService(getApplicationContext().INPUT_METHOD_SERVICE);

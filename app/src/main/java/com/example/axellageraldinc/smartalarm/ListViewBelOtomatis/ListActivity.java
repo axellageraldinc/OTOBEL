@@ -74,6 +74,7 @@ public class ListActivity extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 BelOtomatisModel belOtomatisModel = belOtomatisModelList.get(position);
+                int durasiDB = dbHelper.GetDuration();
                 id = belOtomatisModel.getId();
                 BelOtomatisModel a = dbHelper.getAlarmModel(id);
                 jam = a.getHour();

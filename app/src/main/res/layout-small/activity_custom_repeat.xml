@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Senin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/textView"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkSenin"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Selasa"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt2"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkSelasa"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Rabu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt3"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkRabu"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Kamis"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt4"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkKamis"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Jumat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt5"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkJumat"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Sabtu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt6"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkSabtu"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
+            android:text="Minggu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/txt7"
+            android:textSize="25sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/chkMinggu"
+            android:gravity="center_vertical" />
+    </LinearLayout>
+
+    <Button
+        android:text="@string/ButtonOK"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/btnOK"
+        android:layout_weight="1"
+        android:textColor="@color/BackgroundLayout"
+        android:background="@drawable/button_colors" />
+
+</LinearLayout>

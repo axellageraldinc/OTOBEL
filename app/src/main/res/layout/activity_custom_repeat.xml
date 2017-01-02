@@ -6,7 +6,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Senin"
@@ -26,7 +27,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Selasa"
@@ -46,7 +48,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Rabu"
@@ -66,7 +69,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Kamis"
@@ -86,7 +90,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Jumat"
@@ -106,7 +111,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Sabtu"
@@ -126,7 +132,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <com.example.axellageraldinc.smartalarm.CustomTextViewRegular
             android:text="Minggu"
@@ -145,9 +152,12 @@
     </LinearLayout>
 
     <Button
-        android:text="OK"
+        android:text="@string/ButtonOK"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btnOK" />
+        android:layout_height="match_parent"
+        android:id="@+id/btnOK"
+        android:layout_weight="1"
+        android:background="@drawable/button_colors"
+        android:textColor="@color/BackgroundLayout" />
 
 </LinearLayout>

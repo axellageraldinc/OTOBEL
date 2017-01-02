@@ -112,7 +112,7 @@ public class AddManualAlarm extends AppCompatActivity {
 
     public void JudulBel(){
         final Dialog d = new Dialog(AddManualAlarm.this);
-        d.setTitle("INPUT NAMA BEL");
+        d.setTitle(R.string.InputNamaBel);
         d.setContentView(R.layout.input_box);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -135,7 +135,7 @@ public class AddManualAlarm extends AppCompatActivity {
         final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(AddManualAlarm.this);
-        b.setTitle("Durasi Alarm");
+        b.setTitle(R.string.InputDurasiBel);
         b.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
@@ -155,7 +155,7 @@ public class AddManualAlarm extends AppCompatActivity {
             }
         });
         // Button OK
-        b.setPositiveButton("OK",
+        b.setPositiveButton(R.string.ButtonOK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         fullObject.setSub(duration + " detik");
@@ -165,7 +165,7 @@ public class AddManualAlarm extends AppCompatActivity {
                 });
 
         //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        b.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -176,7 +176,7 @@ public class AddManualAlarm extends AppCompatActivity {
 
     public void SetDurasiNew(){
         final Dialog d = new Dialog(AddManualAlarm.this);
-        d.setTitle("INPUT DURASI BEL");
+        d.setTitle(R.string.InputDurasiBel);
         d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);

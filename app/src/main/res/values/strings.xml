@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Bel Sekolah Gege</string>
+    <string name="app_name">OTOBEL</string>
     <string name="JudulModify">EDIT BEL OTOMATIS</string>
     <string name="JudulSettingAlarm">TAMBAH BEL OTOMATIS</string>
     <string name="JudulAddManual">TAMBAH BEL MANUAL</string>
@@ -13,4 +13,10 @@
     <string name="Info1">App Order :</string>
     <string name="Info2">axella.gerald@gmail.com</string>
     <string name="Info3">daiserver.com</string>
+    <string name="BelAuto">Bel Otomatis</string>
+    <string name="BelManual">Bel Manual</string>
+    <string name="ClickBackAgain">Please click BACK again to exit</string>
+    <string name="InputDurasiBel">INPUT DURASI BEL</string>
+    <string name="SetVolume">Set Alarm Volume</string>
+    <string name="InputNamaBel">INPUT NAMA BEL</string>
 </resources>

@@ -120,7 +120,7 @@ public class ListAdapter extends BaseAdapter {
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + "Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                 //Stop(); //Supaya cuma sekali setel aja, gak loop terus terusan
                 ((ImageButton) view).setEnabled(false); // btnPlay yg di pencet di disable
                 selectedButton = position; // selectedButton diubah biar button lainnya ga bisa dipencet
@@ -184,7 +184,7 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b){
-                    Toast.makeText(context, "Check : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Check : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
                     dbHelper.updateAlarmStatus(Integer.parseInt(txtID.getText().toString()), 1);
                     loadActivateFromDB(Integer.parseInt(txtID.getText().toString()));
                     Runnable updateData = new Runnable() {
@@ -199,7 +199,7 @@ public class ListAdapter extends BaseAdapter {
                 }
                 else
                 {
-                    Toast.makeText(context, "Uncheck : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Uncheck : " + txtID.getText().toString(), Toast.LENGTH_SHORT).show();
                     dbHelper.updateAlarmStatus(Integer.parseInt(txtID.getText().toString()), 0);
                     //alarm OFF
                     //Cari id2 berdasar id dari yang di off, lalu pendingIntent id2 disini. pendingintent di cancel

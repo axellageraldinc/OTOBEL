@@ -96,7 +96,7 @@ public class ListManualAdapter extends BaseAdapter {
         holder.btnPlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + " Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Ringtone : " + txtRingtone.getText().toString() + " Volume : " + VolumeDB, Toast.LENGTH_SHORT).show();
                     //Stop();
                     ((ImageButton) view).setEnabled(false); // btnPlay yg di pencet di disable
                     selectedButton = position; // selectedButton diubah biar button lainnya ga bisa dipencet

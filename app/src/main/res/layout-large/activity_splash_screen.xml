@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_splash_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.axellageraldinc.smartalarm.SplashScreen"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:paddingTop="130dp">
+
+        <ImageView
+            app:srcCompat="@drawable/logo2"
+            android:id="@+id/imageView2"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical|center_horizontal"
+            android:layout_height="7.5dp"
+            android:layout_width="300dp" />
+
+        <com.example.axellageraldinc.smartalarm.CustomTextViewBold
+            android:text="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtSplash"
+            android:textAlignment="center"
+            android:textColor="@color/BackgroundLayout"
+            android:layout_weight="1"
+            android:textSize="80sp" />
+    </LinearLayout>
+
+</LinearLayout>

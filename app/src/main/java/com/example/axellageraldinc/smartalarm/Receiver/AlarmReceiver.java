@@ -43,7 +43,7 @@ public class AlarmReceiver extends BroadcastReceiver
         DefaultVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             myAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, VolumeDB, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE); //REMOVE SOUND AND VIBRATE BIAR GAK ADA SUARA TUT PAS MAU MULAI ALARM
-        Toast.makeText(context, "Volume : " + VolumeDB + "\nDuration : " + duration + "\nVolumeDefault : " + DefaultVolume, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, "Volume : " + VolumeDB + "\nDuration : " + duration + "\nVolumeDefault : " + DefaultVolume, Toast.LENGTH_SHORT).show();
         String pasrseUri = intent.getStringExtra("ringtone_alarm");
 
         if (pasrseUri != null) {

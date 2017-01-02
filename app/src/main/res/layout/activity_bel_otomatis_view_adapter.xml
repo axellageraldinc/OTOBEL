@@ -13,6 +13,15 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+        android:id="@+id/btnStop"
+        android:background="@drawable/button_colors"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/ic_media_play"
         android:id="@+id/btnPlay"
         android:background="@drawable/button_colors"
@@ -31,13 +40,13 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="false"
         android:paddingLeft="10dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
@@ -75,17 +84,17 @@
                 android:textColor="@color/TextColor" />
 
             <com.example.axellageraldinc.smartalarm.CustomTextViewMedium
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/txtJudulAlarm"
                 android:gravity="center_vertical"
                 android:textColor="@color/TextColor"
                 android:fontFamily="sans-serif"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:text="Judul"
-                android:paddingLeft="15dp"
+                android:paddingLeft="7dp"
                 android:maxLines="2"
-                android:lines="2"/>
+                android:lines="2" />
 
             <TextView
                 android:text="id2"

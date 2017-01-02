@@ -130,7 +130,7 @@ public class ModifyBelManual extends AppCompatActivity {
 
     public void JudulBel(){
         final Dialog d = new Dialog(ModifyBelManual.this);
-        d.setTitle("INPUT NAMA BEL");
+        d.setTitle(R.string.InputNamaBel);
         d.setContentView(R.layout.input_box);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -154,7 +154,7 @@ public class ModifyBelManual extends AppCompatActivity {
         final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyBelManual.this);
-        b.setTitle("Durasi Alarm");
+        b.setTitle(R.string.InputDurasiBel);
         int checkedItem;
         if (duration==DurasiDB*1000){
             checkedItem = 0;
@@ -181,7 +181,7 @@ public class ModifyBelManual extends AppCompatActivity {
             }
         });
         // Button OK
-        b.setPositiveButton("OK",
+        b.setPositiveButton(R.string.ButtonOK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         fullObject.setSub(duration/1000 + " detik");
@@ -191,7 +191,7 @@ public class ModifyBelManual extends AppCompatActivity {
                 });
 
         //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        b.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -202,7 +202,7 @@ public class ModifyBelManual extends AppCompatActivity {
 
     public void SetDurasiNew(){
         final Dialog d = new Dialog(ModifyBelManual.this);
-        d.setTitle("INPUT DURASI BEL");
+        d.setTitle(R.string.InputDurasiBel);
         d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -295,7 +295,7 @@ public class ModifyBelManual extends AppCompatActivity {
         d.setCancelable(true);
         d.setTitle("Apakah anda yakin ingin simpan?");
 
-        d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        d.setPositiveButton(R.string.ButtonOK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.updateBelManual(new BelManualModel(JudulBel, chosenRingtone, duration));
@@ -306,7 +306,7 @@ public class ModifyBelManual extends AppCompatActivity {
             }
         });
 
-        d.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        d.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
@@ -323,7 +323,7 @@ public class ModifyBelManual extends AppCompatActivity {
         d.setCancelable(true);
         d.setTitle("Apakah anda yakin untuk hapus bel?");
 
-        d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        d.setPositiveButton(R.string.ButtonOK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteBelManual(ID);
@@ -333,7 +333,7 @@ public class ModifyBelManual extends AppCompatActivity {
             }
         });
 
-        d.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        d.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();

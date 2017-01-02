@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:title="Setting"
-        android:id="@+id/MenuSetting" />
+        android:id="@+id/MenuSetting"
+        android:showAsAction="withText|always"/>
     <item android:title="About"
-        android:id="@+id/MenuAbout" />
+        android:id="@+id/MenuAbout"
+        android:showAsAction="withText|always"/>
 </menu>

@@ -37,7 +37,7 @@ public class DeviceBootReceiver extends BroadcastReceiver {
             Intent mServiceIntent = new Intent(context, BackgroundService.class);
             ComponentName service = context.startService(mServiceIntent);
             if (null == service) {
-                Toast.makeText(context, "Ga bisa", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Alarm gagal di-set", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(context, "Alarm set", Toast.LENGTH_LONG).show();
             }

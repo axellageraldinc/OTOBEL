@@ -2,6 +2,7 @@ package com.example.axellageraldinc.smartalarm;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.ListViewBelManual.ManualAlarm;
 import com.example.axellageraldinc.smartalarm.Menu.MenuSetting;
@@ -25,6 +27,7 @@ public class HomeScreen extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     ViewPagerAdapter adapter;
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +51,8 @@ public class HomeScreen extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new ListActivity(), "Bel Otomatis");
-        adapter.addFrag(new ManualAlarm(), "Bel Manual");
+        adapter.addFrag(new ListActivity(), this.getResources().getString(R.string.BelAuto));
+        adapter.addFrag(new ManualAlarm(), this.getResources().getString(R.string.BelManual));
         viewPager.setAdapter(adapter);
     }
 
@@ -112,6 +115,25 @@ public class HomeScreen extends AppCompatActivity {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, this.getResources().getString(R.string.ClickBackAgain), Toast.LENGTH_LONG).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
 /*    *//**

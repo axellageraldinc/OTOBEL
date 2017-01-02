@@ -103,7 +103,7 @@ public class ListActivity extends Fragment {
                 // Ganti ini biar bisa cancel
                 startActivityForResult(ii, 10);
 
-                Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Klik di list : " + id, Toast.LENGTH_LONG).show();
             }
         });
 

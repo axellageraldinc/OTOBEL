@@ -154,7 +154,7 @@ public class ModifyAlarm extends AppCompatActivity {
 
     public void JudulBel(){
         final Dialog d = new Dialog(ModifyAlarm.this);
-        d.setTitle("INPUT NAMA BEL");
+        d.setTitle(R.string.InputNamaBel);
         d.setContentView(R.layout.input_box);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -210,7 +210,7 @@ public class ModifyAlarm extends AppCompatActivity {
             }
         });
 
-        b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        b.setPositiveButton(R.string.ButtonOK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (daysOfWeek == null) {
@@ -241,7 +241,7 @@ public class ModifyAlarm extends AppCompatActivity {
         final CharSequence[] items = {" Default (10 detik) ", " Set khusus alarm ini "};
 
         final AlertDialog.Builder b = new AlertDialog.Builder(ModifyAlarm.this);
-        b.setTitle("Durasi Alarm");
+        b.setTitle(R.string.InputDurasiBel);
         int checkedItem;
         if (duration*1000==DurasiDB){
             checkedItem = 0;
@@ -267,7 +267,7 @@ public class ModifyAlarm extends AppCompatActivity {
             }
         });
         // Button OK
-        b.setPositiveButton("OK",
+        b.setPositiveButton(R.string.ButtonOK,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         fullObject.setSub(duration + " detik");
@@ -277,7 +277,7 @@ public class ModifyAlarm extends AppCompatActivity {
                 });
 
         //Button Cancel
-        b.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        b.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -288,7 +288,7 @@ public class ModifyAlarm extends AppCompatActivity {
 
     public void SetDurasiNew(){
         final Dialog d = new Dialog(ModifyAlarm.this);
-        d.setTitle("INPUT DURASI BEL");
+        d.setTitle(R.string.InputDurasiBel);
         d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -521,7 +521,7 @@ public class ModifyAlarm extends AppCompatActivity {
         d.setCancelable(true);
         d.setTitle("Apakah anda yakin untuk hapus bel?");
 
-        d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        d.setPositiveButton(R.string.ButtonOK, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
@@ -537,7 +537,7 @@ public class ModifyAlarm extends AppCompatActivity {
             }
         });
 
-        d.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        d.setNegativeButton(R.string.ButtonCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();

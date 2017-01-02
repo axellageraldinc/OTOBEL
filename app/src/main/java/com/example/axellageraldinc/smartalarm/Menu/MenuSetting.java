@@ -21,6 +21,10 @@ import android.widget.Toast;
 
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.R;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.ModelSettingAlarm;
+import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.MyCustomBaseAdapter;
+
+import java.util.ArrayList;
 
 public class MenuSetting extends AppCompatActivity {
 
@@ -33,6 +37,10 @@ public class MenuSetting extends AppCompatActivity {
     private DBHelper dbH;
     private MediaPlayer mp;
     public static int maxVolume;
+    ArrayList<ModelSettingAlarm> results;
+    ModelSettingAlarm fullObject, sr;
+    MyCustomBaseAdapter adapter;
+    long idItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +56,25 @@ public class MenuSetting extends AppCompatActivity {
 
         myAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
+        ArrayList<ModelSettingAlarm> searchResults = GetSearchResults();
         listMenu = (ListView) findViewById(R.id.listMenuSetting);
-        String[] values = new String[] { "Volume"};
+        adapter = new MyCustomBaseAdapter(this, searchResults);
+        listMenu.setAdapter(adapter);
+        /*String[] values = new String[] { "Volume"};
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MenuSetting.this, R.layout.activity_menu_setting_adapter, R.id.txtJudul, values);
-        listMenu.setAdapter(adapter);
+        listMenu.setAdapter(adapter);*/
 
         listMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                int position = i;
-                String itemValue = (String) listMenu.getItemAtPosition(position);
+                /*int position = i;
+                String itemValue = (String) listMenu.getItemAtPosition(position);*/
+                Object o = listMenu.getItemAtPosition(i);
+                idItem = listMenu.getItemIdAtPosition(i);
+                fullObject = (ModelSettingAlarm) o;
 
-                if (position==0)
+                if ((int) idItem==0)
                 {
                     //Show builder set volume
                     ShowSetVolume();
@@ -82,7 +96,7 @@ public class MenuSetting extends AppCompatActivity {
         Log.d("Duration: ", String.valueOf(duration));
         durasi = String.valueOf(duration);
         final Dialog d = new Dialog(MenuSetting.this);
-        d.setTitle("INPUT DURASI BEL");
+        d.setTitle(this.getResources().getString(R.string.InputDurasiBel));
         d.setContentView(R.layout.input_box_number);
 
         final EditText txtInput = (EditText)d.findViewById(R.id.txtInput);
@@ -119,7 +133,7 @@ public class MenuSetting extends AppCompatActivity {
         maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int curVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        popDialog.setTitle("Set Alarm Volume");
+        popDialog.setTitle(this.getResources().getString(R.string.SetVolume));
         popDialog.setView(seek);
 
         seek.setMax(maxVolume);
@@ -151,7 +165,7 @@ public class MenuSetting extends AppCompatActivity {
         });
 
         // Button OK
-        popDialog.setPositiveButton("OK",
+        popDialog.setPositiveButton(this.getResources().getString(R.string.ButtonOK),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dbH.InsertVolume(volume);
@@ -160,7 +174,8 @@ public class MenuSetting extends AppCompatActivity {
                 });
 
         //Button Cancel
-        popDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+        popDialog.setNegativeButton(this.getResources().getString(R.string.ButtonCancel),
+                new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
@@ -173,4 +188,16 @@ public class MenuSetting extends AppCompatActivity {
     public static int getVolume() {
         return volume;
     }
+
+    private ArrayList<ModelSettingAlarm> GetSearchResults(){
+        results = new ArrayList<ModelSettingAlarm>();
+
+        sr = new ModelSettingAlarm();
+        sr.setJudul(this.getResources().getString(R.string.SetVolume));
+        sr.setSub("Volume untuk bel otomatis dan bel manual");
+        results.add(sr);
+
+        return results;
+    }
+
 }

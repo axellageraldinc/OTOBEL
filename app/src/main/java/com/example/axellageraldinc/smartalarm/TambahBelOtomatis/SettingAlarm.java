@@ -349,9 +349,7 @@ public class SettingAlarm extends AppCompatActivity
         if (repeat.equals("Don't repeat")) {
             setRepeatAlarm(0);
         } else if (repeat.equals("Everyday")){
-            for (int a=1;a<=7;a++) {
-                setRepeatAlarm(a);
-            }
+            setEverydayAlarm();
         } else if (repeat.equals("Weekday")) {
             for (int a=2;a<=6;a++) {
                 setRepeatAlarm(a);
@@ -397,6 +395,16 @@ public class SettingAlarm extends AppCompatActivity
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent1);
             }
         }
+    }
+
+    public void setEverydayAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent1);
     }
 
     public void SetRingtone()

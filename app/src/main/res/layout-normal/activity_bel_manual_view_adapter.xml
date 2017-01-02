@@ -37,6 +37,14 @@
                 android:textColor="@color/TextColor"
                 android:text="Ringtone" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtDuration"
+                android:visibility="gone"
+                android:textColor="@color/TextColor"
+                android:text="Duration" />
+
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

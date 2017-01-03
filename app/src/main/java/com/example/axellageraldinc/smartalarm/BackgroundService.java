@@ -19,6 +19,9 @@ import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 // TODO : Set alarm setelah booting
 
@@ -125,7 +128,6 @@ public class BackgroundService extends Service {
             , String chosenRingtone, int duration) {
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
-        ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
         Intent intent = new Intent(context, AlarmReceiver.class);
         Bundle b = new Bundle();
         if (chosenRingtone == null){
@@ -148,22 +150,9 @@ public class BackgroundService extends Service {
             setRepeatAlarm(0, hour, minute, am, pi);
         } else {
             if (repeat.equals("Everyday")) {
-                for (int i=1;i<8;i++) {
-                    setRepeatAlarm(i, hour, minute, am, pi);
-                }
-            } else if (repeat.equals("Weekday")) {
-                for (int i=2;i<7;i++) {
-                    setRepeatAlarm(i, hour, minute, am, pi);
-                }
-            } else if (repeat.equals("Weekend")) {
-                setRepeatAlarm(1, hour, minute, am, pi);
-                setRepeatAlarm(7, hour, minute, am, pi);
-            } else {
-                int list;
-                for (int a=0;a<intRepeat.size();a++) {
-                    list = intRepeat.get(a);
-                    setRepeatAlarm(list, hour, minute, am, pi);
-                }
+                setEverydayAlarm(hour, minute, am, pi);
+            }  else {
+                alarmOn(context, repeat, hour, minute, chosenRingtone, duration, id2);
             }
         }
     }
@@ -239,5 +228,84 @@ public class BackgroundService extends Service {
         PendingIntent pi = PendingIntent.getBroadcast(context, id2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         am.cancel(pi);
+    }
+
+    private static void setEverydayAlarm(int hour, int minute, AlarmManager alarmManager, PendingIntent pi) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+    }
+
+    private static void alarmOn(Context context, String repeat, int hour, int minute, String chosenRingtone, int duration
+            , int id2) {
+        Calendar calendar = Calendar.getInstance();
+        Date now = calendar.getTime();
+        Integer day = calendar.get(Calendar.DAY_OF_WEEK);
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+        ArrayList<Integer> daysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
+        int dayOfYear = 1;
+        int i = 0;
+        while (i < daysOfWeek.size()) {
+            if (daysOfWeek.contains(day)) {
+                if (daysOfWeek.get(i) == day) {
+                    if (i+1 == daysOfWeek.size()) {
+                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(0));
+                        dayOfYear = day - daysOfWeek.get(0);
+                        break;
+                    } else {
+                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i+1));
+                        dayOfYear = day - daysOfWeek.get(i+1);
+                        break;
+                    }
+                }
+            } else {
+                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+                dayOfYear = day - daysOfWeek.get(i);
+                break;
+            }
+            i++;
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, 0);
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            if (Objects.equals(daysOfWeek.get(0), day)) {
+                calendar.add(Calendar.DAY_OF_YEAR, 7);
+            } else {
+                calendar.add(Calendar.DAY_OF_YEAR, 8-dayOfYear);
+            }
+        }
+        long timeInMillis = calendar.getTimeInMillis();
+        Intent intent2 = new Intent(context, AlarmReceiver.class);
+        Bundle bundle = new Bundle();
+        if (chosenRingtone.equals("Default")){
+            bundle.putString("ringtone_alarm", null);
+        } else {
+            bundle.putString("ringtone_alarm", chosenRingtone);
+        }
+        bundle.putInt("durasi", duration);
+        intent2.putExtras(bundle);
+
+        intent2.putExtra("repeat", repeat);
+        intent2.putExtra("duration", duration);
+        intent2.putExtra("id2",id2);
+        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, id2, intent2,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent1);
+        Date setDate = calendar.getTime();
+        long diff = setDate.getTime() - now.getTime();
+        long sminute = diff / (60 * 1000) % 60;
+        long shour = diff / (60 * 60 * 1000) % 24;
+        long sday = diff / (60 * 60 * 24 * 1000) % 365;
+        Toast.makeText(context, "Your next alarm will be set in " + sday + " day(s), " +
+                shour + " hour(s), " + sminute + " minute(s)", Toast.LENGTH_LONG).show();
+        Log.v("Alarm", "Your next alarm will be set in " + sday + " day(s), " +
+                shour + " hour(s), " + sminute + " minute(s)");
     }
 }

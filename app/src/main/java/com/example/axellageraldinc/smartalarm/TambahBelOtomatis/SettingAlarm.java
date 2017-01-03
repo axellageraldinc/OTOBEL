@@ -346,23 +346,10 @@ public class SettingAlarm extends AppCompatActivity
         //Sedangkan iki kan rung mlebu ning DB
         intent1.putExtra("id2",id2);
         pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (repeat.equals("Don't repeat")) {
-            setRepeatAlarm(0);
-        } else if (repeat.equals("Everyday")){
+        if (repeat.equals("Everyday")) {
             setEverydayAlarm();
-        } else if (repeat.equals("Weekday")) {
-            for (int a=2;a<=6;a++) {
-                setRepeatAlarm(a);
-            }
-        } else if (repeat.equals("Weekend")) {
-            setRepeatAlarm(1);
-            setRepeatAlarm(7);
         } else {
-            int list;
-            for (int a=0;a<this.daysOfWeek.size();a++) {
-                list = this.daysOfWeek.get(a);
-                setRepeatAlarm(list);
-            }
+            setRepeatAlarm(0);
         }
     }
 
@@ -403,6 +390,7 @@ public class SettingAlarm extends AppCompatActivity
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent1);
     }

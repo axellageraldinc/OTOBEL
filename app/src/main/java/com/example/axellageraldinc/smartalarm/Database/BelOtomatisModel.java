@@ -44,6 +44,21 @@ public class BelOtomatisModel {
         this.order_alarm = order_alarm;
     }
 
+    public BelOtomatisModel(int id, int hour, int minute, String ringtone, String set_day, int status
+            , int alarm_duration, int ID2, String judul_bel, int order_alarm) {
+        this.id = id;
+        this.hour = hour;
+        this.minute = minute;
+        this.ringtone = ringtone;
+        this.set_day = set_day;
+        this.status = status;
+        this.alarm_duration = alarm_duration;
+        this.ID2 = ID2;
+        this.judul_bel = judul_bel;
+        this.order_alarm = order_alarm;
+    }
+
+
     public int getOrder_alarm() {
         return order_alarm;
     }

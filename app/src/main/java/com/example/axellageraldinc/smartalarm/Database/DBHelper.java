@@ -361,7 +361,9 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             return new String[]{cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
-                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))};
+                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(ID_ALARM)))
+                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(HOUR_ALARM)))
+                    , String.valueOf(cursor.getInt(cursor.getColumnIndex(MINUTE_ALARM)))};
         } else {
             return null;
         }
@@ -377,5 +379,26 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_ALARM, null, ID_ALARM+"=?", new String[]{String.valueOf(id)}, null, null, null, null);
         return cursor;
+    }
+
+
+    public BelOtomatisModel getOneAlarmID2(int id2) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_ALARM + " WHERE " + ID2 + "=" + id2;
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            belOtomatisModel = new BelOtomatisModel(
+                    cursor.getInt(cursor.getColumnIndex(ID_ALARM))
+                    , cursor.getInt(cursor.getColumnIndex(HOUR_ALARM))
+                    , cursor.getInt(cursor.getColumnIndex(MINUTE_ALARM))
+                    , cursor.getString(cursor.getColumnIndex(RINGTONE_ALARM))
+                    , cursor.getString(cursor.getColumnIndex(SETDAY_ALARM))
+                    , cursor.getInt(cursor.getColumnIndex(STATUS_ALARM))
+                    , cursor.getInt(cursor.getColumnIndex(ALARM_DURATION))
+                    , cursor.getInt(cursor.getColumnIndex(ID2))
+                    , cursor.getString(cursor.getColumnIndex(JUDUL_BEL))
+                    , cursor.getInt(cursor.getColumnIndex(order_alarm)));
+        }
+        return belOtomatisModel;
     }
 }

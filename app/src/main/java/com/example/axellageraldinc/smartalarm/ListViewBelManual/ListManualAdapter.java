@@ -140,6 +140,8 @@ public class ListManualAdapter extends BaseAdapter {
                                 mp.stop();
                                 ((ImageButton) view).setEnabled(true);
                                 selectedPlayButton = -1;
+                                btnStop.setVisibility(View.GONE);
+                                ((ImageButton) view).setVisibility(View.VISIBLE);
                                 notifyDataSetChanged();
                             }};
 

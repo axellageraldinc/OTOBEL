@@ -159,6 +159,8 @@ public class ListAdapter extends BaseAdapter {
                         public void run() {
                             mp.stop();
                             ((ImageButton) view).setEnabled(true);
+                            btnStop.setVisibility(View.GONE);
+                            ((ImageButton) view).setVisibility(View.VISIBLE);
                             selectedPlayButton = -1;
                             notifyDataSetChanged();
                         }};

@@ -362,6 +362,26 @@ public class ModifyAlarm extends AppCompatActivity {
 //        d.show();
     }
 
+    public void SetAlarm(){
+        hourNow = alarmTimePicker.getCurrentHour();
+        minuteNow = alarmTimePicker.getCurrentMinute();
+        intent1 = new Intent(this, AlarmReceiver.class);
+        Bundle b = new Bundle();
+        // Biar di database chosenRingtone gak kosong
+        if (chosenRingtone.equals("Default") || chosenRingtone == null){
+            b.putString("ringtone_alarm", null);
+        } else {
+            b.putString("ringtone_alarm", chosenRingtone);
+        }
+        b.putInt("durasi", duration*1000);
+        intent1.putExtras(b);
+
+        intent1.putExtra("repeat", repeat);
+        intent1.putExtra("duration", duration);
+        intent1.putExtra("id2", ID2);
+        pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
     public void setAlarmOn() {
         hourNow = alarmTimePicker.getCurrentHour();
         minuteNow = alarmTimePicker.getCurrentMinute();
@@ -383,9 +403,7 @@ public class ModifyAlarm extends AppCompatActivity {
         if (repeat.equals("Don't repeat")) {
             setRepeatAlarm(0);
         } else if (repeat.equals("Everyday")){
-            for (int a=1;a<=7;a++) {
-                setRepeatAlarm(a);
-            }
+            setEverydayAlarm();
         } else if (repeat.equals("Weekday")) {
             for (int a=2;a<=6;a++) {
                 setRepeatAlarm(a);
@@ -431,6 +449,16 @@ public class ModifyAlarm extends AppCompatActivity {
                 alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent);
             }
         }
+    }
+
+    public void setEverydayAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
+        calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     public void SetRingtone()
@@ -491,10 +519,10 @@ public class ModifyAlarm extends AppCompatActivity {
                         duration*1000, ID2, JudulBel, uye));
                 if (status==1){
 //                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
-                    setAlarmOn();
+                    SetAlarm();
                 }
                 else{
-                    setAlarmOn();
+                    SetAlarm();
                     alarmManager.cancel(pendingIntent);
                 }
                 dialog.dismiss();
@@ -526,7 +554,7 @@ public class ModifyAlarm extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int i) {
                 dbHelper.deleteAlarm(ID);
                 AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-                setAlarmOn();
+                SetAlarm();
                 alarmManager.cancel(pendingIntent);
                 //pendingIntentDelete.cancel();
                 //pendingIntent.cancel();

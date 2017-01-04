@@ -81,7 +81,6 @@ public class AddManualAlarm extends AppCompatActivity {
                         //dbHelper.InsertDuration(duration);
                         break;
                 }
-
             }
         });
 
@@ -250,7 +249,7 @@ public class AddManualAlarm extends AppCompatActivity {
 
         sr = new ModelSettingAlarm();
         sr.setJudul("Ringtone");
-        sr.setSub("Default");
+        sr.setSub("None");
         results.add(sr);
 
         duration = dbHelper.GetDuration();

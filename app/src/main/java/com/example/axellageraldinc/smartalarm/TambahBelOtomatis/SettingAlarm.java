@@ -499,7 +499,9 @@ public class SettingAlarm extends AppCompatActivity
                 && daysOfWeek.contains(5) && daysOfWeek.contains(6)) {
             stDaysOfWeek.clear();
             stDaysOfWeek.add("Weekday");
-        } else if (daysOfWeek.contains(1) && daysOfWeek.contains(7)) {
+        } else if (daysOfWeek.contains(1) && daysOfWeek.contains(7) && !daysOfWeek.contains(2)
+                && !daysOfWeek.contains(3) && !daysOfWeek.contains(4) && !daysOfWeek.contains(5)
+                && !daysOfWeek.contains(6)) {
             stDaysOfWeek.clear();
             stDaysOfWeek.add("Weekend");
         }

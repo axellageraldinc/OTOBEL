@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -32,6 +33,7 @@ import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 // TODO : Masih ada bug bagian UI setelah alarm di modify
 // TODO : Bug set ringtone
@@ -78,6 +80,9 @@ public class ModifyAlarm extends AppCompatActivity {
         hourModify = i.getIntExtra("jam", 0);
         menitModify = i.getIntExtra("menit", 0);
         repeat = i.getStringExtra("repeat");
+        ArrayList<String> stRepeat = new ArrayList<String>();
+        stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
+        daysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
         JudulBel = i.getStringExtra("judul_bel");
         ringtone = i.getStringExtra("ringtone");
         duration = i.getIntExtra("duration", 0);
@@ -346,44 +351,80 @@ public class ModifyAlarm extends AppCompatActivity {
 
         intent1.putExtra("repeat", repeat);
         intent1.putExtra("duration", duration);
+        intent1.putExtra("jam", hourNow);
+        intent1.putExtra("menit", minuteNow);
         intent1.putExtra("id2", ID2);
         pendingIntent = PendingIntent.getBroadcast(this, ID2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         if (repeat.equals("Everyday")) {
             setEverydayAlarm();
         } else {
-            setRepeatAlarm(0);
+            if (repeat.equals("Don't repeat")) {
+                setRepeatAlarm(0);
+            } else {
+                int i = 0;
+                Calendar calNow = Calendar.getInstance();
+                while (i < daysOfWeek.size()) {
+                    if (calNow.get(Calendar.DAY_OF_WEEK) <= daysOfWeek.get(i)) {
+                        setRepeatAlarm(daysOfWeek.get(i));
+                    }
+                    int temp = daysOfWeek.get(i);
+                    daysOfWeek.remove(i);
+                    daysOfWeek.add(temp);
+                    i++;
+                }
+            }
         }
     }
 
     public void setRepeatAlarm(int daysOfWeek) {
         Calendar calendar = Calendar.getInstance();
-        if (daysOfWeek != 0) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
-        }
+        Date now = new Date();
+        calendar.setTime(now);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Log.v("Hari ini", String.valueOf(day));
+        Log.v("DOW", String.valueOf(daysOfWeek));
+
+        Log.v("Hari set", String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)));
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-        }
-        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-        if(daysOfWeek==0 && System.currentTimeMillis()>time)
-        {
-            if (calendar.AM_PM == 0)
-                time = time + (1000*60*60*12);
-            else
-                time = time + (1000*60*60*24);
-        }
-        if (daysOfWeek == 0) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
-        } else {
-            if (calendar.AM_PM == 0) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*12, pendingIntent);
+            if (daysOfWeek == 0) {
+                calendar.add(Calendar.DATE, 1);
             } else {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent);
+                if (day == daysOfWeek) {
+                    calendar.add(Calendar.DATE, 7);
+                }
+                else {
+                    int dayOfYear = day - daysOfWeek;
+                    Log.v("DayofYear", String.valueOf(dayOfYear));
+                    if (dayOfYear > 0) {
+                        calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                    } else {
+                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+                    }
+                }
+            }
+        } else {
+            if (daysOfWeek != 0) {
+                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
             }
         }
+        Log.v("Tanggal ini", String.valueOf(now));
+        Log.v("Alarm set on", String.valueOf(calendar.getTime()));
+        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+        Date setDate = calendar.getTime();
+        long diff = setDate.getTime() - now.getTime();
+        long minute = diff / (60 * 1000) % 60;
+        long hour = diff / (60 * 60 * 1000) % 24;
+        long sday = diff / (60 * 60 * 24 * 1000) % 365;
+        Toast.makeText(ModifyAlarm.this, "Your alarm will be set in " + sday + " day(s), " +
+                hour + " hour(s), " + minute + " minute(s)", Toast.LENGTH_LONG).show();
+        Log.v("Alarm", "Your alarm will be set in " + sday + " day(s), " +
+                hour + " hour(s), " + minute + " minute(s)");
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
     public void setEverydayAlarm() {
@@ -451,16 +492,17 @@ public class ModifyAlarm extends AppCompatActivity {
                 stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
                 ArrayList<Integer> intRepeat = SettingAlarm.getIntDaysOfWeek(stRepeat);
                 int uye = (int) time;
-                dbHelper.updateAlarm(new BelOtomatisModel(hourEdited, minuteEdited, chosenRingtone, repeat, status,
+                setAlarmOn();
+                dbHelper.updateAlarm(new BelOtomatisModel(hourEdited, minuteEdited, chosenRingtone, repeat, 1,
                         duration*1000, ID2, JudulBel, uye));
-                if (status==1){
+                /*if (status==1){
 //                    alarmManager.setRepeating(AlarmManager.RTC, time, 0, pendingIntent);
                     setAlarmOn();
                 }
                 else{
                     setAlarmOn();
                     alarmManager.cancel(pendingIntent);
-                }
+                }*/
                 dialog.dismiss();
                 // Set result ok, terus finish(di back ga balik sini)
                 setResult(Activity.RESULT_OK);

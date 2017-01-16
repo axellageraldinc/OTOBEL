@@ -22,6 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     BelOtomatisModel belOtomatisModel;
     SQLiteDatabase db;
     BelManualModel bmm;
+    KalimatNotifBarModel kmm;
 
     public static final String DATABASE_NAME = "Alarm.db";
     public static final String TABLE_ALARM = "alarm";
@@ -46,6 +47,8 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String judul_manual = "judul_manual";
     public static final String ringtone_manual = "ringtone_manual";
     public static final String durasi_manual = "durasi_manual";
+    public static final String TABLE_5 = "KalimatNotifBar";
+    public static final String kalimat = "Kalimat";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -63,6 +66,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO " + TABLE_3 + " values (10)");
         db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_4 + " (id_manual INTEGER PRIMARY KEY AUTOINCREMENT, judul_manual TEXT, " +
                 "ringtone_manual TEXT, durasi_manual INTEGER)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + TABLE_5 + " (Kalimat TEXT)");
     }
 
     // Upgrading database
@@ -196,6 +200,36 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         db.close();
         return duration;
+    }
+
+    public int GetHour(int id2){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + HOUR_ALARM + " FROM " + TABLE_ALARM + " where " + ID2 + "=" + id2;
+        Cursor c = db.rawQuery(query, null);
+        int hour=0;
+        if (c.moveToFirst()){
+            do{
+                hour = c.getInt(c.getColumnIndex("hour"));
+            }
+            while(c.moveToNext());
+        }
+        db.close();
+        return hour;
+    }
+
+    public int GetMinute(int id2){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT " + MINUTE_ALARM + " FROM " + TABLE_ALARM + " where " + ID2 + "=" + id2;
+        Cursor c = db.rawQuery(query, null);
+        int minute=0;
+        if (c.moveToFirst()){
+            do{
+                minute = c.getInt(c.getColumnIndex("minute"));
+            }
+            while(c.moveToNext());
+        }
+        db.close();
+        return minute;
     }
 
     // Create alarm
@@ -401,4 +435,35 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return belOtomatisModel;
     }
+
+    public boolean KalimatNotifBar(KalimatNotifBarModel km){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(DBHelper.kalimat, km.getKalimat());
+
+        long result = db.insert(TABLE_5, null, cv);
+        db.close();
+        return result != -1;
+    }
+
+    public List<KalimatNotifBarModel> GetKalimatNotifBar(){
+        List<KalimatNotifBarModel> kmmlist = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_5;
+        Cursor c = db.rawQuery(query, null);
+        if (c.moveToFirst()) {
+            do {
+                kmm = new KalimatNotifBarModel();
+                kmm.setKalimat(c.getString(0));
+                kmmlist.add(kmm);
+            } while (c.moveToNext());
+        }
+        return kmmlist;
+    }
+
+    public void DeleteKalimatNotifBar(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_5);
+    }
+
 }

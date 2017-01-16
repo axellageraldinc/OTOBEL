@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 public class SettingAlarm extends AppCompatActivity
 {
@@ -123,11 +125,21 @@ public class SettingAlarm extends AppCompatActivity
                     chosenRingtone = uri.toString();
                 }*/
                 int uye = (int) time;
-                setAlarmOn();
                 if (chosenRingtone=="Default"){
                     Toast.makeText(SettingAlarm.this, "Harap pilih ringtone", Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    setAlarmOn();
+//                    Log.v("Repeat", repeat);
+//                    ArrayList<String> dow = getDaysOfWeek(daysOfWeek);
+//                    StringBuilder sb = new StringBuilder();
+//                    for (int a=0;a<dow.size();a++) {
+//                        sb.append(dow.get(a));
+//                        if (a<dow.size()-1) {
+//                            sb.append(", ");
+//                        }
+//                    }
+//                    Log.v("Days of week (shfl)", String.valueOf(sb));
                     dbHelper.createAlarm(new BelOtomatisModel(hour, minute, chosenRingtone, repeat, 1
                             , duration*1000, id2, JudulBel, uye));
                     Intent i = new Intent(SettingAlarm.this, HomeScreen.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -339,6 +351,8 @@ public class SettingAlarm extends AppCompatActivity
 
         intent1.putExtra("repeat", repeat);
         intent1.putExtra("duration", duration);
+        intent1.putExtra("jam", hour);
+        intent1.putExtra("menit", minute);
 
         //Supaya bisa multiple alarms
         id2 = (int) System.currentTimeMillis(); //id2 adalah id utk alarm-nya, supaya tiap alarm memiliki ID berbeda
@@ -346,42 +360,77 @@ public class SettingAlarm extends AppCompatActivity
         //Sedangkan iki kan rung mlebu ning DB
         intent1.putExtra("id2",id2);
         pendingIntent1 = PendingIntent.getBroadcast(this, id2, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.v("Repeat alarm", repeat);
         if (repeat.equals("Everyday")) {
             setEverydayAlarm();
         } else {
-            setRepeatAlarm(0);
+            if (repeat.equals("Don't repeat")) {
+                setRepeatAlarm(0);
+            } else {
+                int i = 0;
+                Calendar calNow = Calendar.getInstance();
+                while (i < daysOfWeek.size()) {
+                    if (calNow.get(Calendar.DAY_OF_WEEK) <= daysOfWeek.get(i)) {
+                        setRepeatAlarm(daysOfWeek.get(i));
+                    }
+                    int temp = daysOfWeek.get(i);
+                    daysOfWeek.remove(i);
+                    daysOfWeek.add(temp);
+                    i++;
+                }
+            }
         }
     }
 
     public void setRepeatAlarm(int daysOfWeek) {
         Calendar calendar = Calendar.getInstance();
-        if (daysOfWeek != 0) {
-            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
-        }
+        Date now = new Date();
+        calendar.setTime(now);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+        Log.v("Hari ini", String.valueOf(day));
+        Log.v("DOW", String.valueOf(daysOfWeek));
+
+        Log.v("Hari set", String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)));
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DAY_OF_YEAR, 7);
-        }
-        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
-        if(daysOfWeek==0 && System.currentTimeMillis()>time)
-        {
-            if (calendar.AM_PM == 0)
-                time = time + (1000*60*60*12);
-            else
-                time = time + (1000*60*60*24);
-        }
-        if (daysOfWeek == 0) {
-            alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent1);
-        } else {
-            if (calendar.AM_PM == 0) {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*12, pendingIntent1);
+            if (daysOfWeek == 0) {
+                calendar.add(Calendar.DATE, 1);
             } else {
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, time, 1000*60*60*24, pendingIntent1);
+                if (day == daysOfWeek) {
+                    calendar.add(Calendar.DATE, 7);
+                }
+                else {
+                    int dayOfYear = day - daysOfWeek;
+                    Log.v("DayofYear", String.valueOf(dayOfYear));
+                    if (dayOfYear > 0) {
+                        calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                    } else {
+                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+                    }
+                }
+            }
+        } else {
+            if (daysOfWeek != 0) {
+                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
             }
         }
+        Log.v("Tanggal ini", String.valueOf(now));
+        Log.v("Alarm set on", String.valueOf(calendar.getTime()));
+        time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
+        Date setDate = calendar.getTime();
+        long diff = setDate.getTime() - now.getTime();
+        long minute = diff / (60 * 1000) % 60;
+        long hour = diff / (60 * 60 * 1000) % 24;
+        long sday = diff / (60 * 60 * 24 * 1000) % 365;
+        Toast.makeText(SettingAlarm.this, "Your alarm will be set in " + sday + " day(s), " +
+                hour + " hour(s), " + minute + " minute(s)", Toast.LENGTH_LONG).show();
+        Log.v("Alarm", "Your alarm will be set in " + sday + " day(s), " +
+                hour + " hour(s), " + minute + " minute(s)");
+
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent1);
     }
 
     public void setEverydayAlarm() {

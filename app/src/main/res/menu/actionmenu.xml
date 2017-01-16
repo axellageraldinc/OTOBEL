@@ -8,4 +8,7 @@
     <item android:title="About"
         android:id="@+id/MenuAbout"
         android:showAsAction="withText|always"/>
+    <item android:title="Daftar bel yang sudah bunyi"
+        android:id="@+id/MenuList"
+        android:showAsAction="withText|always"/>
 </menu>

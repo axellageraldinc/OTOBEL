@@ -1,11 +1,13 @@
 package com.example.axellageraldinc.smartalarm;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -32,6 +34,13 @@ public class SplashScreen extends AppCompatActivity {
             }
         };
         timerThread.start();
+        /*Intent mServiceIntent = new Intent(getApplicationContext(), BackgroundService.class);
+        ComponentName service = getApplicationContext().startService(mServiceIntent);
+        if (null == service) {
+            Toast.makeText(getApplicationContext(), "Gagal menjalankan service", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Berhasil menjalankan service", Toast.LENGTH_LONG).show();
+        }*/
     }
 
     //Biar gak balik ke splash screen pas mencet tombol back

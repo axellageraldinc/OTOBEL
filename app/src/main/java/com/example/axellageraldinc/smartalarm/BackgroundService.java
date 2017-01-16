@@ -7,6 +7,8 @@ package com.example.axellageraldinc.smartalarm;
 import android.app.*;
 import android.content.*;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.*;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
@@ -65,9 +67,9 @@ public class BackgroundService extends Service {
             this.backgroundThread.start();
             /*android.support.v4.app.NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setContentTitle("Bel Sekolah Well")
-                            .setContentText("Jalan cuy");
+                            .setSmallIcon(R.drawable.ic_stat_social_notifications)
+                            .setContentTitle(getResources().getString(R.string.app_name))
+                            .setContentText("Service running");
             Intent resultIntent = new Intent(context, HomeScreen.class);
 // Because clicking the notification opens a new ("special") activity, there's
 // no need to create an artificial back stack.
@@ -75,15 +77,15 @@ public class BackgroundService extends Service {
             PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
             // Sets an ID for the notification
-            int mNotificationId = 001;
+            int mNotificationId = 1234;
 // Gets an instance of the NotificationManager service
             NotificationManager mNotifyMgr =
                     (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 // Builds the notification and issues it.
             mNotifyMgr.notify(mNotificationId, mBuilder.build());*/
+            //Toast.makeText(this, "Service running", Toast.LENGTH_LONG).show();
         }
         // Nambah toast dan method loadAlarmFromDB, biar bisa setting alarm setelah booting (service start)
-        Toast.makeText(this, "Service running", Toast.LENGTH_LONG).show();
         loadAlarmFromDB();
 //        return START_STICKY;
 
@@ -250,36 +252,93 @@ public class BackgroundService extends Service {
         ArrayList<Integer> daysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
         int dayOfYear = 1;
         int i = 0;
+//        while (i < daysOfWeek.size()) {
+//            if (daysOfWeek.contains(day)) {
+//                if (daysOfWeek.get(i) == day) {
+//                    if (i+1 == daysOfWeek.size()) {
+//                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(0));
+//                        dayOfYear = day - daysOfWeek.get(0);
+//                        break;
+//                    } else {
+//                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i+1));
+//                        dayOfYear = day - daysOfWeek.get(i+1);
+//                        break;
+//                    }
+//                }
+//            } else {
+//                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+//                dayOfYear = day - daysOfWeek.get(i);
+//                break;
+//            }
+//            i++;
+//        }
+//        calendar.set(Calendar.HOUR_OF_DAY, hour);
+//        calendar.set(Calendar.MINUTE, minute);
+//        calendar.set(Calendar.SECOND, 0);
+//        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+//            if (Objects.equals(daysOfWeek.get(0), day)) {
+//                calendar.add(Calendar.DAY_OF_YEAR, 7);
+//            } else {
+//                calendar.add(Calendar.DAY_OF_YEAR, 8-dayOfYear);
+//            }
+//        }
         while (i < daysOfWeek.size()) {
             if (daysOfWeek.contains(day)) {
-                if (daysOfWeek.get(i) == day) {
+                if (daysOfWeek.get(i).equals(day)) {
                     if (i+1 == daysOfWeek.size()) {
-                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(0));
                         dayOfYear = day - daysOfWeek.get(0);
+                        i=0;
                         break;
                     } else {
-                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i+1));
                         dayOfYear = day - daysOfWeek.get(i+1);
+                        i++;
+                        if (dayOfYear < 0) {
+                            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+                        }
                         break;
                     }
                 }
             } else {
-                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+                //calendar.set(Calendar.DATE, daysOfWeek.get(i));
                 dayOfYear = day - daysOfWeek.get(i);
+                if (dayOfYear < 0) {
+                    calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+                }
                 break;
             }
             i++;
         }
+        String dow = "";
+        int x =0;
+        while (x<daysOfWeek.size()) {
+            dow += daysOfWeek.get(x);
+            Log.v("per Day of Week database", String.valueOf(daysOfWeek.get(x)));
+            x++;
+        }
+        Log.v("Day of Week database", dow);
+        Log.v("Day of Week", String.valueOf(calendar.get(Calendar.DATE)));
         calendar.set(Calendar.HOUR_OF_DAY, hour);
+        Log.v("Hour of day", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
         calendar.set(Calendar.MINUTE, minute);
+        Log.v("Minute", String.valueOf(calendar.get(Calendar.MINUTE)));
         calendar.set(Calendar.SECOND, 0);
+        Log.v("Calendar millis", String.valueOf(calendar.getTimeInMillis()));
+        Log.v("System millis", String.valueOf(System.currentTimeMillis()));
+        Log.v("Day", String.valueOf(day));
+        Log.v("DOY", String.valueOf(dayOfYear));
+        // Check we aren't setting it in the past which would trigger it to fire instantly
+        Log.v("calendar now", String.valueOf(calendar.getTime()));
         if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            if (Objects.equals(daysOfWeek.get(0), day)) {
-                calendar.add(Calendar.DAY_OF_YEAR, 7);
-            } else {
-                calendar.add(Calendar.DAY_OF_YEAR, 8-dayOfYear);
+            if (day.equals(daysOfWeek.get(i))) {
+                calendar.add(Calendar.DATE, 7);
+            }
+            else {
+                if (dayOfYear > 0) {
+                    calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                }
             }
         }
+        Log.v("calendar setelah ditambah", String.valueOf(calendar.getTime()));
         long timeInMillis = calendar.getTimeInMillis();
         Intent intent2 = new Intent(context, AlarmReceiver.class);
         Bundle bundle = new Bundle();
@@ -303,8 +362,8 @@ public class BackgroundService extends Service {
         long sminute = diff / (60 * 1000) % 60;
         long shour = diff / (60 * 60 * 1000) % 24;
         long sday = diff / (60 * 60 * 24 * 1000) % 365;
-        Toast.makeText(context, "Your next alarm will be set in " + sday + " day(s), " +
-                shour + " hour(s), " + sminute + " minute(s)", Toast.LENGTH_LONG).show();
+        /*Toast.makeText(context, "Your next alarm will be set in " + sday + " day(s), " +
+                shour + " hour(s), " + sminute + " minute(s)", Toast.LENGTH_LONG).show();*/
         Log.v("Alarm", "Your next alarm will be set in " + sday + " day(s), " +
                 shour + " hour(s), " + sminute + " minute(s)");
     }

@@ -104,6 +104,10 @@ public class HomeScreen extends AppCompatActivity {
                 Intent about = new Intent(HomeScreen.this, About.class);
                 startActivity(about);
                 return true;
+            case R.id.MenuList:
+                Intent list = new Intent(HomeScreen.this, NotificationReceiver.class);
+                startActivity(list);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

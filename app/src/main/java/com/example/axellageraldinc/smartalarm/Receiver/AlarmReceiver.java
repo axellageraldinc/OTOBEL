@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.axellageraldinc.smartalarm.Database.BelOtomatisModel;
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
 import com.example.axellageraldinc.smartalarm.Database.KalimatNotifBarModel;
+import com.example.axellageraldinc.smartalarm.NotificationBarService;
 import com.example.axellageraldinc.smartalarm.NotificationReceiver;
 import com.example.axellageraldinc.smartalarm.R;
 import com.example.axellageraldinc.smartalarm.TambahBelOtomatis.SettingAlarm;
@@ -119,14 +120,15 @@ public class AlarmReceiver extends BroadcastReceiver
                             .setSmallIcon(R.drawable.ic_stat_social_notifications_on)
                             .setColor(color)
                             .setContentTitle("OTOBEL")
-                            .setContentText("Klik untuk melihat bel yang sudah bunyi")
-                            .setGroup(GROUP_KEY_BEL);
-            Intent resultIntent = new Intent(context, NotificationReceiver.class);
-        resultIntent.putExtra(pasrseUri, "uri");
+                            .setContentText("Klik untuk mematikan bel")
+                            .setGroup(GROUP_KEY_BEL)
+                            .setAutoCancel(true);
+            Intent resultIntent = new Intent(context, NotificationBarService.class);
+            resultIntent.putExtra(pasrseUri, "uri");
 // Because clicking the notification opens a new ("special") activity, there's
 // no need to create an artificial back stack.
             //mBuilder.setOngoing(true);
-            PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
             // Sets an ID for the notification
             //mNotificationId = id2;

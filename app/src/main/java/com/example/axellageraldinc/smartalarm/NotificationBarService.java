@@ -12,8 +12,10 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
+import android.util.Log;
 
 import com.example.axellageraldinc.smartalarm.Database.DBHelper;
+import com.example.axellageraldinc.smartalarm.Receiver.AlarmReceiver;
 
 /**
  * Created by Axellageraldinc on 12-Jan-17.
@@ -27,12 +29,6 @@ public class NotificationBarService extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        parseUri = intent.getStringExtra("uri");
-        if (parseUri!=null){
-            uriuri = Uri.parse(intent.getStringExtra("uri"));
-            mp = MediaPlayer.create(context, uriuri);
-            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mp.stop();
-        }
+        AlarmReceiver.mp.stop();
     }
 }

@@ -471,7 +471,7 @@ public class SettingAlarm extends AppCompatActivity
                 }
             }
         // Fungsi jalan kalo jam sekarang kurang dari jam yang di set
-        } else {
+        } else if (daysOfWeek != 0) {
             // Ngecek hari yang di set >= hari ini
             if (daysOfWeek >= day) {
                 calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);

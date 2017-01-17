@@ -250,105 +250,124 @@ public class BackgroundService extends Service {
         ArrayList<String> stRepeat = new ArrayList<String>();
         stRepeat.addAll(Arrays.asList(repeat.split("\\s*,\\s*")));
         ArrayList<Integer> daysOfWeek = SettingAlarm.getIntDaysOfWeek(stRepeat);
-        int dayOfYear = 1;
-        int i = 0;
-//        while (i < daysOfWeek.size()) {
-//            if (daysOfWeek.contains(day)) {
-//                if (daysOfWeek.get(i) == day) {
-//                    if (i+1 == daysOfWeek.size()) {
-//                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(0));
-//                        dayOfYear = day - daysOfWeek.get(0);
-//                        break;
-//                    } else {
-//                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i+1));
-//                        dayOfYear = day - daysOfWeek.get(i+1);
-//                        break;
-//                    }
-//                }
-//            } else {
-//                calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
-//                dayOfYear = day - daysOfWeek.get(i);
-//                break;
-//            }
-//            i++;
-//        }
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
-//        calendar.set(Calendar.SECOND, 0);
-//        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-//            if (Objects.equals(daysOfWeek.get(0), day)) {
-//                calendar.add(Calendar.DAY_OF_YEAR, 7);
-//            } else {
-//                calendar.add(Calendar.DAY_OF_YEAR, 8-dayOfYear);
-//            }
-//        }
-        while (i < daysOfWeek.size()) {
-            if (daysOfWeek.contains(day)) {
-                if (daysOfWeek.get(i).equals(day)) {
-                    if (i+1 == daysOfWeek.size()) {
-                        dayOfYear = day - daysOfWeek.get(0);
-                        i=0;
-                        break;
-                    } else {
-                        dayOfYear = day - daysOfWeek.get(i+1);
-                        i++;
-                        if (dayOfYear < 0) {
-                            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
-                        }
-                        break;
-                    }
-                }
+        int dow = 0;
+        int i = 0, j = 0, k = 0, index = 0;
+        while (j < daysOfWeek.size()) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) > daysOfWeek.get(j)) {
+                i = daysOfWeek.size();
+                index = j;
             } else {
-                //calendar.set(Calendar.DATE, daysOfWeek.get(i));
-                dayOfYear = day - daysOfWeek.get(i);
-                if (dayOfYear < 0) {
-                    calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
-                }
+                i  = 0;
+                k++;
+            }
+            j++;
+        }
+
+        if (k == 0) {
+            dow = daysOfWeek.get(0);
+            i = daysOfWeek.size();
+        }
+
+        while (i < daysOfWeek.size()) {
+            if (calendar.get(Calendar.DAY_OF_WEEK) <= daysOfWeek.get(i)) {
+                dow = daysOfWeek.get(i);
+                index = i;
                 break;
             }
             i++;
         }
-        String dow = "";
-        int x =0;
-        while (x<daysOfWeek.size()) {
-            dow += daysOfWeek.get(x);
-            Log.v("per Day of Week database", String.valueOf(daysOfWeek.get(x)));
-            x++;
-        }
-        Log.v("Day of Week database", dow);
-        Log.v("Day of Week", String.valueOf(calendar.get(Calendar.DATE)));
+
         calendar.set(Calendar.HOUR_OF_DAY, hour);
-        Log.v("Hour of day", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
         calendar.set(Calendar.MINUTE, minute);
-        Log.v("Minute", String.valueOf(calendar.get(Calendar.MINUTE)));
         calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            if (day == dow) {
+                // Variable pembantu
+                int dayOfYear = 0;
+                // Fungsi jalan kalo size dari arraylist udah maks, bakal ngeset buat arraylist ke-0
+                if (daysOfWeek.size() == index+1) {
+                    dayOfYear = day - daysOfWeek.get(0);
+                    // Fungsi jalan kalo size dari arraylist belom maks
+                } else {
+                    dayOfYear = day - daysOfWeek.get(index+1);
+                    dow = daysOfWeek.get(index+1);
+                }
+                // Fungsi jalan buat nambah hari dari hari ini / ngeset day of week kalo belom ganti minggu
+                if (dayOfYear > 0) {
+                    calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                } else {
+                    calendar.set(Calendar.DAY_OF_WEEK, dow);
+                }
+                // Fungsi jalan kalo hari ini bukan hari yang di set
+            } else {
+                int dayOfYear = day - dow;
+                // Debug aja sih
+                Log.v("DayofYear", String.valueOf(dayOfYear));
+                // Fungsi jalan buat nambah hari dari hari ini / ngeset day of week kalo belom ganti minggu
+                if (dayOfYear > 0) {
+                    calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                } else {
+                    calendar.set(Calendar.DAY_OF_WEEK, dow);
+                }
+            }
+        } else {
+            // Ngecek hari yang di set >= hari ini
+            if (dow >= day) {
+                calendar.set(Calendar.DAY_OF_WEEK, dow);
+            } else {
+                int dayOfYear = day - dow;
+                calendar.add(Calendar.DATE, Math.abs(7 - dayOfYear));
+            }
+        }
+//        }
+//        while (i < daysOfWeek.size()) {
+//            if (daysOfWeek.contains(day)) {
+//                if (daysOfWeek.get(i).equals(day)) {
+//                    if (i+1 == daysOfWeek.size()) {
+//                        i=0;
+//                        dayOfYear = day - daysOfWeek.get(i);
+//                        break;
+//                    } else {
+//                        i++;
+//                        dayOfYear = day - daysOfWeek.get(i);
+//                        if (dayOfYear < 0) {
+//                            calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+//                        }
+//                        break;
+//                    }
+//                }
+//            } else {
+//                dayOfYear = day - daysOfWeek.get(i);
+//                if (dayOfYear < 0) {
+//                    calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek.get(i));
+//                }
+//                break;
+//            }
+//            i++;
+//        }
+        Log.v("Day of Week", String.valueOf(calendar.get(Calendar.DATE)));
+        Log.v("Hour of day", String.valueOf(calendar.get(Calendar.HOUR_OF_DAY)));
+        Log.v("Minute", String.valueOf(calendar.get(Calendar.MINUTE)));
         Log.v("Calendar millis", String.valueOf(calendar.getTimeInMillis()));
         Log.v("System millis", String.valueOf(System.currentTimeMillis()));
         Log.v("Day", String.valueOf(day));
-        Log.v("DOY", String.valueOf(dayOfYear));
         // Check we aren't setting it in the past which would trigger it to fire instantly
-        Log.v("calendar now", String.valueOf(calendar.getTime()));
-        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            if (day.equals(daysOfWeek.get(i))) {
-                calendar.add(Calendar.DATE, 7);
-            }
-            else {
-                if (dayOfYear > 0) {
-                    calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
-                }
-            }
-        }
-        Log.v("calendar setelah ditambah", String.valueOf(calendar.getTime()));
-        long timeInMillis = calendar.getTimeInMillis();
+        Log.v("Tanggal ini", String.valueOf(now));
+        Log.v("Alarm set on", String.valueOf(calendar.getTime()));
+        Date setDate = calendar.getTime();//new Date(time);
+        long time = calendar.getTimeInMillis();
+        Log.v("Time set", String.valueOf(time));
         Intent intent2 = new Intent(context, AlarmReceiver.class);
-        Bundle bundle = new Bundle();
+        Bundle b = new Bundle();
         if (chosenRingtone.equals("Default")){
-            bundle.putString("ringtone_alarm", null);
+            b.putString("ringtone_alarm", null);
         } else {
-            bundle.putString("ringtone_alarm", chosenRingtone);
+            b.putString("ringtone_alarm", chosenRingtone);
         }
-        bundle.putInt("durasi", duration);
-        intent2.putExtras(bundle);
+        b.putInt("durasi", duration);
+        intent2.putExtras(b);
 
         intent2.putExtra("repeat", repeat);
         intent2.putExtra("duration", duration);
@@ -356,14 +375,11 @@ public class BackgroundService extends Service {
         PendingIntent pendingIntent1 = PendingIntent.getBroadcast(context, id2, intent2,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, timeInMillis, pendingIntent1);
-        Date setDate = calendar.getTime();
+        alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent1);
         long diff = setDate.getTime() - now.getTime();
         long sminute = diff / (60 * 1000) % 60;
         long shour = diff / (60 * 60 * 1000) % 24;
         long sday = diff / (60 * 60 * 24 * 1000) % 365;
-        /*Toast.makeText(context, "Your next alarm will be set in " + sday + " day(s), " +
-                shour + " hour(s), " + sminute + " minute(s)", Toast.LENGTH_LONG).show();*/
         Log.v("Alarm", "Your next alarm will be set in " + sday + " day(s), " +
                 shour + " hour(s), " + sminute + " minute(s)");
     }

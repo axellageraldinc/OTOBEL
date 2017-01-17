@@ -10,8 +10,8 @@
     <string name="credit">Credit</string>
     <string name="NamaAxell">Axellageraldinc Adryamarthanino</string>
     <string name="NamaAlman">Almantera Tiantana Al Faruqi</string>
-    <string name="Info1">App Order :</string>
-    <string name="Info2">axella.gerald@gmail.com</string>
+    <string name="Info1">Present by</string>
+    <string name="Info2">BIOS COMP</string>
     <string name="Info3">daiserver.com</string>
     <string name="BelAuto">Bel Otomatis</string>
     <string name="BelManual">Bel Manual</string>
@@ -19,4 +19,6 @@
     <string name="InputDurasiBel">INPUT DURASI BEL</string>
     <string name="SetVolume">Set Alarm Volume</string>
     <string name="InputNamaBel">INPUT NAMA BEL</string>
+    <string name="JudulBelAbout">BEL OTOMATIS SEKOLAH</string>
+    <string name="AppVersion">V1.1</string>
 </resources>

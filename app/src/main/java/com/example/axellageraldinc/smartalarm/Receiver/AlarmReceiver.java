@@ -122,7 +122,7 @@ public class AlarmReceiver extends BroadcastReceiver
                             .setSmallIcon(R.drawable.ic_stat_social_notifications_on)
                             .setColor(color)
                             .setContentTitle("OTOBEL")
-                            .setContentText("Klik untuk mematikan bel")
+                            .setContentText("Klik untuk melihat bel yang sudah bunyi")
                             .setGroup(GROUP_KEY_BEL)
                             .setAutoCancel(true);
 

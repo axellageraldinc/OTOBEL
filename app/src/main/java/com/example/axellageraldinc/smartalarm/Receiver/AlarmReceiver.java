@@ -39,7 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver
 {
     private AudioManager myAudioManager;
     Uri uriuri;
-    private MediaPlayer mp;
+    public static MediaPlayer mp;
     private int DefaultVolume, VolumeDB, duration, id2, hour, minute, hourModify, minuteModify;
     private DBHelper dbH;
     private Context context;
@@ -113,8 +113,10 @@ public class AlarmReceiver extends BroadcastReceiver
         date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd-MMM-yyyy");
         dateString = sdf.format(date);
-        kalimat= "Bel " + JamMenit + " sudah berbunyi pada " + dateString;
+        kalimat= "Klik untuk melihat bel yang sudah bunyi";
         dbH.KalimatNotifBar(new KalimatNotifBarModel(kalimat));
+        Intent resultIntent = new Intent(context, NotificationReceiver.class);
+        resultIntent.putExtra("uri", pasrseUri);
         android.support.v4.app.NotificationCompat.Builder mBuilder =
                     new NotificationCompat.Builder(context)
                             .setSmallIcon(R.drawable.ic_stat_social_notifications_on)
@@ -123,20 +125,19 @@ public class AlarmReceiver extends BroadcastReceiver
                             .setContentText("Klik untuk mematikan bel")
                             .setGroup(GROUP_KEY_BEL)
                             .setAutoCancel(true);
-            Intent resultIntent = new Intent(context, NotificationBarService.class);
-            resultIntent.putExtra(pasrseUri, "uri");
+
 // Because clicking the notification opens a new ("special") activity, there's
 // no need to create an artificial back stack.
             //mBuilder.setOngoing(true);
-            PendingIntent resultPendingIntent = PendingIntent.getBroadcast(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(context,  (int) System.currentTimeMillis()
+                , resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
             // Sets an ID for the notification
             //mNotificationId = id2;
 // Gets an instance of the NotificationManager service
-            mNotifyMgr =
-                    (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        mNotifyMgr = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 // Builds the notification and issues it.
-            mNotifyMgr.notify(1, mBuilder.build());
+        mNotifyMgr.notify(1, mBuilder.build());
     }
 
     /*public void ShowStackNotification(){

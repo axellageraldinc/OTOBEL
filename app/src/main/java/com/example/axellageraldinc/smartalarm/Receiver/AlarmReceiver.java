@@ -113,7 +113,7 @@ public class AlarmReceiver extends BroadcastReceiver
         date = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd-MMM-yyyy");
         dateString = sdf.format(date);
-        kalimat= "Klik untuk melihat bel yang sudah bunyi";
+        kalimat= "Bel " + JamMenit + " sudah berbunyi pada " + dateString;
         dbH.KalimatNotifBar(new KalimatNotifBarModel(kalimat));
         Intent resultIntent = new Intent(context, NotificationReceiver.class);
         resultIntent.putExtra("uri", pasrseUri);
@@ -122,7 +122,7 @@ public class AlarmReceiver extends BroadcastReceiver
                             .setSmallIcon(R.drawable.ic_stat_social_notifications_on)
                             .setColor(color)
                             .setContentTitle("OTOBEL")
-                            .setContentText("Klik untuk mematikan bel")
+                            .setContentText("Klik untuk melihat bel yang sudah bunyi")
                             .setGroup(GROUP_KEY_BEL)
                             .setAutoCancel(true);
 

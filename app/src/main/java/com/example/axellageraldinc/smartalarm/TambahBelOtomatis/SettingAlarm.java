@@ -365,46 +365,104 @@ public class SettingAlarm extends AppCompatActivity
             setEverydayAlarm();
         } else {
             if (repeat.equals("Don't repeat")) {
-                setRepeatAlarm(0);
+                setRepeatAlarm(0, 0);
             } else {
-                int i = 0;
+                // Variable buat ngecek hari alarm di set
+                int i = 0, j = 0, k = 0, x = 0;
+
+                // calNow buat ngecek hari ini (DAY_OF_WEEK)
                 Calendar calNow = Calendar.getInstance();
+
+                // Fungsi while buat ngecek apa ada hari yang lebih dari hari ini
+                // contoh: set hari selasa, rabu, kamis .. hari ini selasa, berarti ada yg lebih
+                // dari hari ini yaitu rabu dan kamis
+                while (j < daysOfWeek.size()) {
+                    if (calNow.get(Calendar.DAY_OF_WEEK) > daysOfWeek.get(j)) {
+                        i = daysOfWeek.size();
+                        x = j;
+                    } else {
+                        i  = 0;
+                        k++;
+                    }
+                    j++;
+                }
+
+                // Fungsi buat ngeset alarm kalo ga ada hari yang lebih dari hari ini
+                if (k == 0) {
+                    setRepeatAlarm(daysOfWeek.get(0), x);
+                    i = daysOfWeek.size();
+                }
+
+                // Fungsi buat ngeset alarm kalo ada hari yang lebih dari hari ini
                 while (i < daysOfWeek.size()) {
                     if (calNow.get(Calendar.DAY_OF_WEEK) <= daysOfWeek.get(i)) {
-                        setRepeatAlarm(daysOfWeek.get(i));
+                        setRepeatAlarm(daysOfWeek.get(i), i);
+                        break;
                     }
-                    int temp = daysOfWeek.get(i);
-                    daysOfWeek.remove(i);
-                    daysOfWeek.add(temp);
+                    // Ga perlu di ganti urutannya, cukup ditambah variable "I"
+//                    int temp = daysOfWeek.get(i);
+//                    daysOfWeek.remove(i);
+//                    daysOfWeek.add(temp);
                     i++;
                 }
             }
         }
     }
 
-    public void setRepeatAlarm(int daysOfWeek) {
+    public void setRepeatAlarm(int daysOfWeek, int index) {
         Calendar calendar = Calendar.getInstance();
         Date now = new Date();
         calendar.setTime(now);
         int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        /*
+        Buat debug aja
+        - Hari ini = hari ini
+        - DOW = hari yang ada di parameter
+         */
         Log.v("Hari ini", String.valueOf(day));
         Log.v("DOW", String.valueOf(daysOfWeek));
 
-        Log.v("Hari set", String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)));
+        // Mulai setting alarm
         calendar.set(Calendar.HOUR_OF_DAY, alarmTimePicker.getCurrentHour());
         calendar.set(Calendar.MINUTE, alarmTimePicker.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+
+        // Ngecek alarm kurang dari jam sekarang atau tidak
         if(calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            // Kalo kurang dari jam sekarang, bakal jalan semua fungsinya
+
+            // Kalo don't repeat, bakal nambah 1 hari (besok)
             if (daysOfWeek == 0) {
                 calendar.add(Calendar.DATE, 1);
+
+            // Fungsi jalan buat selain don't repeat
             } else {
+                // Fungsi jalan kalo hari ini = hari yang di set
                 if (day == daysOfWeek) {
-                    calendar.add(Calendar.DATE, 7);
-                }
-                else {
+                    // Variable pembantu
+                    int dayOfYear = 0;
+                    // Fungsi jalan kalo size dari arraylist udah maks, bakal ngeset buat arraylist ke-0
+                    if (this.daysOfWeek.size() == index+1) {
+                        dayOfYear = day - this.daysOfWeek.get(0);
+                    // Fungsi jalan kalo size dari arraylist belom maks
+                    } else {
+                        dayOfYear = day - this.daysOfWeek.get(index+1);
+                        daysOfWeek = this.daysOfWeek.get(index+1);
+                    }
+                    // Fungsi jalan buat nambah hari dari hari ini / ngeset day of week kalo belom ganti minggu
+                    if (dayOfYear > 0) {
+                        calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
+                    } else {
+                        calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+                    }
+                // Fungsi jalan kalo hari ini bukan hari yang di set
+                } else {
                     int dayOfYear = day - daysOfWeek;
+                    // Debug aja sih
                     Log.v("DayofYear", String.valueOf(dayOfYear));
+                    // Fungsi jalan buat nambah hari dari hari ini / ngeset day of week kalo belom ganti minggu
                     if (dayOfYear > 0) {
                         calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
                     } else {
@@ -412,21 +470,26 @@ public class SettingAlarm extends AppCompatActivity
                     }
                 }
             }
+        // Fungsi jalan kalo jam sekarang kurang dari jam yang di set
         } else {
-            if (daysOfWeek != 0) {
+            // Ngecek hari yang di set >= hari ini
+            if (daysOfWeek >= day) {
                 calendar.set(Calendar.DAY_OF_WEEK, daysOfWeek);
+            } else {
+                int dayOfYear = day - daysOfWeek;
+                calendar.add(Calendar.DATE, Math.abs(7-dayOfYear));
             }
         }
+        // Debug lagi
         Log.v("Tanggal ini", String.valueOf(now));
         Log.v("Alarm set on", String.valueOf(calendar.getTime()));
+
         time=calendar.getTimeInMillis(); //(calendar.getTimeInMillis()-(calendar.getTimeInMillis()%60000));
         Date setDate = calendar.getTime();
         long diff = setDate.getTime() - now.getTime();
         long minute = diff / (60 * 1000) % 60;
         long hour = diff / (60 * 60 * 1000) % 24;
         long sday = diff / (60 * 60 * 24 * 1000) % 365;
-        Toast.makeText(SettingAlarm.this, "Your alarm will be set in " + sday + " day(s), " +
-                hour + " hour(s), " + minute + " minute(s)", Toast.LENGTH_LONG).show();
         Log.v("Alarm", "Your alarm will be set in " + sday + " day(s), " +
                 hour + " hour(s), " + minute + " minute(s)");
 

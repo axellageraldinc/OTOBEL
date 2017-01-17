@@ -52,6 +52,12 @@
             </intent-filter>
         </receiver>
 
+
+        <receiver android:name=".NotificationBarService"
+            android:enabled="true">
+
+        </receiver>
+
         <!-- Parent activity name untuk point parent activity nya waktu di klik tombol back navigation -->
         <activity
             android:name=".Menu.MenuSetting"
